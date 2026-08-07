@@ -125,14 +125,14 @@
       "settings": {
         "eyebrow": "Featured",
         "heading": "Selected pieces",
-        "collection": "all",
-        "products_to_show": 8,
+        "collection": "bangles",
+        "products_to_show": 13,
         "show_badges": true,
         "show_quick_actions": true,
         "customise_link": "",
         "view_all_label": "View collection",
         "background": "#faf8f4",
-        "padding_y": 96
+        "padding_y": 52
       }
     },
     "luxury_craftsmanship": {
