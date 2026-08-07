@@ -32,7 +32,7 @@
         "slide_cCK3Gi"
       ],
       "settings": {
-        "hero_type": "image",
+        "hero_type": "slider",
         "height": "full",
         "overlay_opacity": 35,
         "content_alignment": "flex-start",
