@@ -33,6 +33,11 @@ body.mufaddal-luxury .header-logo {
 body.mufaddal-luxury .header__row--top {
   min-height: 4.5rem;
   padding-block: 0.85rem;
+  --color-foreground: var(--mj-ink);
+  --color-foreground-rgb: 17 17 17;
+  --menu-top-level-font-color: var(--mj-ink);
+  --menu-top-level-font-color-rgb: 17 17 17;
+  color: var(--mj-ink);
 }
 
 body.mufaddal-luxury .menu-list__link,
@@ -82,53 +87,76 @@ body.mufaddal-luxury .header-menu .menu-list__link::after {
   transition: transform 0.35s var(--mj-ease);
 }
 
-body.mufaddal-luxury .header-menu .menu-list__link:hover,
-body.mufaddal-luxury .header-menu .menu-list__link[aria-expanded='true'],
-body.mufaddal-luxury .header-menu .menu-list__link[aria-current='page'] {
-  color: var(--mj-gold);
-  background: transparent !important;
-}
-
 body.mufaddal-luxury .header-menu .menu-list__link:hover::after,
 body.mufaddal-luxury .header-menu .menu-list__link[aria-expanded='true']::after,
 body.mufaddal-luxury .header-menu .menu-list__link[aria-current='page']::after {
   transform: scaleX(1);
 }
 
-body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']) .header__row--top {
+/* Default / sticky / non-hero: dark text on light header */
+body.mufaddal-luxury .header:not([transparent]) .header__row--top,
+body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .header__row--top,
+body.mufaddal-luxury .header[transparent][data-sticky-state='active'],
+body.mufaddal-luxury .header[transparent]:has(.menu-list__link[aria-expanded='true']) .header__row--top {
+  --color-foreground: var(--mj-ink);
+  --color-foreground-rgb: 17 17 17;
+  --menu-top-level-font-color: var(--mj-ink);
+  --menu-top-level-font-color-rgb: 17 17 17;
+  background: rgba(255, 255, 255, 0.97) !important;
+  backdrop-filter: blur(14px);
+  color: var(--mj-ink);
+}
+
+body.mufaddal-luxury .header:not([transparent]) .header-logo,
+body.mufaddal-luxury .header:not([transparent]) .header-actions,
+body.mufaddal-luxury .header:not([transparent]) .header-actions__action,
+body.mufaddal-luxury .header:not([transparent]) .dropdown-localization__button,
+body.mufaddal-luxury .header:not([transparent]) .menu-list__link,
+body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .header-logo,
+body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .header-actions,
+body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .header-actions__action,
+body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .dropdown-localization__button,
+body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .menu-list__link,
+body.mufaddal-luxury .header[transparent]:has(.menu-list__link[aria-expanded='true']) .header-logo,
+body.mufaddal-luxury .header[transparent]:has(.menu-list__link[aria-expanded='true']) .header-actions,
+body.mufaddal-luxury .header[transparent]:has(.menu-list__link[aria-expanded='true']) .menu-list__link {
+  color: var(--mj-ink) !important;
+  background: transparent !important;
+}
+
+body.mufaddal-luxury .header:not([transparent]) .header-menu .menu-list__link:hover,
+body.mufaddal-luxury .header:not([transparent]) .header-menu .menu-list__link[aria-current='page'],
+body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .header-menu .menu-list__link:hover,
+body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .header-menu .menu-list__link[aria-current='page'],
+body.mufaddal-luxury .header[transparent]:has(.menu-list__link[aria-expanded='true']) .header-menu .menu-list__link:hover,
+body.mufaddal-luxury .header[transparent]:has(.menu-list__link[aria-expanded='true']) .header-menu .menu-list__link[aria-current='page'] {
+  color: var(--mj-gold) !important;
+}
+
+/* Home hero only: white text while transparent & not sticky */
+body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']):not(:has(.menu-list__link[aria-expanded='true'])) .header__row--top {
   --color-foreground: #ffffff;
   --color-foreground-rgb: 255 255 255;
   --color-border: rgba(255, 255, 255, 0.35);
   --menu-top-level-font-color: #ffffff;
   --menu-top-level-font-color-rgb: 255 255 255;
   background: transparent !important;
+  backdrop-filter: none;
   color: #fff;
 }
 
-body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']) .header-logo,
-body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']) .header-actions,
-body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']) .dropdown-localization__button,
-body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']) .menu-list__link {
+body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']):not(:has(.menu-list__link[aria-expanded='true'])) .header-logo,
+body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']):not(:has(.menu-list__link[aria-expanded='true'])) .header-actions,
+body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']):not(:has(.menu-list__link[aria-expanded='true'])) .header-actions__action,
+body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']):not(:has(.menu-list__link[aria-expanded='true'])) .dropdown-localization__button,
+body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']):not(:has(.menu-list__link[aria-expanded='true'])) .menu-list__link {
   color: #fff !important;
   -webkit-tap-highlight-color: transparent;
 }
 
-body.mufaddal-luxury .header[transparent][data-sticky-state='active'],
-body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .header__row--top,
-body.mufaddal-luxury .header[transparent]:has(.menu-list__link[aria-expanded='true']) .header__row--top {
-  --color-foreground: #1f1f1f;
-  --color-foreground-rgb: 31 31 31;
-  --menu-top-level-font-color: #1f1f1f;
-  --menu-top-level-font-color-rgb: 31 31 31;
-  background: rgba(255, 255, 255, 0.97) !important;
-  backdrop-filter: blur(14px);
-  color: var(--mj-ink);
-}
-
-body.mufaddal-luxury .header[transparent][data-sticky-state='active'] .menu-list__link,
-body.mufaddal-luxury .header[transparent]:has(.menu-list__link[aria-expanded='true']) .menu-list__link {
-  color: var(--mj-ink) !important;
-  background: transparent !important;
+body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']):not(:has(.menu-list__link[aria-expanded='true'])) .header-menu .menu-list__link:hover,
+body.mufaddal-luxury .header[transparent]:not([data-sticky-state='active']):not(:has(.menu-list__link[aria-expanded='true'])) .header-menu .menu-list__link[aria-current='page'] {
+  color: var(--mj-gold) !important;
 }
 
 body.mufaddal-luxury .header-actions,
