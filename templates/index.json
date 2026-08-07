@@ -17,25 +17,25 @@
           "settings": {
             "image": "shopify://shop_images/theme_cover_image.jpg",
             "eyebrow": "Mufaddal Jewellers",
-            "heading": "Jewellery crafted for forever",
-            "text": "Hallmarked gold and fine diamonds, composed with quiet luxury for life's most meaningful moments.",
+            "heading": "Exceptional pieces for extraordinary lives",
+            "text": "Discover rings, necklaces, and bridal collections designed with enduring elegance.",
             "button_label_1": "Shop Collection",
-            "button_link_1": "shopify://collections/all",
+            "button_link_1": "",
             "button_label_2": "Book Consultation",
-            "button_link_2": "shopify://pages/contact"
+            "button_link_2": ""
           }
         },
         "slide_6WX997": {
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/theme_cover_image.jpg",
-            "eyebrow": "Mufaddal Jewellers",
-            "heading": "Bridal pieces with lasting grace",
-            "text": "From the first spark to forever — engagement rings and bridal sets designed to be worn for a lifetime.",
-            "button_label_1": "Explore Bridal",
-            "button_link_1": "shopify://collections/all",
+            "eyebrow": "Mufaddal Jewellers1",
+            "heading": "Exceptional pieces for extraordinary lives",
+            "text": "Discover rings, necklaces, and bridal collections designed with enduring elegance.",
+            "button_label_1": "Shop Collection",
+            "button_link_1": "",
             "button_label_2": "Book Consultation",
-            "button_link_2": "shopify://pages/contact"
+            "button_link_2": ""
           }
         }
       },
@@ -46,15 +46,15 @@
       "settings": {
         "hero_type": "slider",
         "height": "full",
-        "overlay_opacity": 40,
-        "content_alignment": "center",
+        "overlay_opacity": 35,
+        "content_alignment": "flex-start",
         "eyebrow": "Mufaddal Jewellers",
         "heading": "Timeless jewellery, crafted for forever",
         "text": "Fine diamonds and hallmarked gold, composed with quiet luxury for life's most meaningful moments.",
         "button_label_1": "Shop Collection",
-        "button_link_1": "shopify://collections/all",
+        "button_link_1": "",
         "button_label_2": "Book Consultation",
-        "button_link_2": "shopify://pages/contact",
+        "button_link_2": "",
         "slide_interval": 6,
         "show_scroll_indicator": true
       }
@@ -73,7 +73,7 @@
         "col_necklaces": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "necklaces",
             "title": "Necklaces",
             "caption": "Statement & delicate"
           }
