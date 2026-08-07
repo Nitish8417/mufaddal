@@ -1,0 +1,211 @@
+<section
+  class="mj-section mj-newsletter"
+  style="--mj-section-bg: {{ section.settings.background }}; --mj-pad-y: {{ section.settings.padding_y }}px;"
+>
+  <div class="mj-section__inner mj-newsletter__inner mj-reveal">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="mj-eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="mj-heading mj-newsletter__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <p class="mj-subcopy mj-newsletter__text">{{ section.settings.text }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.show_perks -%}
+      <ul class="mj-newsletter__perks">
+        {%- if section.settings.perk_1 != blank -%}<li>{{ section.settings.perk_1 }}</li>{%- endif -%}
+        {%- if section.settings.perk_2 != blank -%}<li>{{ section.settings.perk_2 }}</li>{%- endif -%}
+        {%- if section.settings.perk_3 != blank -%}<li>{{ section.settings.perk_3 }}</li>{%- endif -%}
+      </ul>
+    {%- endif -%}
+
+    {% form 'customer', class: 'mj-newsletter__form' %}
+      <input type="hidden" name="contact[tags]" value="newsletter,vip,mufaddal">
+      <label class="visually-hidden" for="NewsletterEmail-{{ section.id }}">{{ 'mufaddal.newsletter.email' | t }}</label>
+      <div class="mj-newsletter__fields">
+        <input
+          id="NewsletterEmail-{{ section.id }}"
+          type="email"
+          name="contact[email]"
+          value="{{ form.email }}"
+          placeholder="{{ section.settings.placeholder }}"
+          required
+          autocomplete="email"
+        >
+        <button class="mj-btn mj-btn--gold" type="submit">{{ section.settings.button_label }}</button>
+      </div>
+      {%- if form.posted_successfully? -%}
+        <p class="mj-newsletter__success" role="status">{{ section.settings.success_message }}</p>
+      {%- endif -%}
+      {%- if form.errors -%}
+        <p class="mj-newsletter__error" role="alert">{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+    {% endform %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .mj-newsletter__inner {
+    max-width: 42rem;
+    text-align: center;
+  }
+
+  .mj-newsletter__heading {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+  }
+
+  .mj-newsletter__text {
+    margin-inline: auto;
+  }
+
+  .mj-newsletter__perks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1.5rem;
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--mj-text) 70%, transparent);
+  }
+
+  .mj-newsletter__form {
+    margin-top: 2rem;
+  }
+
+  .mj-newsletter__fields {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .mj-newsletter__fields input {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--mj-border);
+    background: #fff;
+    color: var(--mj-text);
+    font: inherit;
+  }
+
+  .mj-newsletter__fields input:focus-visible {
+    outline: 1px solid var(--mj-gold);
+    outline-offset: 2px;
+  }
+
+  .mj-newsletter__success {
+    margin: 1rem 0 0;
+    color: var(--mj-success);
+    font-size: 0.875rem;
+  }
+
+  .mj-newsletter__error {
+    margin: 1rem 0 0;
+    color: #8a1f1f;
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 750px) {
+    .mj-newsletter__fields {
+      grid-template-columns: 1fr auto;
+      align-items: stretch;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Luxury Newsletter",
+  "tag": "section",
+  "class": "shopify-section-luxury-newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Private Access"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Join the inner circle"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Receive exclusive launches, private collection previews, and VIP invitations."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_perks",
+      "label": "Show perks",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "perk_1",
+      "label": "Perk 1",
+      "default": "Exclusive Launches"
+    },
+    {
+      "type": "text",
+      "id": "perk_2",
+      "label": "Perk 2",
+      "default": "Private Collection"
+    },
+    {
+      "type": "text",
+      "id": "perk_3",
+      "label": "Perk 3",
+      "default": "VIP Access"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Welcome to Mufaddal. Your private access awaits."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Newsletter",
+      "category": "Mufaddal Luxury"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,183 @@
+<section
+  class="mj-section mj-bridal"
+  style="--mj-section-bg: {{ section.settings.background }}; --mj-pad-y: {{ section.settings.padding_y }}px;"
+>
+  <div class="mj-section__inner">
+    <div class="mj-bridal__split{% if section.settings.image_position == 'right' %} mj-bridal__split--reverse{% endif %}">
+      <div class="mj-bridal__media mj-reveal">
+        <div class="mj-media">
+          {%- if section.settings.image != blank -%}
+            {{
+              section.settings.image
+              | image_url: width: 1800
+              | image_tag: widths: '600, 900, 1200, 1600, 1800', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', alt: section.settings.heading
+            }}
+          {%- else -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="mj-bridal__content mj-reveal">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="mj-eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="mj-heading" style="font-size: clamp(2.4rem, 4.5vw, 3.75rem);">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <p class="mj-subcopy">{{ section.settings.text }}</p>
+        {%- endif -%}
+        <div class="mj-bridal__actions">
+          {%- if section.settings.button_label != blank -%}
+            <a class="mj-btn mj-btn--gold" href="{{ section.settings.button_link | default: '#' }}">
+              {{- section.settings.button_label -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.secondary_label != blank -%}
+            <a class="mj-link" href="{{ section.settings.secondary_link | default: '#' }}">
+              {{- section.settings.secondary_label -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .mj-bridal__split {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .mj-bridal__media .mj-media {
+    aspect-ratio: 4 / 5;
+  }
+
+  .mj-bridal__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .mj-bridal__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1.75rem;
+  }
+
+  @media (min-width: 990px) {
+    .mj-bridal__split {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 4rem;
+      align-items: stretch;
+      min-height: 36rem;
+    }
+
+    .mj-bridal__split--reverse {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+
+    .mj-bridal__split--reverse .mj-bridal__media {
+      order: 2;
+    }
+
+    .mj-bridal__media .mj-media {
+      height: 100%;
+      aspect-ratio: auto;
+      min-height: 36rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Luxury Bridal",
+  "tag": "section",
+  "class": "shopify-section-luxury-bridal",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Bridal Collection"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Begin your forever in light"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Engagement rings and bridal suites designed for enduring elegance, private appointments, and personal meaning."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary button",
+      "default": "Book Bridal Appointment"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary link label",
+      "default": "View bridal collection"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary link"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#FAF8F4"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Bridal",
+      "category": "Mufaddal Luxury"
+    }
+  ]
+}
+{% endschema %}

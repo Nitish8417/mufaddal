@@ -1,0 +1,235 @@
+<section
+  class="mj-section mj-collections"
+  style="--mj-section-bg: {{ section.settings.background }}; --mj-pad-y: {{ section.settings.padding_y }}px;"
+>
+  <div class="mj-section__inner">
+    <div class="mj-section__header mj-reveal">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="mj-eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="mj-heading" style="font-size: clamp(2rem, 4vw, 3.25rem);">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="mj-subcopy">{{ section.settings.text }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="mj-collections__grid" style="--mj-cols: {{ section.settings.columns }};">
+      {%- for block in section.blocks -%}
+        {%- assign collection = block.settings.collection -%}
+        <a
+          class="mj-collections__card mj-reveal"
+          href="{{ collection.url | default: routes.all_products_collection_url }}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="mj-media mj-collections__media" style="--mj-ratio: {{ section.settings.image_ratio }};">
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 1200
+                | image_tag: widths: '400, 600, 800, 1000, 1200', sizes: '(min-width: 990px) 20vw, 50vw', loading: 'lazy', alt: block.settings.title | default: collection.title
+              }}
+            {%- elsif collection != blank and collection.featured_image != blank -%}
+              {{
+                collection.featured_image
+                | image_url: width: 1200
+                | image_tag: widths: '400, 600, 800, 1000, 1200', sizes: '(min-width: 990px) 20vw, 50vw', loading: 'lazy', alt: collection.title
+              }}
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'mj-collections__placeholder' }}
+            {%- endif -%}
+          </div>
+          <div class="mj-collections__meta">
+            <h3 class="mj-collections__title">
+              {{ block.settings.title | default: collection.title | default: 'Collection' }}
+            </h3>
+            {%- if block.settings.caption != blank -%}
+              <p class="mj-collections__caption">{{ block.settings.caption }}</p>
+            {%- endif -%}
+          </div>
+        </a>
+      {%- else -%}
+        {%- assign placeholders = 'Rings,Necklaces,Bracelets,Earrings,Custom Jewellery' | split: ',' -%}
+        {%- for title in placeholders -%}
+          <div class="mj-collections__card mj-reveal">
+            <div class="mj-media mj-collections__media" style="--mj-ratio: {{ section.settings.image_ratio }};">
+              {{ 'collection-1' | placeholder_svg_tag: 'mj-collections__placeholder' }}
+            </div>
+            <div class="mj-collections__meta">
+              <h3 class="mj-collections__title">{{ title }}</h3>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .mj-collections__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .mj-collections__card {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .mj-collections__media {
+    aspect-ratio: var(--mj-ratio, 3 / 4);
+  }
+
+  .mj-collections__placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  .mj-collections__meta {
+    padding-top: 1rem;
+  }
+
+  .mj-collections__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  .mj-collections__title {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0 1px;
+    transition: background-size 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .mj-collections__card:hover .mj-collections__title {
+    background-size: 100% 1px;
+    color: #c9a227;
+  }
+
+  .mj-collections__caption {
+    margin: 0.35rem 0 0;
+    font-size: 0.8125rem;
+    color: color-mix(in srgb, var(--mj-text) 65%, transparent);
+  }
+
+  @media (min-width: 990px) {
+    .mj-collections__grid {
+      grid-template-columns: repeat(var(--mj-cols, 5), minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Luxury Collections",
+  "tag": "section",
+  "class": "shopify-section-luxury-collections",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Collections"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Explore the maison"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Curated categories of fine jewellery, each finished with quiet precision."
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Desktop columns",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "3 / 4", "label": "Portrait" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Tall" }
+      ],
+      "default": "3 / 4"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Collections",
+      "category": "Mufaddal Luxury",
+      "blocks": [
+        { "type": "collection", "settings": { "title": "Rings" } },
+        { "type": "collection", "settings": { "title": "Necklaces" } },
+        { "type": "collection", "settings": { "title": "Bracelets" } },
+        { "type": "collection", "settings": { "title": "Earrings" } },
+        { "type": "collection", "settings": { "title": "Custom Jewellery" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

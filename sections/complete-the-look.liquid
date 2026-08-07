@@ -1,0 +1,146 @@
+{%- liquid
+  assign look_products = section.settings.product_list
+  if look_products == blank and product.metafields.custom.complete_the_look != blank
+    assign look_products = product.metafields.custom.complete_the_look.value
+  endif
+-%}
+
+{%- if look_products != blank or section.settings.collection != blank -%}
+  <section
+    class="mj-section mj-look"
+    style="--mj-section-bg: {{ section.settings.background }}; --mj-pad-y: {{ section.settings.padding_y }}px;"
+    data-mj-carousel
+  >
+    <div class="mj-section__inner">
+      <div class="mj-section__header mj-section__header--row mj-reveal">
+        <div>
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="mj-eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          <h2 class="mj-heading" style="font-size: clamp(1.75rem, 3vw, 2.75rem);">{{ section.settings.heading }}</h2>
+        </div>
+        <div class="mj-carousel__controls">
+          <button type="button" class="mj-carousel__btn" data-mj-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">‹</button>
+          <button type="button" class="mj-carousel__btn" data-mj-next aria-label="{{ 'accessibility.slideshow_next' | t }}">›</button>
+        </div>
+      </div>
+
+      <div class="mj-carousel__track" data-mj-track>
+        {%- if look_products != blank -%}
+          {%- for look_product in look_products limit: section.settings.products_to_show -%}
+            <article class="mj-product-card mj-reveal">
+              <a class="mj-product-card__link" href="{{ look_product.url }}">
+                <div class="mj-media mj-product-card__media">
+                  {%- if look_product.featured_media -%}
+                    {{
+                      look_product.featured_media
+                      | image_url: width: 1000
+                      | image_tag: widths: '400, 600, 800, 1000', sizes: '(min-width: 990px) 25vw, 70vw', loading: 'lazy', alt: look_product.title
+                    }}
+                  {%- endif -%}
+                </div>
+                <div class="mj-product-card__meta">
+                  <h3 class="mj-product-card__title">{{ look_product.title }}</h3>
+                  <p class="mj-product-card__price">{% render 'price', product_resource: look_product %}</p>
+                </div>
+              </a>
+            </article>
+          {%- endfor -%}
+        {%- elsif section.settings.collection != blank -%}
+          {%- for look_product in section.settings.collection.products limit: section.settings.products_to_show -%}
+            {%- unless look_product.id == product.id -%}
+              <article class="mj-product-card mj-reveal">
+                <a class="mj-product-card__link" href="{{ look_product.url }}">
+                  <div class="mj-media mj-product-card__media">
+                    {%- if look_product.featured_media -%}
+                      {{
+                        look_product.featured_media
+                        | image_url: width: 1000
+                        | image_tag: widths: '400, 600, 800, 1000', sizes: '(min-width: 990px) 25vw, 70vw', loading: 'lazy', alt: look_product.title
+                      }}
+                    {%- endif -%}
+                  </div>
+                  <div class="mj-product-card__meta">
+                    <h3 class="mj-product-card__title">{{ look_product.title }}</h3>
+                    <p class="mj-product-card__price">{% render 'price', product_resource: look_product %}</p>
+                  </div>
+                </a>
+              </article>
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Complete the Look",
+  "tag": "section",
+  "class": "shopify-section-complete-the-look",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Styling"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Complete the look"
+    },
+    {
+      "type": "product_list",
+      "id": "product_list",
+      "label": "Products",
+      "limit": 8
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Fallback collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "paragraph",
+      "content": "Optional product metafield: custom.complete_the_look (list of products)."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Complete the Look",
+      "category": "Mufaddal Luxury"
+    }
+  ]
+}
+{% endschema %}

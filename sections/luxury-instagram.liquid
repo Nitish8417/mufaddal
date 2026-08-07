@@ -1,0 +1,212 @@
+<section
+  class="mj-section mj-instagram"
+  style="--mj-section-bg: {{ section.settings.background }}; --mj-pad-y: {{ section.settings.padding_y }}px;"
+>
+  <div class="mj-section__inner">
+    <div class="mj-section__header mj-section__header--row mj-reveal">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="mj-eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="mj-heading" style="font-size: clamp(2rem, 4vw, 3.25rem);">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.profile_url != blank -%}
+        <a class="mj-link" href="{{ section.settings.profile_url }}" target="_blank" rel="noopener">
+          {{ section.settings.profile_label }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="mj-instagram__grid">
+      {%- for block in section.blocks -%}
+        <a
+          class="mj-instagram__item mj-reveal"
+          href="{{ block.settings.link | default: section.settings.profile_url | default: '#' }}"
+          {% if block.settings.link != blank or section.settings.profile_url != blank %}
+            target="_blank" rel="noopener"
+          {% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <div class="mj-media">
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 900
+                | image_tag: widths: '300, 450, 600, 900', sizes: '(min-width: 990px) 25vw, 50vw', loading: 'lazy', alt: block.settings.caption | default: section.settings.heading
+              }}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag }}
+            {%- endif -%}
+          </div>
+          <div class="mj-instagram__overlay">
+            <span>{{ block.settings.cta_label | default: section.settings.shop_look_label }}</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .mj-instagram__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .mj-instagram__item {
+    position: relative;
+    display: block;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .mj-instagram__item .mj-media {
+    aspect-ratio: 1;
+  }
+
+  .mj-instagram__overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(17, 17, 17, 0.35);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .mj-instagram__overlay span {
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .mj-instagram__item:hover .mj-instagram__overlay,
+  .mj-instagram__item:focus-visible .mj-instagram__overlay {
+    opacity: 1;
+  }
+
+  @media (min-width: 750px) {
+    .mj-instagram__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .mj-instagram__item:nth-child(1) {
+      grid-row: span 2;
+    }
+
+    .mj-instagram__item:nth-child(1) .mj-media {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .mj-instagram__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Luxury Instagram",
+  "tag": "section",
+  "class": "shopify-section-luxury-instagram",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Social"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Follow the maison"
+    },
+    {
+      "type": "text",
+      "id": "profile_label",
+      "label": "Profile label",
+      "default": "@mufaddaljewellers"
+    },
+    {
+      "type": "url",
+      "id": "profile_url",
+      "label": "Profile URL"
+    },
+    {
+      "type": "text",
+      "id": "shop_look_label",
+      "label": "Hover label",
+      "default": "Shop the Look"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Gallery image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "Hover label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Instagram",
+      "category": "Mufaddal Luxury",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

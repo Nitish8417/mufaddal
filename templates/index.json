@@ -1,0 +1,314 @@
+/*
+ * ------------------------------------------------------------
+ * Mufaddal Jewellers — Luxury Homepage
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "luxury_hero": {
+      "type": "luxury-hero",
+      "settings": {
+        "hero_type": "image",
+        "height": "full",
+        "overlay_opacity": 35,
+        "content_alignment": "flex-start",
+        "eyebrow": "Mufaddal Jewellers",
+        "heading": "Timeless jewellery, crafted for forever",
+        "text": "Fine diamonds and hallmarked gold, composed with quiet luxury for life's most meaningful moments.",
+        "button_label_1": "Shop Collection",
+        "button_label_2": "Book Consultation",
+        "button_label_3": "Explore Bridal",
+        "show_scroll_indicator": true
+      }
+    },
+    "luxury_collections": {
+      "type": "luxury-collections",
+      "blocks": {
+        "col_rings": {
+          "type": "collection",
+          "settings": {
+            "title": "Rings",
+            "caption": "Engagement & eternity"
+          }
+        },
+        "col_necklaces": {
+          "type": "collection",
+          "settings": {
+            "title": "Necklaces",
+            "caption": "Statement & delicate"
+          }
+        },
+        "col_bracelets": {
+          "type": "collection",
+          "settings": {
+            "title": "Bracelets",
+            "caption": "Refined everyday luxury"
+          }
+        },
+        "col_earrings": {
+          "type": "collection",
+          "settings": {
+            "title": "Earrings",
+            "caption": "Luminous finishing touches"
+          }
+        },
+        "col_custom": {
+          "type": "collection",
+          "settings": {
+            "title": "Custom Jewellery",
+            "caption": "Bespoke by appointment"
+          }
+        }
+      },
+      "block_order": [
+        "col_rings",
+        "col_necklaces",
+        "col_bracelets",
+        "col_earrings",
+        "col_custom"
+      ],
+      "settings": {
+        "eyebrow": "Collections",
+        "heading": "Explore the maison",
+        "text": "Curated categories of fine jewellery, each finished with quiet precision.",
+        "columns": 5,
+        "image_ratio": "3 / 4",
+        "background": "#FFFFFF",
+        "padding_y": 96
+      }
+    },
+    "luxury_featured_carousel": {
+      "type": "luxury-product-carousel",
+      "settings": {
+        "eyebrow": "Featured",
+        "heading": "Selected pieces",
+        "collection": "all",
+        "products_to_show": 8,
+        "show_badges": true,
+        "show_quick_actions": true,
+        "view_all_label": "View collection",
+        "background": "#FAF8F4",
+        "padding_y": 96
+      }
+    },
+    "luxury_craftsmanship": {
+      "type": "luxury-craftsmanship",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "Design consultation",
+            "text": "A private conversation to understand occasion, style, and personal meaning."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "Goldsmith expertise",
+            "text": "Master artisans shape hallmarked gold with quiet precision and balance."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "Diamond selection",
+            "text": "Certified diamonds are chosen for brilliance, proportion, and purity."
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "title": "Finishing",
+            "text": "Each piece is polished, inspected, and prepared for a lifetime of wear."
+          }
+        }
+      },
+      "block_order": ["step_1", "step_2", "step_3", "step_4"],
+      "settings": {
+        "eyebrow": "Our Craftsmanship",
+        "heading": "Handcrafted with enduring mastery",
+        "text": "<p>From diamond selection to final polish, every Mufaddal piece is shaped by goldsmith expertise and an uncompromising standard of finish.</p>",
+        "button_label": "Discover our atelier",
+        "background": "#FFFFFF",
+        "padding_y": 100
+      }
+    },
+    "luxury_bestsellers": {
+      "type": "luxury-product-carousel",
+      "settings": {
+        "eyebrow": "Bestsellers",
+        "heading": "Most coveted creations",
+        "collection": "all",
+        "products_to_show": 8,
+        "show_badges": true,
+        "show_quick_actions": true,
+        "view_all_label": "Shop bestsellers",
+        "background": "#FFFFFF",
+        "padding_y": 96
+      }
+    },
+    "luxury_bridal": {
+      "type": "luxury-bridal",
+      "settings": {
+        "eyebrow": "Bridal Collection",
+        "heading": "Begin your forever in light",
+        "text": "Engagement rings and bridal suites designed for enduring elegance, private appointments, and personal meaning.",
+        "image_position": "left",
+        "button_label": "Book Bridal Appointment",
+        "secondary_label": "View bridal collection",
+        "background": "#FAF8F4",
+        "padding_y": 100
+      }
+    },
+    "luxury_custom_journey": {
+      "type": "luxury-custom-journey",
+      "blocks": {
+        "journey_1": {
+          "type": "step",
+          "settings": {
+            "title": "Design Consultation",
+            "text": "Share your vision in a private appointment with our design specialists."
+          }
+        },
+        "journey_2": {
+          "type": "step",
+          "settings": {
+            "title": "CAD Design",
+            "text": "Approve refined digital renderings before craftsmanship begins."
+          }
+        },
+        "journey_3": {
+          "type": "step",
+          "settings": {
+            "title": "Manufacturing",
+            "text": "Master goldsmiths bring your piece to life with hallmarked metals and certified stones."
+          }
+        },
+        "journey_4": {
+          "type": "step",
+          "settings": {
+            "title": "Delivery",
+            "text": "Receive your finished creation with luxury packaging and lifetime care guidance."
+          }
+        }
+      },
+      "block_order": ["journey_1", "journey_2", "journey_3", "journey_4"],
+      "settings": {
+        "eyebrow": "Bespoke",
+        "heading": "The custom jewellery experience",
+        "text": "A private, guided process from first sketch to finished heirloom.",
+        "heading_alignment": "center",
+        "button_label": "Start Custom Design",
+        "background": "#FAF8F4",
+        "padding_y": 100
+      }
+    },
+    "luxury_testimonials": {
+      "type": "luxury-testimonials",
+      "blocks": {
+        "t1": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "The craftsmanship is exquisite. Our engagement ring feels timeless and deeply personal.",
+            "name": "Aisha R.",
+            "source": "Google Review"
+          }
+        },
+        "t2": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "A private consultation experience that matches the world's finest maisons.",
+            "name": "Daniel K.",
+            "source": "Verified Buyer"
+          }
+        },
+        "t3": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Every detail — from diamonds to packaging — felt considered and luxurious.",
+            "name": "Meera S.",
+            "source": "Bridal Client"
+          }
+        }
+      },
+      "block_order": ["t1", "t2", "t3"],
+      "settings": {
+        "eyebrow": "Client Stories",
+        "heading": "Trusted by discerning clients worldwide",
+        "background": "#FFFFFF",
+        "padding_y": 96
+      }
+    },
+    "luxury_instagram": {
+      "type": "luxury-instagram",
+      "blocks": {
+        "ig1": { "type": "image" },
+        "ig2": { "type": "image" },
+        "ig3": { "type": "image" },
+        "ig4": { "type": "image" },
+        "ig5": { "type": "image" },
+        "ig6": { "type": "image" }
+      },
+      "block_order": ["ig1", "ig2", "ig3", "ig4", "ig5", "ig6"],
+      "settings": {
+        "eyebrow": "Social",
+        "heading": "Follow the maison",
+        "profile_label": "@mufaddaljewellers",
+        "shop_look_label": "Shop the Look",
+        "background": "#FFFFFF",
+        "padding_y": 88
+      }
+    },
+    "luxury_trust": {
+      "type": "luxury-trust",
+      "blocks": {
+        "b1": { "type": "badge", "settings": { "title": "Lifetime Warranty", "text": "Craftsmanship protected for life" } },
+        "b2": { "type": "badge", "settings": { "title": "Certified Diamonds", "text": "Authenticated stone quality" } },
+        "b3": { "type": "badge", "settings": { "title": "Hallmarked Gold", "text": "Verified metal purity" } },
+        "b4": { "type": "badge", "settings": { "title": "Secure Payments", "text": "Encrypted checkout" } },
+        "b5": { "type": "badge", "settings": { "title": "Worldwide Shipping", "text": "Insured global delivery" } },
+        "b6": { "type": "badge", "settings": { "title": "Easy Returns", "text": "Hassle-free exchanges" } },
+        "b7": { "type": "badge", "settings": { "title": "Insurance Available", "text": "Optional coverage" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6", "b7"],
+      "settings": {
+        "heading": "Confidence in every detail",
+        "background": "#FAF8F4",
+        "padding_y": 72
+      }
+    },
+    "luxury_newsletter": {
+      "type": "luxury-newsletter",
+      "settings": {
+        "eyebrow": "Private Access",
+        "heading": "Join the inner circle",
+        "text": "Receive exclusive launches, private collection previews, and VIP invitations.",
+        "show_perks": true,
+        "perk_1": "Exclusive Launches",
+        "perk_2": "Private Collection",
+        "perk_3": "VIP Access",
+        "placeholder": "Email address",
+        "button_label": "Subscribe",
+        "success_message": "Welcome to Mufaddal. Your private access awaits.",
+        "background": "#FFFFFF",
+        "padding_y": 100
+      }
+    }
+  },
+  "order": [
+    "luxury_hero",
+    "luxury_collections",
+    "luxury_featured_carousel",
+    "luxury_craftsmanship",
+    "luxury_bestsellers",
+    "luxury_bridal",
+    "luxury_custom_journey",
+    "luxury_testimonials",
+    "luxury_instagram",
+    "luxury_trust",
+    "luxury_newsletter"
+  ]
+}

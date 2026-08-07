@@ -1,0 +1,256 @@
+{%- liquid
+  assign mf = product.metafields.custom
+  assign show_section = false
+
+  if section.settings.show_when_empty
+    assign show_section = true
+  endif
+
+  if mf.metal != blank or mf.diamond_weight != blank or mf.gross_weight != blank or mf.net_weight != blank or mf.stone != blank or mf.purity != blank or mf.hallmark != blank or mf.dimensions != blank or mf.certificate != blank or mf.origin != blank or product.description != blank
+    assign show_section = true
+  endif
+-%}
+
+{%- if show_section -%}
+  <section
+    class="mj-section mj-specs"
+    style="--mj-section-bg: {{ section.settings.background }}; --mj-pad-y: {{ section.settings.padding_y }}px;"
+  >
+    <div class="mj-section__inner mj-specs__inner">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="mj-heading mj-reveal" style="font-size: clamp(1.75rem, 3vw, 2.5rem); margin-bottom: 1.5rem;">
+          {{ section.settings.heading }}
+        </h2>
+      {%- endif -%}
+
+      <div class="mj-specs__list mj-reveal">
+        {%- if section.settings.show_description and product.description != blank -%}
+          <details class="mj-specs__item" {% if section.settings.open_first %}open{% endif %}>
+            <summary>{{ 'mufaddal.specs.description' | t }}</summary>
+            <div class="mj-specs__content rte">{{ product.description }}</div>
+          </details>
+        {%- endif -%}
+
+        {%- assign spec_rows = 'metal,diamond_weight,gross_weight,net_weight,stone,purity,hallmark,dimensions,certificate,origin,warranty,shipping,care_guide,returns' | split: ',' -%}
+        {%- for key in spec_rows -%}
+          {%- liquid
+            assign value = blank
+            case key
+              when 'metal'
+                assign value = mf.metal.value | default: mf.metal
+                assign label = 'mufaddal.specs.metal' | t
+              when 'diamond_weight'
+                assign value = mf.diamond_weight.value | default: mf.diamond_weight
+                assign label = 'mufaddal.specs.diamond_weight' | t
+              when 'gross_weight'
+                assign value = mf.gross_weight.value | default: mf.gross_weight
+                assign label = 'mufaddal.specs.gross_weight' | t
+              when 'net_weight'
+                assign value = mf.net_weight.value | default: mf.net_weight
+                assign label = 'mufaddal.specs.net_weight' | t
+              when 'stone'
+                assign value = mf.stone.value | default: mf.stone
+                assign label = 'mufaddal.specs.stone' | t
+              when 'purity'
+                assign value = mf.purity.value | default: mf.purity
+                assign label = 'mufaddal.specs.purity' | t
+              when 'hallmark'
+                assign value = mf.hallmark.value | default: mf.hallmark
+                assign label = 'mufaddal.specs.hallmark' | t
+              when 'dimensions'
+                assign value = mf.dimensions.value | default: mf.dimensions
+                assign label = 'mufaddal.specs.dimensions' | t
+              when 'certificate'
+                assign value = mf.certificate.value | default: mf.certificate
+                assign label = 'mufaddal.specs.certificate' | t
+              when 'origin'
+                assign value = mf.origin.value | default: mf.origin
+                assign label = 'mufaddal.specs.origin' | t
+              when 'warranty'
+                assign value = mf.warranty.value | default: section.settings.warranty_fallback
+                assign label = 'mufaddal.specs.warranty' | t
+              when 'shipping'
+                assign value = mf.shipping.value | default: section.settings.shipping_fallback
+                assign label = 'mufaddal.specs.shipping' | t
+              when 'care_guide'
+                assign value = mf.care_guide.value | default: section.settings.care_fallback
+                assign label = 'mufaddal.specs.care_guide' | t
+              when 'returns'
+                assign value = mf.returns.value | default: section.settings.returns_fallback
+                assign label = 'mufaddal.specs.returns' | t
+            endcase
+          -%}
+          {%- if value != blank -%}
+            <details class="mj-specs__item">
+              <summary>{{ label }}</summary>
+              <div class="mj-specs__content">{{ value }}</div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- for block in section.blocks -%}
+          {%- if block.settings.title != blank and block.settings.content != blank -%}
+            <details class="mj-specs__item" {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.title }}</summary>
+              <div class="mj-specs__content">{{ block.settings.content }}</div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .mj-specs__inner {
+    max-width: 52rem;
+  }
+
+  .mj-specs__list {
+    border-top: 1px solid var(--mj-border);
+  }
+
+  .mj-specs__item {
+    border-bottom: 1px solid var(--mj-border);
+  }
+
+  .mj-specs__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.15rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-heading--family);
+    font-size: 1.25rem;
+  }
+
+  .mj-specs__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mj-specs__item summary::after {
+    content: '+';
+    color: var(--mj-gold);
+    font-size: 1.1rem;
+  }
+
+  .mj-specs__item[open] summary::after {
+    content: '−';
+  }
+
+  .mj-specs__content {
+    padding: 0 0 1.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--mj-text) 75%, transparent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Jewellery Specifications",
+  "tag": "section",
+  "class": "shopify-section-jewellery-specs",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Product information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description accordion",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open first item by default",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_when_empty",
+      "label": "Show section with fallback content only",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "warranty_fallback",
+      "label": "Warranty fallback",
+      "default": "Lifetime craftsmanship warranty on manufacturing defects."
+    },
+    {
+      "type": "textarea",
+      "id": "shipping_fallback",
+      "label": "Shipping fallback",
+      "default": "Insured worldwide shipping with tracked delivery."
+    },
+    {
+      "type": "textarea",
+      "id": "care_fallback",
+      "label": "Care guide fallback",
+      "default": "Store separately, avoid harsh chemicals, and polish gently with a soft cloth."
+    },
+    {
+      "type": "textarea",
+      "id": "returns_fallback",
+      "label": "Returns fallback",
+      "default": "Easy returns within the stated policy window for eligible unworn pieces."
+    },
+    {
+      "type": "paragraph",
+      "content": "Reads product metafields in namespace custom: metal, diamond_weight, gross_weight, net_weight, stone, purity, hallmark, dimensions, certificate, origin, warranty, shipping, care_guide, returns."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Custom accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Additional details"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Add custom product information here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Jewellery Specifications",
+      "category": "Mufaddal Luxury"
+    }
+  ]
+}
+{% endschema %}

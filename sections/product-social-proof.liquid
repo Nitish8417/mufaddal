@@ -1,0 +1,241 @@
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign inventory = variant.inventory_quantity
+  assign low_stock = section.settings.low_stock_threshold
+-%}
+
+<section
+  class="mj-section mj-proof"
+  style="--mj-section-bg: {{ section.settings.background }}; --mj-pad-y: {{ section.settings.padding_y }}px;"
+  data-mj-sticky-trigger
+>
+  <div class="mj-section__inner mj-proof__inner">
+    <div class="mj-proof__grid">
+      {%- if section.settings.show_inventory and variant.inventory_management != blank and inventory > 0 and inventory <= low_stock -%}
+        <p class="mj-proof__item mj-proof__item--urgency mj-reveal">
+          {{ 'mufaddal.proof.low_stock' | t: count: inventory }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.show_visitors -%}
+        <p class="mj-proof__item mj-reveal" data-mj-visitors data-min="{{ section.settings.visitors_min }}" data-max="{{ section.settings.visitors_max }}">
+          {{ 'mufaddal.proof.visitors' | t: count: section.settings.visitors_min }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.show_delivery -%}
+        <p class="mj-proof__item mj-reveal">
+          {{ section.settings.delivery_text }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.show_gift_wrap -%}
+        <p class="mj-proof__item mj-reveal">
+          {{ section.settings.gift_wrap_text }}
+        </p>
+      {%- endif -%}
+    </div>
+
+    <div class="mj-proof__actions mj-reveal">
+      {%- if section.settings.consultation_label != blank -%}
+        <a class="mj-btn mj-btn--outline" href="{{ section.settings.consultation_link | default: '#' }}">
+          {{ section.settings.consultation_label }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.whatsapp_number != blank -%}
+        <a
+          class="mj-btn mj-btn--dark"
+          href="https://wa.me/{{ section.settings.whatsapp_number | replace: '+', '' | replace: ' ', '' }}?text={{ section.settings.whatsapp_message | url_encode }}"
+          target="_blank"
+          rel="noopener"
+        >
+          {{ section.settings.whatsapp_label }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.customise_label != blank -%}
+        <a class="mj-link" href="{{ section.settings.customise_link | default: '#' }}">
+          {{ section.settings.customise_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% javascript %}
+  document.querySelectorAll('[data-mj-visitors]').forEach((node) => {
+    const min = Number(node.dataset.min || 2);
+    const max = Number(node.dataset.max || 8);
+    const count = Math.floor(Math.random() * (max - min + 1)) + min;
+    node.textContent = node.textContent.replace(/\d+/, String(count));
+  });
+{% endjavascript %}
+
+{% stylesheet %}
+  .mj-proof__inner {
+    max-width: 52rem;
+  }
+
+  .mj-proof__grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .mj-proof__item {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--mj-border);
+    background: #fff;
+    font-size: 0.875rem;
+  }
+
+  .mj-proof__item--urgency {
+    border-color: color-mix(in srgb, var(--mj-gold) 55%, var(--mj-border));
+    color: #7a5a10;
+  }
+
+  .mj-proof__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem 1.25rem;
+    margin-top: 1.25rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product Social Proof",
+  "tag": "section",
+  "class": "shopify-section-product-social-proof",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_inventory",
+      "label": "Show low inventory urgency",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "label": "Low stock threshold",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_visitors",
+      "label": "Show live visitor count",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "visitors_min",
+      "label": "Visitor count min",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "visitors_max",
+      "label": "Visitor count max",
+      "min": 2,
+      "max": 40,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_delivery",
+      "label": "Show delivery estimate",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "delivery_text",
+      "label": "Delivery estimate text",
+      "default": "Estimated delivery: 3–7 business days with insured shipping."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gift_wrap",
+      "label": "Show gift wrapping note",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "gift_wrap_text",
+      "label": "Gift wrap text",
+      "default": "Complimentary luxury gift wrapping available at checkout."
+    },
+    {
+      "type": "text",
+      "id": "consultation_label",
+      "label": "Consultation button",
+      "default": "Book video consultation"
+    },
+    {
+      "type": "url",
+      "id": "consultation_link",
+      "label": "Consultation link"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_label",
+      "label": "WhatsApp label",
+      "default": "WhatsApp support"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp number",
+      "info": "Include country code, e.g. 9198XXXXXXXX"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_message",
+      "label": "WhatsApp message",
+      "default": "Hello Mufaddal Jewellers, I would like assistance with this piece."
+    },
+    {
+      "type": "text",
+      "id": "customise_label",
+      "label": "Customise label",
+      "default": "Customize jewellery"
+    },
+    {
+      "type": "url",
+      "id": "customise_link",
+      "label": "Customise link"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#FAF8F4"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Social Proof",
+      "category": "Mufaddal Luxury"
+    }
+  ]
+}
+{% endschema %}
