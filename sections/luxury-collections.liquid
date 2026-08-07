@@ -70,7 +70,7 @@
   .mj-collections__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 1.15rem 1rem;
   }
 
   .mj-collections__card {
@@ -79,7 +79,22 @@
   }
 
   .mj-collections__media {
+    position: relative;
     aspect-ratio: var(--mj-ratio, 3 / 4);
+  }
+
+  .mj-collections__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(14, 14, 14, 0.18), transparent 42%);
+    opacity: 0;
+    transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+  .mj-collections__card:hover .mj-collections__media::after {
+    opacity: 1;
   }
 
   .mj-collections__placeholder {
@@ -88,40 +103,39 @@
   }
 
   .mj-collections__meta {
-    padding-top: 1rem;
+    padding-top: 1.15rem;
   }
 
   .mj-collections__title {
     margin: 0;
     font-family: var(--font-heading--family);
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
     font-weight: 400;
-    letter-spacing: 0.01em;
-  }
-
-  .mj-collections__title {
+    letter-spacing: 0.015em;
     background-image: linear-gradient(currentColor, currentColor);
     background-position: 0 100%;
     background-repeat: no-repeat;
     background-size: 0 1px;
-    transition: background-size 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: background-size 0.45s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s ease;
   }
 
   .mj-collections__card:hover .mj-collections__title {
     background-size: 100% 1px;
-    color: #c9a227;
+    color: var(--mj-gold, #c4a35a);
   }
 
   .mj-collections__caption {
-    margin: 0.35rem 0 0;
-    font-size: 0.8125rem;
-    color: color-mix(in srgb, var(--mj-text) 65%, transparent);
+    margin: 0.4rem 0 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--mj-text) 58%, transparent);
   }
 
   @media (min-width: 990px) {
     .mj-collections__grid {
       grid-template-columns: repeat(var(--mj-cols, 5), minmax(0, 1fr));
-      gap: 1.25rem;
+      gap: 1.5rem 1.25rem;
     }
   }
 {% endstylesheet %}

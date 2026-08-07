@@ -1,23 +1,29 @@
 /* Mufaddal Jewellers — Luxury Design System */
 :root {
-  --mj-gold: #c9a227;
-  --mj-gold-hover: #d4af37;
-  --mj-ink: #111111;
-  --mj-text: #1f1f1f;
+  --mj-gold: #c4a35a;
+  --mj-gold-hover: #d4b56c;
+  --mj-ink: #0e0e0e;
+  --mj-text: #1a1a1a;
   --mj-bg: #ffffff;
-  --mj-bg-soft: #faf8f4;
-  --mj-accent: #e8d9b5;
+  --mj-bg-soft: #f7f6f3;
+  --mj-accent: #e6dcc6;
   --mj-success: #2d6a4f;
-  --mj-border: #ececec;
+  --mj-border: #e8e4dc;
   --mj-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --mj-duration: 0.55s;
-  --mj-letter-eyebrow: 0.22em;
+  --mj-duration: 0.7s;
+  --mj-letter-eyebrow: 0.24em;
 }
 
 body.mufaddal-luxury {
   color: var(--mj-text);
   background: var(--mj-bg);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.mufaddal-luxury ::selection {
+  background: color-mix(in srgb, var(--mj-gold) 35%, white);
+  color: var(--mj-ink);
 }
 
 /* ========== Luxury Header ========== */
@@ -203,7 +209,10 @@ body.mufaddal-luxury .announcement-bar span {
 }
 
 .mj-eyebrow {
-  margin: 0 0 0.75rem;
+  position: relative;
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding-bottom: 0.85rem;
   font-family: var(--font-subheading--family);
   font-size: 0.6875rem;
   font-weight: 500;
@@ -212,21 +221,44 @@ body.mufaddal-luxury .announcement-bar span {
   color: var(--mj-gold);
 }
 
+.mj-eyebrow::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 2rem;
+  height: 1px;
+  background: var(--mj-gold);
+}
+
+.mj-section__header[style*='text-align: center'] .mj-eyebrow,
+.mj-section__header[style*='text-align:center'] .mj-eyebrow,
+.mj-newsletter__inner .mj-eyebrow {
+  margin-inline: auto;
+}
+
+.mj-section__header[style*='text-align: center'] .mj-eyebrow::after,
+.mj-section__header[style*='text-align:center'] .mj-eyebrow::after,
+.mj-newsletter__inner .mj-eyebrow::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .mj-heading {
   margin: 0;
   font-family: var(--font-heading--family);
   font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
   color: var(--mj-ink);
 }
 
 .mj-subcopy {
-  margin: 1rem 0 0;
-  max-width: 36rem;
+  margin: 1.1rem 0 0;
+  max-width: 34rem;
   font-size: 0.9375rem;
-  line-height: 1.7;
-  color: color-mix(in srgb, var(--mj-text) 72%, transparent);
+  line-height: 1.75;
+  color: color-mix(in srgb, var(--mj-text) 68%, transparent);
 }
 
 .mj-btn {
@@ -234,18 +266,22 @@ body.mufaddal-luxury .announcement-bar span {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 3rem;
-  padding: 0.85rem 1.75rem;
+  min-height: 2.85rem;
+  padding: 0.8rem 1.65rem;
   border: 1px solid transparent;
   font-family: var(--font-subheading--family);
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: background-color 0.35s var(--mj-ease), color 0.35s var(--mj-ease), border-color 0.35s var(--mj-ease),
-    transform 0.35s var(--mj-ease);
+  transition: background-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease), border-color 0.4s var(--mj-ease),
+    transform 0.4s var(--mj-ease);
   cursor: pointer;
+}
+
+.mj-btn:hover {
+  transform: translateY(-1px);
 }
 
 .mj-btn--gold {
@@ -263,11 +299,11 @@ body.mufaddal-luxury .announcement-bar span {
 .mj-btn--ghost {
   background: transparent;
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .mj-btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   border-color: #fff;
   color: #fff;
 }
@@ -275,11 +311,12 @@ body.mufaddal-luxury .announcement-bar span {
 .mj-btn--outline {
   background: transparent;
   color: var(--mj-ink);
-  border-color: var(--mj-ink);
+  border-color: color-mix(in srgb, var(--mj-ink) 55%, transparent);
 }
 
 .mj-btn--outline:hover {
   background: var(--mj-ink);
+  border-color: var(--mj-ink);
   color: #fff;
 }
 
@@ -361,7 +398,7 @@ body.mufaddal-luxury .announcement-bar span {
 
 .mj-section {
   position: relative;
-  padding-block: var(--mj-pad-y, 5rem);
+  padding-block: var(--mj-pad-y, 5.5rem);
   background: var(--mj-section-bg, var(--mj-bg));
   color: var(--mj-text);
 }
@@ -374,8 +411,8 @@ body.mufaddal-luxury .announcement-bar span {
 .mj-section__header {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  gap: 0.35rem;
+  margin-bottom: clamp(2.25rem, 4.5vw, 3.75rem);
 }
 
 .mj-section__header--row {
@@ -388,11 +425,52 @@ body.mufaddal-luxury .announcement-bar span {
 
 @media (min-width: 750px) {
   .mj-section {
-    padding-block: var(--mj-pad-y, 7rem);
+    padding-block: var(--mj-pad-y, 7.5rem);
   }
 
   .mj-section__inner {
     width: min(100% - 5rem, var(--page-width, 120rem));
+  }
+}
+
+/* Homepage premium rhythm */
+body.mufaddal-luxury .shopify-section-luxury-collections,
+body.mufaddal-luxury .shopify-section-luxury-craftsmanship,
+body.mufaddal-luxury .shopify-section-luxury-bestsellers,
+body.mufaddal-luxury .shopify-section-luxury-instagram,
+body.mufaddal-luxury .shopify-section-luxury-newsletter {
+  border-top: 1px solid transparent;
+}
+
+body.mufaddal-luxury .mj-product-card__title {
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+}
+
+body.mufaddal-luxury .mj-product-card__meta {
+  padding-top: 1.15rem;
+}
+
+body.mufaddal-luxury .mj-carousel__btn {
+  width: 2.85rem;
+  height: 2.85rem;
+  border-color: color-mix(in srgb, var(--mj-ink) 18%, transparent);
+  transition: border-color 0.35s var(--mj-ease), color 0.35s var(--mj-ease), background-color 0.35s var(--mj-ease);
+}
+
+body.mufaddal-luxury .mj-carousel__btn:hover {
+  background: var(--mj-ink);
+  border-color: var(--mj-ink);
+  color: #fff;
+}
+
+body.mufaddal-luxury .mj-carousel__track {
+  gap: 1.15rem;
+}
+
+@media (min-width: 750px) {
+  body.mufaddal-luxury .mj-carousel__track {
+    gap: 1.5rem;
   }
 }
 

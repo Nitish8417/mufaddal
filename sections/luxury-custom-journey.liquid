@@ -51,26 +51,32 @@
 {% stylesheet %}
   .mj-journey__grid {
     display: grid;
-    gap: 1rem;
+    gap: 0;
   }
 
   .mj-journey__card {
-    padding: 1.75rem 1.5rem;
-    background: #fff;
-    border: 1px solid var(--mj-border);
-    transition: border-color 0.35s ease, transform 0.35s ease;
+    padding: 1.85rem 0;
+    background: transparent;
+    border: 0;
+    border-top: 1px solid var(--mj-border);
+    transition: none;
+  }
+
+  .mj-journey__card:last-child {
+    border-bottom: 1px solid var(--mj-border);
   }
 
   .mj-journey__card:hover {
-    border-color: var(--mj-accent);
-    transform: translateY(-2px);
+    border-color: var(--mj-border);
+    transform: none;
   }
 
   .mj-journey__number {
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
     font-family: var(--font-heading--family);
-    font-size: 1.125rem;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
     color: var(--mj-gold);
   }
 
@@ -87,15 +93,16 @@
   .mj-journey__title {
     margin: 0;
     font-family: var(--font-heading--family);
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 400;
   }
 
   .mj-journey__text {
-    margin: 0.75rem 0 0;
-    font-size: 0.9rem;
+    margin: 0.65rem 0 0;
+    max-width: 28rem;
+    font-size: 0.875rem;
     line-height: 1.65;
-    color: color-mix(in srgb, var(--mj-text) 70%, transparent);
+    color: color-mix(in srgb, var(--mj-text) 68%, transparent);
   }
 
   .mj-journey__cta {
@@ -103,22 +110,21 @@
     text-align: center;
   }
 
-  @media (min-width: 750px) {
-    .mj-journey__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.25rem;
-    }
-  }
-
   @media (min-width: 990px) {
     .mj-journey__grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0 2rem;
+      border-top: 1px solid var(--mj-border);
+      border-bottom: 1px solid var(--mj-border);
     }
-  }
 
-  @media (prefers-reduced-motion: reduce) {
-    .mj-journey__card:hover {
-      transform: none;
+    .mj-journey__card {
+      padding: 2.25rem 0;
+      border: 0;
+    }
+
+    .mj-journey__card:last-child {
+      border-bottom: 0;
     }
   }
 {% endstylesheet %}

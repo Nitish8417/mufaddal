@@ -56,21 +56,23 @@
 {% stylesheet %}
   .mj-testimonials__grid {
     display: grid;
-    gap: 1rem;
+    gap: 2rem 0;
   }
 
   .mj-testimonials__card {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    padding: 1.75rem;
-    background: #fff;
-    border: 1px solid var(--mj-border);
+    gap: 1.35rem;
+    padding: 0 0 2rem;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--mj-border);
   }
 
   .mj-testimonials__stars {
-    color: #e8d9b5;
-    letter-spacing: 0.12em;
+    color: #e6dcc6;
+    letter-spacing: 0.14em;
+    font-size: 0.8rem;
   }
 
   .mj-testimonials__stars .is-on {
@@ -80,9 +82,10 @@
   .mj-testimonials__quote {
     margin: 0;
     font-family: var(--font-heading--family);
-    font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+    font-size: clamp(1.4rem, 2.4vw, 1.85rem);
     font-weight: 400;
-    line-height: 1.45;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
   }
 
   .mj-testimonials__author {
@@ -93,8 +96,8 @@
   }
 
   .mj-testimonials__photo {
-    width: 3.25rem;
-    height: 3.25rem;
+    width: 2.75rem;
+    height: 2.75rem;
     overflow: hidden;
     border-radius: 50%;
   }
@@ -107,26 +110,32 @@
 
   .mj-testimonials__name {
     margin: 0;
-    font-size: 0.875rem;
-    letter-spacing: 0.04em;
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .mj-testimonials__source {
-    margin: 0.2rem 0 0;
+    margin: 0.25rem 0 0;
     font-size: 0.75rem;
-    color: color-mix(in srgb, var(--mj-text) 60%, transparent);
+    color: color-mix(in srgb, var(--mj-text) 55%, transparent);
   }
 
   @media (min-width: 750px) {
     .mj-testimonials__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 2.5rem;
+    }
+
+    .mj-testimonials__card {
+      padding: 0.5rem 0 2.25rem;
     }
   }
 
   @media (min-width: 1100px) {
     .mj-testimonials__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1.25rem;
+      gap: 0 2.75rem;
     }
   }
 {% endstylesheet %}
