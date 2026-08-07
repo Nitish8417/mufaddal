@@ -97,8 +97,8 @@
         "col_custom": {
           "type": "collection",
           "settings": {
-            "collection": "",
-            "title": "Custom Jewellery",
+            "collection": "bangles",
+            "title": "",
             "caption": "Bespoke by appointment"
           }
         }
