@@ -38,7 +38,6 @@
       const slides = [...root.querySelectorAll('[data-mj-slide]')];
       if (slides.length < 2) return;
 
-      const dots = [...root.querySelectorAll('[data-mj-dot]')];
       let index = Math.max(
         0,
         slides.findIndex((slide) => slide.classList.contains('is-active'))
@@ -52,19 +51,12 @@
       const setActive = (next) => {
         slides[index]?.classList.remove('is-active');
         slides[index]?.setAttribute('aria-hidden', 'true');
-        dots[index]?.classList.remove('is-active');
-        dots[index]?.removeAttribute('aria-current');
 
         index = (next + slides.length) % slides.length;
 
         slides[index].classList.add('is-active');
         slides[index].setAttribute('aria-hidden', 'false');
         slides[index].querySelector('[data-mj-slide-content]')?.classList.add('is-visible');
-
-        if (dots[index]) {
-          dots[index].classList.add('is-active');
-          dots[index].setAttribute('aria-current', 'true');
-        }
       };
 
       const play = () => {
@@ -97,14 +89,6 @@
       nextBtn?.addEventListener('click', onNext);
       prevBtn?.addEventListener('click', onPrev);
 
-      const onDotClick = (event) => {
-        const button = event.currentTarget;
-        const target = Number(button.dataset.index || 0);
-        setActive(target);
-        play();
-      };
-      dots.forEach((dot) => dot.addEventListener('click', onDotClick));
-
       const onEnter = () => pause();
       const onLeave = () => resume();
       root.addEventListener('mouseenter', onEnter);
@@ -127,7 +111,6 @@
         clearInterval(timer);
         nextBtn?.removeEventListener('click', onNext);
         prevBtn?.removeEventListener('click', onPrev);
-        dots.forEach((dot) => dot.removeEventListener('click', onDotClick));
         root.removeEventListener('mouseenter', onEnter);
         root.removeEventListener('mouseleave', onLeave);
         root.removeEventListener('focusin', onEnter);

@@ -123,28 +123,12 @@
     </div>
 
     {%- if slide_count > 1 -%}
-      <div class="mj-hero__controls">
-        <div class="mj-hero__dots" role="tablist" aria-label="Slides">
-          {%- for block in slide_blocks -%}
-            <button
-              type="button"
-              class="mj-hero__dot{% if forloop.first %} is-active{% endif %}"
-              data-mj-dot
-              data-index="{{ forloop.index0 }}"
-              aria-label="Slide {{ forloop.index }} of {{ slide_count }}"
-              {% if forloop.first %}aria-current="true"{% endif %}
-            ></button>
-          {%- endfor -%}
-        </div>
-        <div class="mj-hero__nav">
-          <button type="button" class="mj-hero__nav-btn" data-mj-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
-            <span aria-hidden="true">‹</span>
-          </button>
-          <button type="button" class="mj-hero__nav-btn" data-mj-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
-            <span aria-hidden="true">›</span>
-          </button>
-        </div>
-      </div>
+      <button type="button" class="mj-hero__nav-btn mj-hero__nav-btn--prev" data-mj-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
+        <span aria-hidden="true">‹</span>
+      </button>
+      <button type="button" class="mj-hero__nav-btn mj-hero__nav-btn--next" data-mj-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
+        <span aria-hidden="true">›</span>
+      </button>
     {%- endif -%}
   {%- else -%}
     <div class="mj-hero__slide is-active mj-hero__slide--static">
@@ -306,10 +290,10 @@
     z-index: 1;
     background:
       linear-gradient(
-        to top,
-        rgba(10, 10, 10, calc(0.72 + var(--mj-hero-overlay) * 0.35)) 0%,
-        rgba(10, 10, 10, calc(0.28 + var(--mj-hero-overlay) * 0.25)) 42%,
-        rgba(10, 10, 10, calc(0.18 + var(--mj-hero-overlay) * 0.2)) 100%
+        180deg,
+        rgba(10, 10, 10, calc(0.42 + var(--mj-hero-overlay) * 0.25)) 0%,
+        rgba(10, 10, 10, calc(0.22 + var(--mj-hero-overlay) * 0.2)) 45%,
+        rgba(10, 10, 10, calc(0.58 + var(--mj-hero-overlay) * 0.3)) 100%
       );
   }
 
@@ -318,15 +302,15 @@
     z-index: 2;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: var(--mj-hero-align, flex-start);
-    text-align: var(--mj-hero-text-align, left);
+    justify-content: center;
+    align-items: var(--mj-hero-align, center);
+    text-align: var(--mj-hero-text-align, center);
     box-sizing: border-box;
     width: 100%;
     max-width: 72rem;
     min-height: 100%;
     margin: 0 auto;
-    padding: calc(var(--header-group-height, 6rem) + 2.5rem) var(--mj-hero-pad-x) var(--mj-hero-pad-bottom);
+    padding: calc(var(--header-group-height, 6rem) + 2rem) clamp(3.5rem, 8vw, 5.5rem) var(--mj-hero-pad-bottom);
     opacity: 0;
     transform: translateY(1.1rem);
     transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
@@ -336,7 +320,7 @@
   .mj-hero__content > .mj-hero__heading,
   .mj-hero__content > .mj-hero__text,
   .mj-hero__content > .mj-hero__actions {
-    max-width: 36rem;
+    max-width: 40rem;
   }
 
   .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__content > .mj-hero__brand,
@@ -353,6 +337,10 @@
     margin-inline-start: auto;
   }
 
+  .mj-hero[style*='--mj-hero-text-align: left'] .mj-hero__content {
+    justify-content: flex-end;
+  }
+
   .mj-hero__slide.is-active .mj-hero__content,
   .mj-hero__content.is-visible {
     opacity: 1;
@@ -360,11 +348,11 @@
   }
 
   .mj-hero__brand {
-    margin: 0 0 1rem;
+    margin: 0 0 1.15rem;
     font-family: var(--font-heading--family);
-    font-size: clamp(1.65rem, 3.4vw, 2.35rem);
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
     font-weight: 400;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     line-height: 1;
     text-transform: lowercase;
     color: #fff;
@@ -372,92 +360,66 @@
 
   .mj-hero__heading {
     margin: 0;
-    max-width: 14ch;
+    max-width: 18ch;
     font-family: var(--font-heading--family);
-    font-size: clamp(2.4rem, 6.2vw, 4.75rem);
+    font-size: clamp(2.5rem, 6.4vw, 5rem);
     font-weight: 400;
     letter-spacing: -0.02em;
-    line-height: 1.05;
+    line-height: 1.06;
     color: #fff;
   }
 
-  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__heading {
-    max-width: 16ch;
-  }
-
   .mj-hero__text {
-    margin: 1.1rem 0 0;
-    max-width: 32rem;
-    font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
-    line-height: 1.65;
-    color: rgba(255, 255, 255, 0.78);
+    margin: 1.25rem 0 0;
+    max-width: 34rem;
+    font-size: clamp(0.9375rem, 1.45vw, 1.125rem);
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    color: rgba(255, 255, 255, 0.8);
   }
 
   .mj-hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 1.85rem;
-    justify-content: var(--mj-hero-align, flex-start);
-  }
-
-  .mj-hero__controls {
-    position: absolute;
-    right: var(--mj-hero-pad-x);
-    bottom: 1.5rem;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .mj-hero__dots {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-  }
-
-  .mj-hero__dot {
-    width: 0.45rem;
-    height: 0.45rem;
-    padding: 0;
-    border: 0;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.35);
-    cursor: pointer;
-    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease;
-  }
-
-  .mj-hero__dot.is-active {
-    width: 1.5rem;
-    background: #c9a227;
-  }
-
-  .mj-hero__nav {
-    display: flex;
-    gap: 0.4rem;
+    gap: 0.85rem;
+    margin-top: 2rem;
+    justify-content: var(--mj-hero-align, center);
   }
 
   .mj-hero__nav-btn {
+    position: absolute;
+    top: 50%;
+    z-index: 4;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    background: rgba(17, 17, 17, 0.2);
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    background: rgba(17, 17, 17, 0.22);
     color: #fff;
-    font-size: 1.35rem;
+    font-size: 1.6rem;
     line-height: 1;
     cursor: pointer;
-    backdrop-filter: blur(8px);
-    transition: border-color 0.3s ease, background-color 0.3s ease;
+    backdrop-filter: blur(10px);
+    transform: translateY(-50%);
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .mj-hero__nav-btn--prev {
+    left: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .mj-hero__nav-btn--next {
+    right: clamp(0.75rem, 2vw, 1.5rem);
   }
 
   .mj-hero__nav-btn:hover,
   .mj-hero__nav-btn:focus-visible {
     border-color: #c9a227;
-    background: rgba(17, 17, 17, 0.45);
+    background: rgba(17, 17, 17, 0.5);
+    color: #c9a227;
     outline: none;
   }
 
@@ -503,9 +465,18 @@
   }
 
   @media screen and (max-width: 749px) {
-    .mj-hero__controls {
-      right: 1rem;
-      bottom: 4.25rem;
+    .mj-hero__nav-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 1.35rem;
+    }
+
+    .mj-hero__nav-btn--prev {
+      left: 0.65rem;
+    }
+
+    .mj-hero__nav-btn--next {
+      right: 0.65rem;
     }
 
     .mj-hero__heading {
@@ -513,7 +484,7 @@
     }
 
     .mj-hero__brand {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
     }
   }
 
@@ -521,8 +492,7 @@
     .mj-hero__slide,
     .mj-hero__content,
     .mj-hero__media img,
-    .mj-hero__media video,
-    .mj-hero__dot {
+    .mj-hero__media video {
       transition: none;
     }
 
@@ -587,7 +557,7 @@
         { "value": "center", "label": "Center" },
         { "value": "flex-end", "label": "Right" }
       ],
-      "default": "flex-start"
+      "default": "center"
     },
     {
       "type": "image_picker",
