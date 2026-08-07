@@ -89,34 +89,36 @@
           </div>
           <div class="mj-hero__overlay" aria-hidden="true"></div>
           <div class="mj-hero__content{% if forloop.first %} is-visible{% endif %}" data-mj-slide-content>
-            {%- assign brand_label = block.settings.eyebrow | default: shop.name -%}
-            {%- if brand_label != blank -%}
-              <p class="mj-hero__brand">{{ brand_label }}</p>
-            {%- endif -%}
-            {%- if block.settings.heading != blank -%}
-              {%- if forloop.first -%}
-                <h1 class="mj-hero__heading">{{ block.settings.heading }}</h1>
-              {%- else -%}
-                <h2 class="mj-hero__heading">{{ block.settings.heading }}</h2>
+            <div class="mj-section__inner mj-hero__inner">
+              {%- assign brand_label = block.settings.eyebrow | default: shop.name -%}
+              {%- if brand_label != blank -%}
+                <p class="mj-hero__brand">{{ brand_label }}</p>
               {%- endif -%}
-            {%- endif -%}
-            {%- if block.settings.text != blank -%}
-              <p class="mj-hero__text">{{ block.settings.text }}</p>
-            {%- endif -%}
-            {%- if block.settings.button_label_1 != blank or block.settings.button_label_2 != blank -%}
-              <div class="mj-hero__actions">
-                {%- if block.settings.button_label_1 != blank -%}
-                  <a class="mj-btn mj-btn--gold" href="{{ block.settings.button_link_1 | default: routes.all_products_collection_url }}">
-                    {{- block.settings.button_label_1 -}}
-                  </a>
+              {%- if block.settings.heading != blank -%}
+                {%- if forloop.first -%}
+                  <h1 class="mj-hero__heading">{{ block.settings.heading }}</h1>
+                {%- else -%}
+                  <h2 class="mj-hero__heading">{{ block.settings.heading }}</h2>
                 {%- endif -%}
-                {%- if block.settings.button_label_2 != blank -%}
-                  <a class="mj-btn mj-btn--ghost" href="{{ block.settings.button_link_2 | default: '#' }}">
-                    {{- block.settings.button_label_2 -}}
-                  </a>
-                {%- endif -%}
-              </div>
-            {%- endif -%}
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="mj-hero__text">{{ block.settings.text }}</p>
+              {%- endif -%}
+              {%- if block.settings.button_label_1 != blank or block.settings.button_label_2 != blank -%}
+                <div class="mj-hero__actions">
+                  {%- if block.settings.button_label_1 != blank -%}
+                    <a class="mj-btn mj-btn--gold" href="{{ block.settings.button_link_1 | default: routes.all_products_collection_url }}">
+                      {{- block.settings.button_label_1 -}}
+                    </a>
+                  {%- endif -%}
+                  {%- if block.settings.button_label_2 != blank -%}
+                    <a class="mj-btn mj-btn--ghost" href="{{ block.settings.button_link_2 | default: '#' }}">
+                      {{- block.settings.button_label_2 -}}
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
           </div>
         </article>
       {%- endfor -%}
@@ -166,30 +168,32 @@
       </div>
       <div class="mj-hero__overlay" aria-hidden="true"></div>
       <div class="mj-hero__content is-visible">
-        {%- assign brand_label = section.settings.eyebrow | default: shop.name -%}
-        {%- if brand_label != blank -%}
-          <p class="mj-hero__brand">{{ brand_label }}</p>
-        {%- endif -%}
-        {%- if section.settings.heading != blank -%}
-          <h1 class="mj-hero__heading">{{ section.settings.heading }}</h1>
-        {%- endif -%}
-        {%- if section.settings.text != blank -%}
-          <p class="mj-hero__text">{{ section.settings.text }}</p>
-        {%- endif -%}
-        {%- if section.settings.button_label_1 != blank or section.settings.button_label_2 != blank -%}
-          <div class="mj-hero__actions">
-            {%- if section.settings.button_label_1 != blank -%}
-              <a class="mj-btn mj-btn--gold" href="{{ section.settings.button_link_1 | default: routes.all_products_collection_url }}">
-                {{- section.settings.button_label_1 -}}
-              </a>
-            {%- endif -%}
-            {%- if section.settings.button_label_2 != blank -%}
-              <a class="mj-btn mj-btn--ghost" href="{{ section.settings.button_link_2 | default: '#' }}">
-                {{- section.settings.button_label_2 -}}
-              </a>
-            {%- endif -%}
-          </div>
-        {%- endif -%}
+        <div class="mj-section__inner mj-hero__inner">
+          {%- assign brand_label = section.settings.eyebrow | default: shop.name -%}
+          {%- if brand_label != blank -%}
+            <p class="mj-hero__brand">{{ brand_label }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h1 class="mj-hero__heading">{{ section.settings.heading }}</h1>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <p class="mj-hero__text">{{ section.settings.text }}</p>
+          {%- endif -%}
+          {%- if section.settings.button_label_1 != blank or section.settings.button_label_2 != blank -%}
+            <div class="mj-hero__actions">
+              {%- if section.settings.button_label_1 != blank -%}
+                <a class="mj-btn mj-btn--gold" href="{{ section.settings.button_link_1 | default: routes.all_products_collection_url }}">
+                  {{- section.settings.button_label_1 -}}
+                </a>
+              {%- endif -%}
+              {%- if section.settings.button_label_2 != blank -%}
+                <a class="mj-btn mj-btn--ghost" href="{{ section.settings.button_link_2 | default: '#' }}">
+                  {{- section.settings.button_label_2 -}}
+                </a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
       </div>
     </div>
   {%- endif -%}
@@ -303,23 +307,27 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    align-items: var(--mj-hero-align, flex-start);
-    text-align: var(--mj-hero-text-align, left);
     box-sizing: border-box;
     width: 100%;
-    max-width: 72rem;
     min-height: 100%;
-    margin: 0 auto;
-    padding: calc(var(--header-group-height, 6rem) + 2rem) clamp(3.5rem, 8vw, 5.5rem) var(--mj-hero-pad-bottom);
+    margin: 0;
+    padding: calc(var(--header-group-height, 6rem) + 2rem) 0 var(--mj-hero-pad-bottom);
     opacity: 0;
     transform: translateY(1.1rem);
     transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
   }
 
-  .mj-hero__content > .mj-hero__brand,
-  .mj-hero__content > .mj-hero__heading,
-  .mj-hero__content > .mj-hero__text,
-  .mj-hero__content > .mj-hero__actions {
+  .mj-hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: var(--mj-hero-align, flex-start);
+    text-align: var(--mj-hero-text-align, left);
+  }
+
+  .mj-hero__inner > .mj-hero__brand,
+  .mj-hero__inner > .mj-hero__heading,
+  .mj-hero__inner > .mj-hero__text,
+  .mj-hero__inner > .mj-hero__actions {
     max-width: 38rem;
   }
 
@@ -327,17 +335,17 @@
     justify-content: center;
   }
 
-  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__content > .mj-hero__brand,
-  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__content > .mj-hero__heading,
-  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__content > .mj-hero__text,
-  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__content > .mj-hero__actions {
+  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__inner > .mj-hero__brand,
+  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__inner > .mj-hero__heading,
+  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__inner > .mj-hero__text,
+  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__inner > .mj-hero__actions {
     margin-inline: auto;
   }
 
-  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__content > .mj-hero__brand,
-  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__content > .mj-hero__heading,
-  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__content > .mj-hero__text,
-  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__content > .mj-hero__actions {
+  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__inner > .mj-hero__brand,
+  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__inner > .mj-hero__heading,
+  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__inner > .mj-hero__text,
+  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__inner > .mj-hero__actions {
     margin-inline-start: auto;
   }
 
