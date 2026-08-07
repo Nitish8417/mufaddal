@@ -1,12 +1,36 @@
 /*
  * ------------------------------------------------------------
- * Mufaddal Jewellers — Luxury Homepage
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
 {
   "sections": {
     "luxury_hero": {
       "type": "luxury-hero",
+      "blocks": {
+        "slide_cCK3Gi": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/theme_cover_image.jpg",
+            "eyebrow": "Mufaddal Jewellers",
+            "heading": "Exceptional pieces for extraordinary lives",
+            "text": "Discover rings, necklaces, and bridal collections designed with enduring elegance.",
+            "button_label_1": "Shop Collection",
+            "button_link_1": "",
+            "button_label_2": "Book Consultation",
+            "button_link_2": "",
+            "button_label_3": "Explore Bridal",
+            "button_link_3": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_cCK3Gi"
+      ],
       "settings": {
         "hero_type": "image",
         "height": "full",
@@ -16,8 +40,12 @@
         "heading": "Timeless jewellery, crafted for forever",
         "text": "Fine diamonds and hallmarked gold, composed with quiet luxury for life's most meaningful moments.",
         "button_label_1": "Shop Collection",
+        "button_link_1": "",
         "button_label_2": "Book Consultation",
+        "button_link_2": "",
         "button_label_3": "Explore Bridal",
+        "button_link_3": "",
+        "slide_interval": 6,
         "show_scroll_indicator": true
       }
     },
@@ -27,6 +55,7 @@
         "col_rings": {
           "type": "collection",
           "settings": {
+            "collection": "",
             "title": "Rings",
             "caption": "Engagement & eternity"
           }
@@ -34,6 +63,7 @@
         "col_necklaces": {
           "type": "collection",
           "settings": {
+            "collection": "",
             "title": "Necklaces",
             "caption": "Statement & delicate"
           }
@@ -41,6 +71,7 @@
         "col_bracelets": {
           "type": "collection",
           "settings": {
+            "collection": "",
             "title": "Bracelets",
             "caption": "Refined everyday luxury"
           }
@@ -48,6 +79,7 @@
         "col_earrings": {
           "type": "collection",
           "settings": {
+            "collection": "",
             "title": "Earrings",
             "caption": "Luminous finishing touches"
           }
@@ -55,6 +87,7 @@
         "col_custom": {
           "type": "collection",
           "settings": {
+            "collection": "",
             "title": "Custom Jewellery",
             "caption": "Bespoke by appointment"
           }
@@ -73,7 +106,7 @@
         "text": "Curated categories of fine jewellery, each finished with quiet precision.",
         "columns": 5,
         "image_ratio": "3 / 4",
-        "background": "#FFFFFF",
+        "background": "#ffffff",
         "padding_y": 96
       }
     },
@@ -86,8 +119,9 @@
         "products_to_show": 8,
         "show_badges": true,
         "show_quick_actions": true,
+        "customise_link": "",
         "view_all_label": "View collection",
-        "background": "#FAF8F4",
+        "background": "#faf8f4",
         "padding_y": 96
       }
     },
@@ -123,13 +157,19 @@
           }
         }
       },
-      "block_order": ["step_1", "step_2", "step_3", "step_4"],
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4"
+      ],
       "settings": {
         "eyebrow": "Our Craftsmanship",
         "heading": "Handcrafted with enduring mastery",
         "text": "<p>From diamond selection to final polish, every Mufaddal piece is shaped by goldsmith expertise and an uncompromising standard of finish.</p>",
         "button_label": "Discover our atelier",
-        "background": "#FFFFFF",
+        "button_link": "",
+        "background": "#ffffff",
         "padding_y": 100
       }
     },
@@ -142,8 +182,9 @@
         "products_to_show": 8,
         "show_badges": true,
         "show_quick_actions": true,
+        "customise_link": "",
         "view_all_label": "Shop bestsellers",
-        "background": "#FFFFFF",
+        "background": "#ffffff",
         "padding_y": 96
       }
     },
@@ -155,8 +196,10 @@
         "text": "Engagement rings and bridal suites designed for enduring elegance, private appointments, and personal meaning.",
         "image_position": "left",
         "button_label": "Book Bridal Appointment",
+        "button_link": "",
         "secondary_label": "View bridal collection",
-        "background": "#FAF8F4",
+        "secondary_link": "",
+        "background": "#faf8f4",
         "padding_y": 100
       }
     },
@@ -192,14 +235,20 @@
           }
         }
       },
-      "block_order": ["journey_1", "journey_2", "journey_3", "journey_4"],
+      "block_order": [
+        "journey_1",
+        "journey_2",
+        "journey_3",
+        "journey_4"
+      ],
       "settings": {
         "eyebrow": "Bespoke",
         "heading": "The custom jewellery experience",
         "text": "A private, guided process from first sketch to finished heirloom.",
         "heading_alignment": "center",
         "button_label": "Start Custom Design",
-        "background": "#FAF8F4",
+        "button_link": "",
+        "background": "#faf8f4",
         "padding_y": 100
       }
     },
@@ -212,7 +261,8 @@
             "rating": 5,
             "quote": "The craftsmanship is exquisite. Our engagement ring feels timeless and deeply personal.",
             "name": "Aisha R.",
-            "source": "Google Review"
+            "source": "Google Review",
+            "video_url": ""
           }
         },
         "t2": {
@@ -221,7 +271,8 @@
             "rating": 5,
             "quote": "A private consultation experience that matches the world's finest maisons.",
             "name": "Daniel K.",
-            "source": "Verified Buyer"
+            "source": "Verified Buyer",
+            "video_url": ""
           }
         },
         "t3": {
@@ -230,53 +281,158 @@
             "rating": 5,
             "quote": "Every detail — from diamonds to packaging — felt considered and luxurious.",
             "name": "Meera S.",
-            "source": "Bridal Client"
+            "source": "Bridal Client",
+            "video_url": ""
           }
         }
       },
-      "block_order": ["t1", "t2", "t3"],
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ],
       "settings": {
         "eyebrow": "Client Stories",
         "heading": "Trusted by discerning clients worldwide",
-        "background": "#FFFFFF",
+        "background": "#ffffff",
         "padding_y": 96
       }
     },
     "luxury_instagram": {
       "type": "luxury-instagram",
       "blocks": {
-        "ig1": { "type": "image" },
-        "ig2": { "type": "image" },
-        "ig3": { "type": "image" },
-        "ig4": { "type": "image" },
-        "ig5": { "type": "image" },
-        "ig6": { "type": "image" }
+        "ig1": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "caption": "",
+            "cta_label": ""
+          }
+        },
+        "ig2": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "caption": "",
+            "cta_label": ""
+          }
+        },
+        "ig3": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "caption": "",
+            "cta_label": ""
+          }
+        },
+        "ig4": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "caption": "",
+            "cta_label": ""
+          }
+        },
+        "ig5": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "caption": "",
+            "cta_label": ""
+          }
+        },
+        "ig6": {
+          "type": "image",
+          "settings": {
+            "link": "",
+            "caption": "",
+            "cta_label": ""
+          }
+        }
       },
-      "block_order": ["ig1", "ig2", "ig3", "ig4", "ig5", "ig6"],
+      "block_order": [
+        "ig1",
+        "ig2",
+        "ig3",
+        "ig4",
+        "ig5",
+        "ig6"
+      ],
       "settings": {
         "eyebrow": "Social",
         "heading": "Follow the maison",
         "profile_label": "@mufaddaljewellers",
+        "profile_url": "",
         "shop_look_label": "Shop the Look",
-        "background": "#FFFFFF",
+        "background": "#ffffff",
         "padding_y": 88
       }
     },
     "luxury_trust": {
       "type": "luxury-trust",
       "blocks": {
-        "b1": { "type": "badge", "settings": { "title": "Lifetime Warranty", "text": "Craftsmanship protected for life" } },
-        "b2": { "type": "badge", "settings": { "title": "Certified Diamonds", "text": "Authenticated stone quality" } },
-        "b3": { "type": "badge", "settings": { "title": "Hallmarked Gold", "text": "Verified metal purity" } },
-        "b4": { "type": "badge", "settings": { "title": "Secure Payments", "text": "Encrypted checkout" } },
-        "b5": { "type": "badge", "settings": { "title": "Worldwide Shipping", "text": "Insured global delivery" } },
-        "b6": { "type": "badge", "settings": { "title": "Easy Returns", "text": "Hassle-free exchanges" } },
-        "b7": { "type": "badge", "settings": { "title": "Insurance Available", "text": "Optional coverage" } }
+        "b1": {
+          "type": "badge",
+          "settings": {
+            "title": "Lifetime Warranty",
+            "text": "Craftsmanship protected for life"
+          }
+        },
+        "b2": {
+          "type": "badge",
+          "settings": {
+            "title": "Certified Diamonds",
+            "text": "Authenticated stone quality"
+          }
+        },
+        "b3": {
+          "type": "badge",
+          "settings": {
+            "title": "Hallmarked Gold",
+            "text": "Verified metal purity"
+          }
+        },
+        "b4": {
+          "type": "badge",
+          "settings": {
+            "title": "Secure Payments",
+            "text": "Encrypted checkout"
+          }
+        },
+        "b5": {
+          "type": "badge",
+          "settings": {
+            "title": "Worldwide Shipping",
+            "text": "Insured global delivery"
+          }
+        },
+        "b6": {
+          "type": "badge",
+          "settings": {
+            "title": "Easy Returns",
+            "text": "Hassle-free exchanges"
+          }
+        },
+        "b7": {
+          "type": "badge",
+          "settings": {
+            "title": "Insurance Available",
+            "text": "Optional coverage"
+          }
+        }
       },
-      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6", "b7"],
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7"
+      ],
       "settings": {
         "heading": "Confidence in every detail",
-        "background": "#FAF8F4",
+        "background": "#faf8f4",
         "padding_y": 72
       }
     },
@@ -293,7 +449,7 @@
         "placeholder": "Email address",
         "button_label": "Subscribe",
         "success_message": "Welcome to Mufaddal. Your private access awaits.",
-        "background": "#FFFFFF",
+        "background": "#ffffff",
         "padding_y": 100
       }
     }
