@@ -46,7 +46,7 @@
       "settings": {
         "hero_type": "slider",
         "height": "full",
-        "overlay_opacity": 35,
+        "overlay_opacity": 40,
         "content_alignment": "flex-start",
         "eyebrow": "Mufaddal Jewellers",
         "heading": "Timeless jewellery, crafted for forever",
