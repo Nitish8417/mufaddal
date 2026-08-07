@@ -65,7 +65,7 @@
         "col_rings": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "rings",
             "title": "Rings",
             "caption": "Engagement & eternity"
           }
@@ -81,7 +81,7 @@
         "col_bracelets": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "bracelets",
             "title": "Bracelets",
             "caption": "Refined everyday luxury"
           }
@@ -89,7 +89,7 @@
         "col_earrings": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "earrings",
             "title": "Earrings",
             "caption": "Luminous finishing touches"
           }
