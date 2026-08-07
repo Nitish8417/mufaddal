@@ -26,10 +26,26 @@
             "button_label_3": "Explore Bridal",
             "button_link_3": ""
           }
+        },
+        "slide_6WX997": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/theme_cover_image.jpg",
+            "eyebrow": "Mufaddal Jewellers",
+            "heading": "Exceptional pieces for extraordinary lives",
+            "text": "Discover rings, necklaces, and bridal collections designed with enduring elegance.",
+            "button_label_1": "Shop Collection",
+            "button_link_1": "",
+            "button_label_2": "Book Consultation",
+            "button_link_2": "",
+            "button_label_3": "Explore Bridal",
+            "button_link_3": ""
+          }
         }
       },
       "block_order": [
-        "slide_cCK3Gi"
+        "slide_cCK3Gi",
+        "slide_6WX997"
       ],
       "settings": {
         "hero_type": "slider",
