@@ -1,80 +1,109 @@
 {%- liquid
   assign hero_type = section.settings.hero_type
   assign show_scroll = section.settings.show_scroll_indicator
+  assign align = section.settings.content_alignment
+  case align
+    when 'center'
+      assign text_align = 'center'
+      assign justify = 'center'
+    when 'flex-end'
+      assign text_align = 'right'
+      assign justify = 'flex-end'
+    else
+      assign text_align = 'left'
+      assign justify = 'flex-start'
+  endcase
+
+  assign slide_blocks = section.blocks | where: 'type', 'slide'
+  assign slide_count = slide_blocks.size
 -%}
 
 <section
   id="LuxuryHero-{{ section.id }}"
-  class="mj-hero mj-hero--{{ hero_type }} mj-hero--height-{{ section.settings.height }}"
-  data-mj-hero-slider
-  data-interval="{{ section.settings.slide_interval | times: 1000 }}"
+  class="mj-hero mj-hero--{{ hero_type }} mj-hero--height-{{ section.settings.height }}{% if hero_type == 'slider' and slide_count > 1 %} mj-hero--has-slider{% endif %}"
+  {% if hero_type == 'slider' and slide_count > 1 %}
+    data-mj-hero-slider
+    data-interval="{{ section.settings.slide_interval | times: 1000 }}"
+  {% endif %}
   style="
     --mj-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
-    --mj-hero-align: {{ section.settings.content_alignment }};
+    --mj-hero-align: {{ justify }};
+    --mj-hero-text-align: {{ text_align }};
   "
+  aria-roledescription="{% if hero_type == 'slider' and slide_count > 1 %}carousel{% else %}banner{% endif %}"
+  aria-label="{{ section.settings.heading | default: shop.name | escape }}"
 >
   {%- if hero_type == 'slider' -%}
-    <div class="mj-hero__slides">
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'slide' -%}
-          <div
-            class="mj-hero__slide{% if forloop.first %} is-active{% endif %}"
-            data-mj-slide
-            {{ block.shopify_attributes }}
-          >
-            <div class="mj-hero__media">
-              {%- if block.settings.video != blank -%}
+    <div class="mj-hero__slides" data-mj-slides>
+      {%- for block in slide_blocks -%}
+        <article
+          class="mj-hero__slide{% if forloop.first %} is-active{% endif %}"
+          data-mj-slide
+          {% unless forloop.first %}aria-hidden="true"{% endunless %}
+          {{ block.shopify_attributes }}
+        >
+          <div class="mj-hero__media">
+            {%- if block.settings.video != blank -%}
+              {{
+                block.settings.video
+                | video_tag:
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  playsinline: true,
+                  preload: 'metadata',
+                  class: 'mj-hero__video'
+              }}
+            {%- elsif block.settings.image != blank -%}
+              {%- liquid
+                assign slide_alt = block.settings.heading | default: shop.name
+              -%}
+              {%- if forloop.first -%}
                 {{
-                  block.settings.video
-                  | video_tag:
-                    autoplay: true,
-                    loop: true,
-                    muted: true,
-                    controls: false,
-                    playsinline: true,
-                    preload: 'metadata',
-                    class: 'mj-hero__video'
+                  block.settings.image
+                  | image_url: width: 2400
+                  | image_tag:
+                    widths: '750, 1100, 1500, 1800, 2100, 2400',
+                    sizes: '100vw',
+                    class: 'mj-hero__image',
+                    loading: 'eager',
+                    fetchpriority: 'high',
+                    alt: slide_alt
                 }}
-              {%- elsif block.settings.image != blank -%}
-                {%- if forloop.first -%}
-                  {{
-                    block.settings.image
-                    | image_url: width: 2400
-                    | image_tag:
-                      widths: '750, 1100, 1500, 1800, 2100, 2400',
-                      sizes: '100vw',
-                      class: 'mj-hero__image',
-                      loading: 'eager',
-                      fetchpriority: 'high',
-                      alt: block.settings.heading
-                  }}
-                {%- else -%}
-                  {{
-                    block.settings.image
-                    | image_url: width: 2400
-                    | image_tag:
-                      widths: '750, 1100, 1500, 1800, 2100, 2400',
-                      sizes: '100vw',
-                      class: 'mj-hero__image',
-                      loading: 'lazy',
-                      alt: block.settings.heading
-                  }}
-                {%- endif -%}
               {%- else -%}
-                {{ 'lifestyle-1' | placeholder_svg_tag: 'mj-hero__placeholder' }}
+                {{
+                  block.settings.image
+                  | image_url: width: 2400
+                  | image_tag:
+                    widths: '750, 1100, 1500, 1800, 2100, 2400',
+                    sizes: '100vw',
+                    class: 'mj-hero__image',
+                    loading: 'lazy',
+                    alt: slide_alt
+                }}
               {%- endif -%}
-            </div>
-            <div class="mj-hero__overlay"></div>
-            <div class="mj-hero__content mj-reveal">
-              {%- if block.settings.eyebrow != blank -%}
-                <p class="mj-eyebrow">{{ block.settings.eyebrow }}</p>
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'mj-hero__placeholder' }}
+            {%- endif -%}
+          </div>
+          <div class="mj-hero__overlay" aria-hidden="true"></div>
+          <div class="mj-hero__content{% if forloop.first %} is-visible{% endif %}" data-mj-slide-content>
+            {%- assign brand_label = block.settings.eyebrow | default: shop.name -%}
+            {%- if brand_label != blank -%}
+              <p class="mj-hero__brand">{{ brand_label }}</p>
+            {%- endif -%}
+            {%- if block.settings.heading != blank -%}
+              {%- if forloop.first -%}
+                <h1 class="mj-hero__heading">{{ block.settings.heading }}</h1>
+              {%- else -%}
+                <h2 class="mj-hero__heading">{{ block.settings.heading }}</h2>
               {%- endif -%}
-              {%- if block.settings.heading != blank -%}
-                <h1 class="mj-heading mj-hero__heading">{{ block.settings.heading }}</h1>
-              {%- endif -%}
-              {%- if block.settings.text != blank -%}
-                <p class="mj-subcopy mj-hero__text">{{ block.settings.text }}</p>
-              {%- endif -%}
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="mj-hero__text">{{ block.settings.text }}</p>
+            {%- endif -%}
+            {%- if block.settings.button_label_1 != blank or block.settings.button_label_2 != blank -%}
               <div class="mj-hero__actions">
                 {%- if block.settings.button_label_1 != blank -%}
                   <a class="mj-btn mj-btn--gold" href="{{ block.settings.button_link_1 | default: routes.all_products_collection_url }}">
@@ -86,29 +115,39 @@
                     {{- block.settings.button_label_2 -}}
                   </a>
                 {%- endif -%}
-                {%- if block.settings.button_label_3 != blank -%}
-                  <a class="mj-btn mj-btn--ghost" href="{{ block.settings.button_link_3 | default: '#' }}">
-                    {{- block.settings.button_label_3 -}}
-                  </a>
-                {%- endif -%}
               </div>
-            </div>
+            {%- endif -%}
           </div>
-        {%- endif -%}
+        </article>
       {%- endfor -%}
     </div>
-    {%- if section.blocks.size > 1 -%}
-      <div class="mj-hero__nav">
-        <button type="button" class="mj-hero__nav-btn" data-mj-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
-          ‹
-        </button>
-        <button type="button" class="mj-hero__nav-btn" data-mj-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
-          ›
-        </button>
+
+    {%- if slide_count > 1 -%}
+      <div class="mj-hero__controls">
+        <div class="mj-hero__dots" role="tablist" aria-label="Slides">
+          {%- for block in slide_blocks -%}
+            <button
+              type="button"
+              class="mj-hero__dot{% if forloop.first %} is-active{% endif %}"
+              data-mj-dot
+              data-index="{{ forloop.index0 }}"
+              aria-label="Slide {{ forloop.index }} of {{ slide_count }}"
+              {% if forloop.first %}aria-current="true"{% endif %}
+            ></button>
+          {%- endfor -%}
+        </div>
+        <div class="mj-hero__nav">
+          <button type="button" class="mj-hero__nav-btn" data-mj-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
+            <span aria-hidden="true">‹</span>
+          </button>
+          <button type="button" class="mj-hero__nav-btn" data-mj-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
+            <span aria-hidden="true">›</span>
+          </button>
+        </div>
       </div>
     {%- endif -%}
   {%- else -%}
-    <div class="mj-hero__slide is-active">
+    <div class="mj-hero__slide is-active mj-hero__slide--static">
       <div class="mj-hero__media">
         {%- if hero_type == 'video' and section.settings.video != blank -%}
           {{
@@ -123,6 +162,9 @@
               class: 'mj-hero__video'
           }}
         {%- elsif section.settings.image != blank -%}
+          {%- liquid
+            assign hero_alt = section.settings.heading | default: shop.name
+          -%}
           {{
             section.settings.image
             | image_url: width: 2400
@@ -132,85 +174,107 @@
               class: 'mj-hero__image',
               loading: 'eager',
               fetchpriority: 'high',
-              alt: section.settings.heading
+              alt: hero_alt
           }}
         {%- else -%}
           {{ 'lifestyle-1' | placeholder_svg_tag: 'mj-hero__placeholder' }}
         {%- endif -%}
       </div>
-      <div class="mj-hero__overlay"></div>
-      <div class="mj-hero__content mj-reveal is-visible">
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="mj-eyebrow">{{ section.settings.eyebrow }}</p>
+      <div class="mj-hero__overlay" aria-hidden="true"></div>
+      <div class="mj-hero__content is-visible">
+        {%- assign brand_label = section.settings.eyebrow | default: shop.name -%}
+        {%- if brand_label != blank -%}
+          <p class="mj-hero__brand">{{ brand_label }}</p>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
-          <h1 class="mj-heading mj-hero__heading">{{ section.settings.heading }}</h1>
+          <h1 class="mj-hero__heading">{{ section.settings.heading }}</h1>
         {%- endif -%}
         {%- if section.settings.text != blank -%}
-          <p class="mj-subcopy mj-hero__text">{{ section.settings.text }}</p>
+          <p class="mj-hero__text">{{ section.settings.text }}</p>
         {%- endif -%}
-        <div class="mj-hero__actions">
-          {%- if section.settings.button_label_1 != blank -%}
-            <a class="mj-btn mj-btn--gold" href="{{ section.settings.button_link_1 | default: routes.all_products_collection_url }}">
-              {{- section.settings.button_label_1 -}}
-            </a>
-          {%- endif -%}
-          {%- if section.settings.button_label_2 != blank -%}
-            <a class="mj-btn mj-btn--ghost" href="{{ section.settings.button_link_2 | default: '#' }}">
-              {{- section.settings.button_label_2 -}}
-            </a>
-          {%- endif -%}
-          {%- if section.settings.button_label_3 != blank -%}
-            <a class="mj-btn mj-btn--ghost" href="{{ section.settings.button_link_3 | default: '#' }}">
-              {{- section.settings.button_label_3 -}}
-            </a>
-          {%- endif -%}
-        </div>
+        {%- if section.settings.button_label_1 != blank or section.settings.button_label_2 != blank -%}
+          <div class="mj-hero__actions">
+            {%- if section.settings.button_label_1 != blank -%}
+              <a class="mj-btn mj-btn--gold" href="{{ section.settings.button_link_1 | default: routes.all_products_collection_url }}">
+                {{- section.settings.button_label_1 -}}
+              </a>
+            {%- endif -%}
+            {%- if section.settings.button_label_2 != blank -%}
+              <a class="mj-btn mj-btn--ghost" href="{{ section.settings.button_link_2 | default: '#' }}">
+                {{- section.settings.button_label_2 -}}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
       </div>
     </div>
   {%- endif -%}
 
   {%- if show_scroll -%}
-    <a class="mj-hero__scroll" href="#MainContent" aria-label="{{ 'accessibility.skip_to_text' | t }}">
+    <button type="button" class="mj-hero__scroll" data-mj-scroll-next aria-label="{{ 'accessibility.skip_to_text' | t }}">
       <span></span>
-    </a>
+    </button>
   {%- endif -%}
 </section>
 
 {% stylesheet %}
   .mj-hero {
+    --mj-hero-pad-x: clamp(1.25rem, 4vw, 3.5rem);
+    --mj-hero-pad-bottom: clamp(4.5rem, 8vh, 6.5rem);
     position: relative;
     isolation: isolate;
     overflow: hidden;
+    width: 100%;
     color: #fff;
     background: #111;
   }
 
   .mj-hero--height-full {
     min-height: 100svh;
+    height: 100svh;
   }
 
   .mj-hero--height-large {
     min-height: 85svh;
+    height: 85svh;
   }
 
   .mj-hero--height-medium {
-    min-height: 70svh;
+    min-height: 72svh;
+    height: 72svh;
   }
 
-  .mj-hero__slides,
-  .mj-hero__slide {
-    min-height: inherit;
+  .mj-hero__slides {
+    position: absolute;
+    inset: 0;
   }
 
   .mj-hero__slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1), visibility 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .mj-hero__slide--static,
+  .mj-hero:not(.mj-hero--has-slider) .mj-hero__slide {
     position: relative;
-    display: none;
+    inset: auto;
     min-height: inherit;
+    height: 100%;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .mj-hero__slide.is-active {
-    display: grid;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 1;
   }
 
   .mj-hero__media,
@@ -219,21 +283,34 @@
     inset: 0;
   }
 
+  .mj-hero__media {
+    overflow: hidden;
+  }
+
   .mj-hero__media img,
   .mj-hero__media video,
   .mj-hero__placeholder {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transform: scale(1.04);
+    transition: transform 7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .mj-hero__slide.is-active .mj-hero__media img,
+  .mj-hero__slide.is-active .mj-hero__media video {
+    transform: scale(1);
   }
 
   .mj-hero__overlay {
-    background: linear-gradient(
-      to top,
-      rgba(17, 17, 17, calc(0.55 + var(--mj-hero-overlay))) 0%,
-      rgba(17, 17, 17, calc(0.2 + var(--mj-hero-overlay) * 0.4)) 45%,
-      rgba(17, 17, 17, calc(var(--mj-hero-overlay) * 0.35)) 100%
-    );
+    z-index: 1;
+    background:
+      linear-gradient(
+        to top,
+        rgba(10, 10, 10, calc(0.72 + var(--mj-hero-overlay) * 0.35)) 0%,
+        rgba(10, 10, 10, calc(0.28 + var(--mj-hero-overlay) * 0.25)) 42%,
+        rgba(10, 10, 10, calc(0.18 + var(--mj-hero-overlay) * 0.2)) 100%
+      );
   }
 
   .mj-hero__content {
@@ -242,69 +319,169 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    align-items: var(--mj-hero-align);
-    text-align: var(--mj-hero-align);
-    width: min(100% - 2.5rem, 72rem);
+    align-items: var(--mj-hero-align, flex-start);
+    text-align: var(--mj-hero-text-align, left);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 72rem;
+    min-height: 100%;
     margin: 0 auto;
-    padding: calc(var(--header-group-height, 6rem) + 3rem) 0 5.5rem;
-    min-height: inherit;
+    padding: calc(var(--header-group-height, 6rem) + 2.5rem) var(--mj-hero-pad-x) var(--mj-hero-pad-bottom);
+    opacity: 0;
+    transform: translateY(1.1rem);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
   }
 
-  .mj-hero__heading {
-    max-width: 14ch;
-    font-size: clamp(2.75rem, 7vw, 5.5rem);
+  .mj-hero__content > .mj-hero__brand,
+  .mj-hero__content > .mj-hero__heading,
+  .mj-hero__content > .mj-hero__text,
+  .mj-hero__content > .mj-hero__actions {
+    max-width: 36rem;
+  }
+
+  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__content > .mj-hero__brand,
+  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__content > .mj-hero__heading,
+  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__content > .mj-hero__text,
+  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__content > .mj-hero__actions {
+    margin-inline: auto;
+  }
+
+  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__content > .mj-hero__brand,
+  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__content > .mj-hero__heading,
+  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__content > .mj-hero__text,
+  .mj-hero[style*='--mj-hero-text-align: right'] .mj-hero__content > .mj-hero__actions {
+    margin-inline-start: auto;
+  }
+
+  .mj-hero__slide.is-active .mj-hero__content,
+  .mj-hero__content.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .mj-hero__brand {
+    margin: 0 0 1rem;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.65rem, 3.4vw, 2.35rem);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: lowercase;
     color: #fff;
   }
 
+  .mj-hero__heading {
+    margin: 0;
+    max-width: 14ch;
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.4rem, 6.2vw, 4.75rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: #fff;
+  }
+
+  .mj-hero[style*='--mj-hero-text-align: center'] .mj-hero__heading {
+    max-width: 16ch;
+  }
+
   .mj-hero__text {
-    color: rgba(255, 255, 255, 0.82);
+    margin: 1.1rem 0 0;
+    max-width: 32rem;
+    font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.78);
   }
 
   .mj-hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-top: 1.75rem;
-    justify-content: var(--mj-hero-align);
+    margin-top: 1.85rem;
+    justify-content: var(--mj-hero-align, flex-start);
   }
 
-  .mj-hero__nav {
+  .mj-hero__controls {
     position: absolute;
-    right: 1.25rem;
+    right: var(--mj-hero-pad-x);
     bottom: 1.5rem;
     z-index: 3;
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .mj-hero__dots {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .mj-hero__dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease;
+  }
+
+  .mj-hero__dot.is-active {
+    width: 1.5rem;
+    background: #c9a227;
+  }
+
+  .mj-hero__nav {
+    display: flex;
+    gap: 0.4rem;
   }
 
   .mj-hero__nav-btn {
-    width: 2.75rem;
-    height: 2.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    background: rgba(17, 17, 17, 0.25);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(17, 17, 17, 0.2);
     color: #fff;
-    font-size: 1.25rem;
+    font-size: 1.35rem;
+    line-height: 1;
     cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .mj-hero__nav-btn:hover,
+  .mj-hero__nav-btn:focus-visible {
+    border-color: #c9a227;
+    background: rgba(17, 17, 17, 0.45);
+    outline: none;
   }
 
   .mj-hero__scroll {
     position: absolute;
     left: 50%;
-    bottom: 1.25rem;
+    bottom: 1.35rem;
     z-index: 3;
-    width: 1.25rem;
-    height: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    width: 1.2rem;
+    height: 1.9rem;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 999px;
+    background: transparent;
     transform: translateX(-50%);
+    cursor: pointer;
   }
 
   .mj-hero__scroll span {
     position: absolute;
     left: 50%;
-    top: 0.35rem;
-    width: 0.25rem;
-    height: 0.25rem;
+    top: 0.3rem;
+    width: 0.22rem;
+    height: 0.22rem;
     border-radius: 50%;
     background: #c9a227;
     transform: translateX(-50%);
@@ -321,11 +498,39 @@
     }
     100% {
       opacity: 0;
-      transform: translate(-50%, 0.9rem);
+      transform: translate(-50%, 0.85rem);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .mj-hero__controls {
+      right: 1rem;
+      bottom: 4.25rem;
+    }
+
+    .mj-hero__heading {
+      font-size: clamp(2.15rem, 11vw, 3.25rem);
+    }
+
+    .mj-hero__brand {
+      font-size: 1.35rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .mj-hero__slide,
+    .mj-hero__content,
+    .mj-hero__media img,
+    .mj-hero__media video,
+    .mj-hero__dot {
+      transition: none;
+    }
+
+    .mj-hero__media img,
+    .mj-hero__media video {
+      transform: none;
+    }
+
     .mj-hero__scroll span {
       animation: none;
     }
@@ -399,7 +604,7 @@
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow",
+      "label": "Brand / eyebrow",
       "default": "Mufaddal Jewellers",
       "visible_if": "{{ section.settings.hero_type != 'slider' }}"
     },
@@ -444,19 +649,6 @@
       "visible_if": "{{ section.settings.hero_type != 'slider' }}"
     },
     {
-      "type": "text",
-      "id": "button_label_3",
-      "label": "Tertiary button label",
-      "default": "Explore Bridal",
-      "visible_if": "{{ section.settings.hero_type != 'slider' }}"
-    },
-    {
-      "type": "url",
-      "id": "button_link_3",
-      "label": "Tertiary button link",
-      "visible_if": "{{ section.settings.hero_type != 'slider' }}"
-    },
-    {
       "type": "range",
       "id": "slide_interval",
       "label": "Slider interval",
@@ -492,7 +684,7 @@
         {
           "type": "text",
           "id": "eyebrow",
-          "label": "Eyebrow",
+          "label": "Brand / eyebrow",
           "default": "Mufaddal Jewellers"
         },
         {
@@ -528,17 +720,6 @@
           "type": "url",
           "id": "button_link_2",
           "label": "Secondary button link"
-        },
-        {
-          "type": "text",
-          "id": "button_label_3",
-          "label": "Tertiary button label",
-          "default": "Explore Bridal"
-        },
-        {
-          "type": "url",
-          "id": "button_link_3",
-          "label": "Tertiary button link"
         }
       ]
     }
@@ -546,7 +727,15 @@
   "presets": [
     {
       "name": "Luxury Hero",
-      "category": "Mufaddal Luxury"
+      "category": "Mufaddal Luxury",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
     }
   ]
 }

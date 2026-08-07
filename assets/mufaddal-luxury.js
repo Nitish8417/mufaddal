@@ -24,42 +24,135 @@
     nodes.forEach((node) => observer.observe(node));
   };
 
-  const initHeroSlider = () => {
-    document.querySelectorAll('[data-mj-hero-slider]').forEach((root) => {
+  const destroyHeroSlider = (root) => {
+    if (root._mjHeroCleanup) {
+      root._mjHeroCleanup();
+      root._mjHeroCleanup = null;
+    }
+  };
+
+  const initHeroSlider = (scope = document) => {
+    scope.querySelectorAll('[data-mj-hero-slider]').forEach((root) => {
+      destroyHeroSlider(root);
+
       const slides = [...root.querySelectorAll('[data-mj-slide]')];
       if (slides.length < 2) return;
 
-      let index = 0;
+      const dots = [...root.querySelectorAll('[data-mj-dot]')];
+      let index = Math.max(
+        0,
+        slides.findIndex((slide) => slide.classList.contains('is-active'))
+      );
+      if (index < 0) index = 0;
+
       const interval = Number(root.dataset.interval || 6000);
       let timer;
+      let paused = false;
 
-      const show = (next) => {
-        slides[index].classList.remove('is-active');
+      const setActive = (next) => {
+        slides[index]?.classList.remove('is-active');
+        slides[index]?.setAttribute('aria-hidden', 'true');
+        dots[index]?.classList.remove('is-active');
+        dots[index]?.removeAttribute('aria-current');
+
         index = (next + slides.length) % slides.length;
+
         slides[index].classList.add('is-active');
+        slides[index].setAttribute('aria-hidden', 'false');
+        slides[index].querySelector('[data-mj-slide-content]')?.classList.add('is-visible');
+
+        if (dots[index]) {
+          dots[index].classList.add('is-active');
+          dots[index].setAttribute('aria-current', 'true');
+        }
       };
 
       const play = () => {
-        if (reduceMotion) return;
+        if (reduceMotion || paused) return;
         clearInterval(timer);
-        timer = setInterval(() => show(index + 1), interval);
+        timer = window.setInterval(() => setActive(index + 1), interval);
       };
 
-      root.querySelector('[data-mj-next]')?.addEventListener('click', () => {
-        show(index + 1);
+      const pause = () => {
+        paused = true;
+        clearInterval(timer);
+      };
+
+      const resume = () => {
+        paused = false;
         play();
-      });
-      root.querySelector('[data-mj-prev]')?.addEventListener('click', () => {
-        show(index - 1);
+      };
+
+      const onNext = () => {
+        setActive(index + 1);
         play();
+      };
+      const onPrev = () => {
+        setActive(index - 1);
+        play();
+      };
+
+      const nextBtn = root.querySelector('[data-mj-next]');
+      const prevBtn = root.querySelector('[data-mj-prev]');
+      nextBtn?.addEventListener('click', onNext);
+      prevBtn?.addEventListener('click', onPrev);
+
+      const onDotClick = (event) => {
+        const button = event.currentTarget;
+        const target = Number(button.dataset.index || 0);
+        setActive(target);
+        play();
+      };
+      dots.forEach((dot) => dot.addEventListener('click', onDotClick));
+
+      const onEnter = () => pause();
+      const onLeave = () => resume();
+      root.addEventListener('mouseenter', onEnter);
+      root.addEventListener('mouseleave', onLeave);
+      root.addEventListener('focusin', onEnter);
+      root.addEventListener('focusout', (event) => {
+        if (!root.contains(event.relatedTarget)) resume();
       });
 
+      const onVisibility = () => {
+        if (document.hidden) pause();
+        else resume();
+      };
+      document.addEventListener('visibilitychange', onVisibility);
+
+      setActive(index);
       play();
+
+      root._mjHeroCleanup = () => {
+        clearInterval(timer);
+        nextBtn?.removeEventListener('click', onNext);
+        prevBtn?.removeEventListener('click', onPrev);
+        dots.forEach((dot) => dot.removeEventListener('click', onDotClick));
+        root.removeEventListener('mouseenter', onEnter);
+        root.removeEventListener('mouseleave', onLeave);
+        root.removeEventListener('focusin', onEnter);
+        document.removeEventListener('visibilitychange', onVisibility);
+      };
     });
   };
 
-  const initCarousels = () => {
-    document.querySelectorAll('[data-mj-carousel]').forEach((root) => {
+  const initScrollNext = (scope = document) => {
+    scope.querySelectorAll('[data-mj-scroll-next]').forEach((button) => {
+      if (button.dataset.mjBound === 'true') return;
+      button.dataset.mjBound = 'true';
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        const section = button.closest('.shopify-section');
+        const next = section?.nextElementSibling;
+        if (next) {
+          next.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        }
+      });
+    });
+  };
+
+  const initCarousels = (scope = document) => {
+    scope.querySelectorAll('[data-mj-carousel]').forEach((root) => {
       const track = root.querySelector('[data-mj-track]');
       if (!track) return;
 
@@ -121,17 +214,26 @@
     });
   };
 
-  const boot = () => {
+  const boot = (scope = document) => {
     initReveal();
-    initHeroSlider();
-    initCarousels();
+    initHeroSlider(scope);
+    initScrollNext(scope);
+    initCarousels(scope);
     initStickyAtc();
     initRecentlyViewed();
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
+    document.addEventListener('DOMContentLoaded', () => boot(document));
   } else {
-    boot();
+    boot(document);
   }
+
+  document.addEventListener('shopify:section:load', (event) => {
+    boot(event.target);
+  });
+
+  document.addEventListener('shopify:section:unload', (event) => {
+    event.target.querySelectorAll('[data-mj-hero-slider]').forEach(destroyHeroSlider);
+  });
 })();
