@@ -15,7 +15,7 @@
         "slide_cCK3Gi": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/theme_cover_image.jpg",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_8_2026_01_24_05_AM.png",
             "eyebrow": "Mufaddal Jewellers",
             "heading": "Exceptional pieces for extraordinary lives",
             "text": "Discover rings, necklaces, and bridal collections designed with enduring elegance.",
@@ -46,7 +46,7 @@
       "settings": {
         "hero_type": "slider",
         "height": "full",
-        "overlay_opacity": 40,
+        "overlay_opacity": 35,
         "content_alignment": "flex-start",
         "eyebrow": "Mufaddal Jewellers",
         "heading": "Timeless jewellery, crafted for forever",
