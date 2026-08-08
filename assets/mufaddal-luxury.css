@@ -19,6 +19,14 @@ body.mufaddal-luxury {
   background: var(--mj-bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  --mj-gutter: 1.25rem;
+  --mj-container-width: min(calc(100% - (var(--mj-gutter) * 2)), var(--page-content-width, 120rem));
+}
+
+@media (min-width: 750px) {
+  body.mufaddal-luxury {
+    --mj-gutter: 2.5rem;
+  }
 }
 
 /* Prevent horizontal page scroll from carousels / drawer layout */
@@ -33,6 +41,12 @@ body.mufaddal-luxury .mj-section__inner,
 body.mufaddal-luxury .mj-carousel-section {
   min-width: 0;
   max-width: 100%;
+}
+
+/* Product + Horizon sections share the same container gutters as luxury sections */
+body.mufaddal-luxury .product-information.section,
+body.mufaddal-luxury main[data-template='product'] .section {
+  --page-margin: var(--mj-gutter);
 }
 
 body.mufaddal-luxury ::selection {
@@ -446,7 +460,7 @@ body.mufaddal-luxury .announcement-bar span {
 }
 
 .mj-section__inner {
-  width: min(100% - 2.5rem, var(--page-width, 120rem));
+  width: var(--mj-container-width, min(100% - 2.5rem, var(--page-content-width, 120rem)));
   margin-inline: auto;
 }
 
@@ -468,10 +482,6 @@ body.mufaddal-luxury .announcement-bar span {
 @media (min-width: 750px) {
   .mj-section {
     padding-block: var(--mj-pad-y, 7.5rem);
-  }
-
-  .mj-section__inner {
-    width: min(100% - 5rem, var(--page-width, 120rem));
   }
 }
 
