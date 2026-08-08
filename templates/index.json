@@ -131,8 +131,8 @@
         "show_quick_actions": true,
         "customise_link": "",
         "view_all_label": "View collection",
-        "background": "#faf8f4",
-        "padding_y": 52
+        "background": "#f7f6f3",
+        "padding_y": 72
       }
     },
     "luxury_craftsmanship": {
@@ -196,7 +196,7 @@
         "customise_link": "",
         "view_all_label": "Shop bestsellers",
         "background": "#ffffff",
-        "padding_y": 96
+        "padding_y": 72
       }
     },
     "luxury_bridal": {

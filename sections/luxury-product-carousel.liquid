@@ -15,7 +15,7 @@
           <p class="mj-eyebrow">{{ section.settings.eyebrow }}</p>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
-          <h2 class="mj-heading" style="font-size: clamp(2rem, 4vw, 3.25rem);">{{ section.settings.heading }}</h2>
+          <h2 class="mj-heading mj-carousel-section__heading">{{ section.settings.heading }}</h2>
         {%- endif -%}
       </div>
       <div class="mj-carousel__controls">
@@ -62,7 +62,7 @@
             </a>
             {%- if section.settings.show_quick_actions -%}
               <div class="mj-product-card__actions">
-                <a class="mj-btn mj-btn--outline mj-product-card__atc" href="{{ product.url }}">
+                <a class="mj-link mj-product-card__atc" href="{{ product.url }}">
                   {{ 'mufaddal.actions.view_piece' | t }}
                 </a>
                 {%- if section.settings.customise_link != blank -%}
@@ -88,7 +88,7 @@
 
     {%- if section.settings.view_all_label != blank and collection != blank -%}
       <div class="mj-carousel__footer mj-reveal">
-        <a class="mj-btn mj-btn--outline" href="{{ collection.url }}">{{ section.settings.view_all_label }}</a>
+        <a class="mj-link" href="{{ collection.url }}">{{ section.settings.view_all_label }}</a>
       </div>
     {%- endif -%}
   </div>
