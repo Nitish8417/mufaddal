@@ -12,25 +12,6 @@
     "main": {
       "type": "product-information",
       "blocks": {
-        "disclosures_g9mWze": {
-          "type": "disclosures",
-          "name": "t:names.disclosures",
-          "settings": {
-            "heading": "Disclosures",
-            "heading_preset": "h5",
-            "open_by_default": false,
-            "icon": "caret",
-            "disclosure_heading_preset": "h6",
-            "text_color": "",
-            "dividers": true,
-            "divider_color": "{{ settings.color_palette.color2 }}",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -45,7 +26,7 @@
             "thumbnail_position": "right",
             "thumbnail_width": 44,
             "thumbnail_radius": 0,
-            "aspect_ratio": "adapt",
+            "aspect_ratio": "1",
             "constrain_to_viewport": true,
             "media_fit": "contain",
             "media_radius": 0,
@@ -276,15 +257,15 @@
               },
               "block_order": []
             },
-            "heading_product_info": {
+            "text_aEtTtq": {
               "type": "text",
-              "name": "Product information",
+              "name": "t:names.product_description",
               "settings": {
-                "text": "<h2>Product information</h2>",
+                "text": "{{ closest.product.description }}",
                 "width": "100%",
-                "max_width": "none",
+                "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "h5",
+                "type_preset": "rte",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -295,21 +276,21 @@
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
-                "padding-block-start": 16,
-                "padding-block-end": 8,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
               "blocks": {}
             },
-            "accordion_product_info": {
+            "accordion_3Ncx9Y": {
               "type": "accordion",
-              "name": "Product information",
+              "name": "t:names.accordion",
               "settings": {
-                "icon": "plus",
+                "icon": "caret",
                 "dividers": true,
-                "divider_color": "{{ settings.color_palette.color2 }}",
-                "type_preset": "paragraph",
+                "divider_color": "",
+                "type_preset": "h6",
                 "background_color": "",
                 "text_color": "",
                 "border": "none",
@@ -323,21 +304,21 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "row_description": {
+                "accordion_row_YGTR9n": {
                   "type": "_accordion-row",
                   "settings": {
-                    "heading": "Description",
-                    "open_by_default": false,
+                    "heading": "Return policy",
+                    "open_by_default": true,
                     "icon": "none",
                     "width": 20
                   },
                   "blocks": {
-                    "text_description": {
+                    "text_ahij6B": {
                       "type": "text",
                       "settings": {
-                        "text": "{{ closest.product.description }}",
+                        "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>",
                         "width": "100%",
-                        "max_width": "none",
+                        "max_width": "normal",
                         "alignment": "left",
                         "type_preset": "rte",
                         "font": "var(--font-body--family)",
@@ -351,7 +332,7 @@
                         "background_color": "#00000026",
                         "corner_radius": 0,
                         "padding-block-start": 0,
-                        "padding-block-end": 12,
+                        "padding-block-end": 0,
                         "padding-inline-start": 0,
                         "padding-inline-end": 0
                       },
@@ -359,49 +340,10 @@
                     }
                   },
                   "block_order": [
-                    "text_description"
+                    "text_ahij6B"
                   ]
                 },
-                "row_warranty": {
-                  "type": "_accordion-row",
-                  "settings": {
-                    "heading": "Warranty",
-                    "open_by_default": false,
-                    "icon": "none",
-                    "width": 20
-                  },
-                  "blocks": {
-                    "text_warranty": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>Every Mufaddal piece is covered by our craftsmanship warranty. Contact us for lifetime care and servicing guidance.</p>",
-                        "width": "100%",
-                        "max_width": "none",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "text_color": "",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 12,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "text_warranty"
-                  ]
-                },
-                "row_shipping": {
+                "accordion_row_TBwmny": {
                   "type": "_accordion-row",
                   "settings": {
                     "heading": "Shipping",
@@ -410,12 +352,12 @@
                     "width": 20
                   },
                   "blocks": {
-                    "text_shipping": {
+                    "text_iEnDTD": {
                       "type": "text",
                       "settings": {
-                        "text": "<p>Insured shipping with discreet packaging. Estimated delivery in 3–7 business days.</p>",
+                        "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
                         "width": "100%",
-                        "max_width": "none",
+                        "max_width": "normal",
                         "alignment": "left",
                         "type_preset": "rte",
                         "font": "var(--font-body--family)",
@@ -429,7 +371,7 @@
                         "background_color": "#00000026",
                         "corner_radius": 0,
                         "padding-block-start": 0,
-                        "padding-block-end": 12,
+                        "padding-block-end": 0,
                         "padding-inline-start": 0,
                         "padding-inline-end": 0
                       },
@@ -437,24 +379,24 @@
                     }
                   },
                   "block_order": [
-                    "text_shipping"
+                    "text_iEnDTD"
                   ]
                 },
-                "row_care": {
+                "accordion_row_9wzzcK": {
                   "type": "_accordion-row",
                   "settings": {
-                    "heading": "Care guide",
+                    "heading": "Manufacturing",
                     "open_by_default": false,
                     "icon": "none",
                     "width": 20
                   },
                   "blocks": {
-                    "text_care": {
+                    "text_3aadPc": {
                       "type": "text",
                       "settings": {
-                        "text": "<p>Store jewellery in a soft pouch. Avoid chemicals, perfume, and prolonged water exposure. Wipe gently with a soft cloth after wear.</p>",
+                        "text": "<p>Our products are manufactured both locally and globally. We carefully select our manufacturing partners to ensure our products are high quality and a fair value.</p>",
                         "width": "100%",
-                        "max_width": "none",
+                        "max_width": "normal",
                         "alignment": "left",
                         "type_preset": "rte",
                         "font": "var(--font-body--family)",
@@ -468,7 +410,7 @@
                         "background_color": "#00000026",
                         "corner_radius": 0,
                         "padding-block-start": 0,
-                        "padding-block-end": 12,
+                        "padding-block-end": 0,
                         "padding-inline-start": 0,
                         "padding-inline-end": 0
                       },
@@ -476,55 +418,14 @@
                     }
                   },
                   "block_order": [
-                    "text_care"
-                  ]
-                },
-                "row_returns": {
-                  "type": "_accordion-row",
-                  "settings": {
-                    "heading": "Returns",
-                    "open_by_default": false,
-                    "icon": "none",
-                    "width": 20
-                  },
-                  "blocks": {
-                    "text_returns": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>Easy returns within our stated window for unworn pieces in original packaging. Custom designs may follow a separate policy.</p>",
-                        "width": "100%",
-                        "max_width": "none",
-                        "alignment": "left",
-                        "type_preset": "rte",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "text_color": "",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 12,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "text_returns"
+                    "text_3aadPc"
                   ]
                 }
               },
               "block_order": [
-                "row_description",
-                "row_warranty",
-                "row_shipping",
-                "row_care",
-                "row_returns"
+                "accordion_row_YGTR9n",
+                "accordion_row_TBwmny",
+                "accordion_row_9wzzcK"
               ]
             }
           },
@@ -533,14 +434,11 @@
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "heading_product_info",
-            "accordion_product_info"
+            "text_aEtTtq",
+            "accordion_3Ncx9Y"
           ]
         }
       },
-      "block_order": [
-        "disclosures_g9mWze"
-      ],
       "settings": {
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
