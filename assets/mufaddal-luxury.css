@@ -192,6 +192,34 @@ body.mufaddal-luxury .header__icon svg {
   height: 1.25rem;
 }
 
+/* Keep cart count badge visible and readable */
+body.mufaddal-luxury .header-actions__action,
+body.mufaddal-luxury .header-actions__cart-icon {
+  overflow: visible;
+}
+
+body.mufaddal-luxury .header-actions__cart-icon .cart-bubble:not(.visually-hidden) {
+  --cart-bubble-background: var(--mj-gold, #c4a35a);
+  --cart-bubble-text: #ffffff;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+}
+
+body.mufaddal-luxury .header-actions__cart-icon .cart-bubble__background {
+  background-color: var(--cart-bubble-background, var(--mj-gold, #c4a35a));
+}
+
+body.mufaddal-luxury .header-actions__cart-icon .cart-bubble__text {
+  color: var(--cart-bubble-text, #ffffff);
+  font-weight: 600;
+}
+
+/* Mini cart must sit above sticky header */
+body.mufaddal-luxury #cart-drawer .theme-drawer__dialog {
+  z-index: calc(var(--layer-menu-drawer) + 20);
+}
+
 body.mufaddal-luxury .announcement-bar {
   letter-spacing: 0.14em;
 }
