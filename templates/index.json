@@ -17,25 +17,25 @@
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Aug_8_2026_01_24_05_AM.png",
             "eyebrow": "Mufaddal Jewellers",
-            "heading": "Jewellery crafted for forever",
-            "text": "Hallmarked gold and fine diamonds, composed with quiet luxury for life's most meaningful moments.",
+            "heading": "Exceptional pieces for extraordinary lives",
+            "text": "Discover rings, necklaces, and bridal collections designed with enduring elegance.",
             "button_label_1": "Shop Collection",
-            "button_link_1": "shopify://collections/all",
+            "button_link_1": "",
             "button_label_2": "Book Consultation",
-            "button_link_2": "shopify://pages/contact"
+            "button_link_2": ""
           }
         },
         "slide_6WX997": {
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Aug_8_2026_01_29_16_AM.png",
-            "eyebrow": "Mufaddal Jewellers",
-            "heading": "Bridal pieces with lasting grace",
-            "text": "From the first spark to forever — engagement rings and bridal sets designed to be worn for a lifetime.",
-            "button_label_1": "Explore Bridal",
-            "button_link_1": "shopify://collections/all",
+            "eyebrow": "Mufaddal Jewellers1",
+            "heading": "Exceptional pieces for extraordinary lives",
+            "text": "Discover rings, necklaces, and bridal collections designed with enduring elegance.",
+            "button_label_1": "Shop Collection",
+            "button_link_1": "",
             "button_label_2": "Book Consultation",
-            "button_link_2": "shopify://pages/contact"
+            "button_link_2": ""
           }
         }
       },
@@ -52,11 +52,11 @@
         "heading": "Timeless jewellery, crafted for forever",
         "text": "Fine diamonds and hallmarked gold, composed with quiet luxury for life's most meaningful moments.",
         "button_label_1": "Shop Collection",
-        "button_link_1": "shopify://collections/all",
+        "button_link_1": "",
         "button_label_2": "Book Consultation",
-        "button_link_2": "shopify://pages/contact",
+        "button_link_2": "",
         "slide_interval": 6,
-        "show_scroll_indicator": false
+        "show_scroll_indicator": true
       }
     },
     "luxury_collections": {
@@ -111,13 +111,13 @@
         "col_custom"
       ],
       "settings": {
-        "eyebrow": "The Maison",
-        "heading": "Collections of enduring beauty",
-        "text": "Discover curated jewellery designed for everyday elegance and life's most meaningful occasions.",
+        "eyebrow": "Collections",
+        "heading": "Explore the maison",
+        "text": "Curated categories of fine jewellery, each finished with quiet precision.",
         "columns": 5,
         "image_ratio": "3 / 4",
         "background": "#ffffff",
-        "padding_y": 110
+        "padding_y": 96
       }
     },
     "luxury_featured_carousel": {
@@ -131,8 +131,8 @@
         "show_quick_actions": true,
         "customise_link": "",
         "view_all_label": "View collection",
-        "background": "#f7f6f3",
-        "padding_y": 110
+        "background": "#faf8f4",
+        "padding_y": 52
       }
     },
     "luxury_craftsmanship": {
@@ -177,11 +177,11 @@
         "eyebrow": "Our Craftsmanship",
         "heading": "Handcrafted with enduring mastery",
         "text": "<p>From diamond selection to final polish, every Mufaddal piece is shaped by goldsmith expertise and an uncompromising standard of finish.</p>",
-        "image": "shopify://shop_images/mufaddal.jpg",
+        "image": "shopify://shop_images/ChatGPT_Image_Aug_8_2026_10_54_10_AM.png",
         "button_label": "Discover our atelier",
         "button_link": "",
         "background": "#ffffff",
-        "padding_y": 110
+        "padding_y": 100
       }
     },
     "luxury_bestsellers": {
@@ -196,22 +196,22 @@
         "customise_link": "",
         "view_all_label": "Shop bestsellers",
         "background": "#ffffff",
-        "padding_y": 110
+        "padding_y": 96
       }
     },
     "luxury_bridal": {
       "type": "luxury-bridal",
       "settings": {
-        "eyebrow": "Bridal",
+        "eyebrow": "Bridal Collection",
         "heading": "Begin your forever in light",
         "text": "Engagement rings and bridal suites designed for enduring elegance, private appointments, and personal meaning.",
         "image_position": "left",
         "button_label": "Book Bridal Appointment",
-        "button_link": "shopify://pages/contact",
+        "button_link": "",
         "secondary_label": "View bridal collection",
-        "secondary_link": "shopify://collections/all",
-        "background": "#f7f6f3",
-        "padding_y": 120
+        "secondary_link": "",
+        "background": "#faf8f4",
+        "padding_y": 100
       }
     },
     "luxury_custom_journey": {
@@ -258,9 +258,9 @@
         "text": "A private, guided process from first sketch to finished heirloom.",
         "heading_alignment": "center",
         "button_label": "Start Custom Design",
-        "button_link": "shopify://pages/contact",
-        "background": "#ffffff",
-        "padding_y": 110
+        "button_link": "",
+        "background": "#faf8f4",
+        "padding_y": 100
       }
     },
     "luxury_testimonials": {
@@ -304,9 +304,9 @@
       ],
       "settings": {
         "eyebrow": "Client Stories",
-        "heading": "Voices of lasting trust",
-        "background": "#f7f6f3",
-        "padding_y": 110
+        "heading": "Trusted by discerning clients worldwide",
+        "background": "#ffffff",
+        "padding_y": 96
       }
     },
     "luxury_instagram": {
@@ -443,8 +443,8 @@
       ],
       "settings": {
         "heading": "Confidence in every detail",
-        "background": "#f7f6f3",
-        "padding_y": 80
+        "background": "#faf8f4",
+        "padding_y": 72
       }
     },
     "luxury_newsletter": {
@@ -461,7 +461,7 @@
         "button_label": "Subscribe",
         "success_message": "Welcome to Mufaddal. Your private access awaits.",
         "background": "#ffffff",
-        "padding_y": 120
+        "padding_y": 100
       }
     }
   },
