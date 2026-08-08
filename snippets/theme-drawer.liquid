@@ -33,9 +33,12 @@
     if (!window.matchMedia('(min-width: 990px)').matches) return;
 
     var dialogs = [];
+    var shouldSqueeze = false;
     for (var i = 0; i < drawerIds.length; i++) {
       var drawer = document.getElementById(drawerIds[i]);
       if (!drawer) continue;
+      // Skip drawers that opt out of persistence / page squeeze (e.g. cart).
+      if (drawer.hasAttribute('no-persist') || drawer.hasAttribute('data-no-squeeze')) continue;
 
       drawer.setAttribute('open', '');
 
@@ -56,13 +59,14 @@
       // Let each drawer type handle its own restore (e.g. shopify-chat mode).
       // Synchronous dispatch — listeners attached during earlier parsing run immediately.
       drawer.dispatchEvent(new CustomEvent('theme-drawer:restoring'));
+      shouldSqueeze = true;
     }
 
     // Apply squeeze immediately, bypassing the margin transition.
     // Only squeeze if at least one drawer was actually restored — saved
     // drawer IDs may not exist on every page (e.g. cart-drawer on /cart).
     var pageWrapper = document.querySelector('.page-wrapper');
-    if (pageWrapper && dialogs.length > 0) {
+    if (pageWrapper && dialogs.length > 0 && shouldSqueeze) {
       pageWrapper.style.transition = 'none';
       pageWrapper.classList.add('page-wrapper--drawer-open');
     }
@@ -85,25 +89,34 @@
   const pageWrapper = document.querySelector('.page-wrapper');
   const squeezeQuery = window.matchMedia('(min-width: 990px)');
 
+  const drawerAllowsSqueeze = (drawer) =>
+    drawer instanceof Element && !drawer.hasAttribute('data-no-squeeze');
+
   // ── Squeeze coordination ──
   // Listens to all drawers. Only squeezes on wide viewports.
-  document.addEventListener('theme-drawer:open', () => {
-    if (squeezeQuery.matches) {
-      pageWrapper?.classList.add('page-wrapper--drawer-open');
-    }
+  document.addEventListener('theme-drawer:open', (event) => {
+    const drawer = event.target instanceof Element ? event.target.closest('theme-drawer') : null;
+    if (!squeezeQuery.matches || !drawerAllowsSqueeze(drawer)) return;
+    pageWrapper?.classList.add('page-wrapper--drawer-open');
   });
 
   document.addEventListener('theme-drawer:close', () => {
-    const openDrawer = document.querySelector('theme-drawer[open]');
-    if (!openDrawer) {
+    const openSqueezeDrawer = document.querySelector('theme-drawer[open]:not([data-no-squeeze])');
+    if (!openSqueezeDrawer) {
       pageWrapper?.classList.remove('page-wrapper--drawer-open');
     }
   });
 
   squeezeQuery.addEventListener('change', () => {
-    const openDrawer = document.querySelector('theme-drawer[open]');
-    pageWrapper?.classList.toggle('page-wrapper--drawer-open', Boolean(openDrawer) && squeezeQuery.matches);
+    const openSqueezeDrawer = document.querySelector('theme-drawer[open]:not([data-no-squeeze])');
+    pageWrapper?.classList.toggle('page-wrapper--drawer-open', Boolean(openSqueezeDrawer) && squeezeQuery.matches);
   });
+
+  // Clear a stuck squeeze class left over from older cart-drawer sessions.
+  if (pageWrapper?.classList.contains('page-wrapper--drawer-open')) {
+    const openSqueezeDrawer = document.querySelector('theme-drawer[open]:not([data-no-squeeze])');
+    if (!openSqueezeDrawer) pageWrapper.classList.remove('page-wrapper--drawer-open');
+  }
 
   // ── State persistence ──
   // Store open drawer IDs sorted by their visual stack order so

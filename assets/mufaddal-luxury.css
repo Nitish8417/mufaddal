@@ -21,6 +21,20 @@ body.mufaddal-luxury {
   text-rendering: optimizeLegibility;
 }
 
+/* Prevent horizontal page scroll from carousels / drawer layout */
+body.mufaddal-luxury .page-wrapper,
+body.mufaddal-luxury #MainContent {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body.mufaddal-luxury .mj-section,
+body.mufaddal-luxury .mj-section__inner,
+body.mufaddal-luxury .mj-carousel-section {
+  min-width: 0;
+  max-width: 100%;
+}
+
 body.mufaddal-luxury ::selection {
   background: color-mix(in srgb, var(--mj-gold) 35%, white);
   color: var(--mj-ink);
@@ -566,7 +580,11 @@ body.mufaddal-luxury .mj-carousel__track {
   grid-auto-flow: column;
   grid-auto-columns: minmax(58%, 1fr);
   gap: 0.85rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   padding-bottom: 0.15rem;

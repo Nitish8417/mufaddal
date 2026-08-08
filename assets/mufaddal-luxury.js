@@ -211,9 +211,32 @@
     }
   };
 
+  const clearLegacyCartSqueeze = () => {
+    try {
+      const stored = (sessionStorage.getItem('theme-drawer-open') || '')
+        .split(',')
+        .filter(Boolean);
+      const next = stored.filter((id) => id !== 'cart-drawer');
+      if (next.length !== stored.length) {
+        if (next.length) sessionStorage.setItem('theme-drawer-open', next.join(','));
+        else sessionStorage.removeItem('theme-drawer-open');
+      }
+    } catch {
+      /* ignore */
+    }
+
+    const pageWrapper = document.querySelector('.page-wrapper');
+    const openSqueezeDrawer = document.querySelector('theme-drawer[open]:not([data-no-squeeze])');
+    if (pageWrapper && !openSqueezeDrawer) {
+      pageWrapper.classList.remove('page-wrapper--drawer-open');
+    }
+  };
+
   const initCartDrawerOnAdd = () => {
     if (document.documentElement.dataset.mjCartDrawerBound === 'true') return;
     document.documentElement.dataset.mjCartDrawerBound = 'true';
+
+    clearLegacyCartSqueeze();
 
     document.addEventListener('shopify:cart:lines-update', (event) => {
       if (event.action !== 'add') return;
