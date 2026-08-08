@@ -451,29 +451,6 @@
         "padding-block-end": 0
       }
     },
-    "product_social_proof": {
-      "type": "product-social-proof",
-      "settings": {
-        "show_inventory": true,
-        "low_stock_threshold": 5,
-        "show_visitors": true,
-        "visitors_min": 3,
-        "visitors_max": 12,
-        "show_delivery": true,
-        "delivery_text": "Estimated delivery: 3–7 business days with insured shipping.",
-        "show_gift_wrap": true,
-        "gift_wrap_text": "Complimentary luxury gift wrapping available at checkout.",
-        "consultation_label": "Book video consultation",
-        "consultation_link": "",
-        "whatsapp_label": "WhatsApp support",
-        "whatsapp_number": "",
-        "whatsapp_message": "Hello Mufaddal Jewellers, I would like assistance with this piece.",
-        "customise_label": "Customize jewellery",
-        "customise_link": "",
-        "background": "#faf8f4",
-        "padding_y": 32
-      }
-    },
     "complete_the_look": {
       "type": "complete-the-look",
       "settings": {
@@ -637,7 +614,6 @@
   },
   "order": [
     "main",
-    "product_social_proof",
     "complete_the_look",
     "product_recommendations_qggXJq"
   ]
