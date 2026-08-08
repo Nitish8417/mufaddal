@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "main": {
       "type": "product-information",
@@ -38,6 +39,7 @@
             "media_columns": "two",
             "image_gap": 4,
             "large_first_image": false,
+            "icons_style": "arrow",
             "slideshow_controls_style": "counter",
             "slideshow_mobile_controls_style": "dots",
             "thumbnail_position": "right",
@@ -116,6 +118,7 @@
                 "border_opacity": 100,
                 "border_color": "",
                 "border_radius": 0,
+                "link": "",
                 "open_in_new_tab": false,
                 "placeholder": "",
                 "padding-block-start": 0,
@@ -337,10 +340,13 @@
         "show_gift_wrap": true,
         "gift_wrap_text": "Complimentary luxury gift wrapping available at checkout.",
         "consultation_label": "Book video consultation",
+        "consultation_link": "",
         "whatsapp_label": "WhatsApp support",
+        "whatsapp_number": "",
         "whatsapp_message": "Hello Mufaddal Jewellers, I would like assistance with this piece.",
         "customise_label": "Customize jewellery",
-        "background": "#FAF8F4",
+        "customise_link": "",
+        "background": "#faf8f4",
         "padding_y": 32
       }
     },
@@ -355,7 +361,7 @@
         "shipping_fallback": "Insured worldwide shipping with tracked delivery.",
         "care_fallback": "Store separately, avoid harsh chemicals, and polish gently with a soft cloth.",
         "returns_fallback": "Easy returns within the stated policy window for eligible unworn pieces.",
-        "background": "#FFFFFF",
+        "background": "#ffffff",
         "padding_y": 64
       }
     },
@@ -364,8 +370,16 @@
       "settings": {
         "eyebrow": "Styling",
         "heading": "Complete the look",
+        "product_list": [
+          "amethyst-cluster-bangle",
+          "amethyst-cluster-pendant",
+          "amethyst-cluster-earrings",
+          "amethyst-cocktail-ring",
+          "amethyst-healing-bracelet"
+        ],
+        "collection": "",
         "products_to_show": 4,
-        "background": "#FFFFFF",
+        "background": "#ffffff",
         "padding_y": 72
       }
     },
