@@ -17,9 +17,11 @@
   }
 </script>
 
-{%- if template.name == 'product' and product -%}
-  {{ product | structured_data }}
-{%- endif -%}
+{%- comment -%}
+  Product and article JSON-LD already render from their section templates
+  (product-information / main-blog-post). Do not output bare structured_data
+  here — without a script wrapper it prints as visible page text.
+{%- endcomment -%}
 
 {%- if template.name == 'collection' and collection -%}
   <script type="application/ld+json">
@@ -31,10 +33,6 @@
       "url": {{ canonical_url | json }}
     }
   </script>
-{%- endif -%}
-
-{%- if template.name == 'article' and article -%}
-  {{ article | structured_data }}
 {%- endif -%}
 
 {%- if template.name == 'index' or template.name == 'product' or template.name == 'collection' or template.name == 'page' or template.name == 'blog' or template.name == 'article' -%}
