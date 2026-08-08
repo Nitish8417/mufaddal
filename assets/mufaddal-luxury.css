@@ -624,12 +624,40 @@ body.mufaddal-luxury .mj-carousel__track {
   margin-top: 0.55rem;
 }
 
-.mj-product-card__atc {
-  min-height: 0;
-  padding: 0;
-  border: 0;
+.mj-product-card__form {
+  display: inline-flex;
+}
+
+.mj-product-card__atc.mj-btn,
+.mj-product-card__atc.button {
+  min-height: 2.35rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--mj-ink) 55%, transparent);
   background: transparent;
+  color: var(--mj-ink);
+  font-family: var(--font-subheading--family);
   font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.mj-product-card__atc.mj-btn:hover,
+.mj-product-card__atc.button:hover:not(:disabled) {
+  background: var(--mj-ink);
+  border-color: var(--mj-ink);
+  color: #fff;
+}
+
+.mj-product-card__atc .add-to-cart-icon {
+  display: none;
+}
+
+.mj-product-card__atc:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .mj-carousel__footer {

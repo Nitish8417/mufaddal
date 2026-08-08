@@ -61,10 +61,55 @@
               </div>
             </a>
             {%- if section.settings.show_quick_actions -%}
+              {%- liquid
+                assign mj_variant = product.selected_or_first_available_variant
+                assign mj_form_id = 'MjCarousel-' | append: section.id | append: '-' | append: product.id
+                assign mj_atc_text = 'products.product.add_to_cart' | t
+                assign mj_can_add = false
+                if mj_variant != blank and mj_variant.available
+                  assign mj_can_add = true
+                endif
+              -%}
               <div class="mj-product-card__actions">
-                <a class="mj-link mj-product-card__atc" href="{{ product.url }}">
-                  {{ 'mufaddal.actions.view_piece' | t }}
-                </a>
+                {%- if mj_can_add -%}
+                  <product-form-component
+                    class="mj-product-card__form"
+                    data-section-id="{{ section.id }}"
+                    data-product-id="{{ product.id }}"
+                    on:submit="/handleSubmit"
+                  >
+                    <div
+                      class="visually-hidden"
+                      aria-live="assertive"
+                      role="status"
+                      aria-atomic="true"
+                      ref="liveRegion"
+                    ></div>
+                    {%- form 'product', product, id: mj_form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                      <input
+                        type="hidden"
+                        name="id"
+                        ref="variantId"
+                        value="{{ mj_variant.id }}"
+                      >
+                      <input
+                        type="hidden"
+                        name="quantity"
+                        value="{% if mj_variant.quantity_rule.min %}{{ mj_variant.quantity_rule.min }}{% else %}1{% endif %}"
+                      >
+                      {% render 'add-to-cart-button',
+                        add_to_cart_text: mj_atc_text,
+                        class: 'mj-btn mj-btn--outline mj-product-card__atc add-to-cart-button',
+                        can_add_to_cart: mj_can_add,
+                        product: product
+                      %}
+                    {%- endform -%}
+                  </product-form-component>
+                {%- else -%}
+                  <button type="button" class="mj-btn mj-btn--outline mj-product-card__atc" disabled>
+                    {{ 'products.product.sold_out' | t }}
+                  </button>
+                {%- endif -%}
                 {%- if section.settings.customise_link != blank -%}
                   <a class="mj-link" href="{{ section.settings.customise_link }}">{{ 'mufaddal.actions.customise' | t }}</a>
                 {%- endif -%}
@@ -93,6 +138,8 @@
     {%- endif -%}
   </div>
 </section>
+
+{% render 'add-to-cart-button-styles' %}
 
 {% schema %}
 {
@@ -139,7 +186,7 @@
     {
       "type": "checkbox",
       "id": "show_quick_actions",
-      "label": "Show quick actions",
+      "label": "Show add to cart",
       "default": true
     },
     {
