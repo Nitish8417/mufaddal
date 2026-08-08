@@ -197,6 +197,43 @@
     });
   };
 
+  const openCartDrawer = () => {
+    const drawer = document.querySelector('theme-drawer#cart-drawer');
+    if (!drawer) return;
+
+    if (typeof drawer.open === 'function' && !drawer.isOpen) {
+      drawer.open();
+      return;
+    }
+
+    if (window.Shopify?.actions?.openCart) {
+      window.Shopify.actions.openCart();
+    }
+  };
+
+  const initCartDrawerOnAdd = () => {
+    if (document.documentElement.dataset.mjCartDrawerBound === 'true') return;
+    document.documentElement.dataset.mjCartDrawerBound = 'true';
+
+    document.addEventListener('shopify:cart:lines-update', (event) => {
+      if (event.action !== 'add') return;
+
+      const source = event.target;
+      const fromLuxuryCard =
+        source instanceof Element &&
+        (source.matches('.mj-product-card__form') || source.closest('.mj-product-card__form, .mj-carousel-section'));
+
+      if (!fromLuxuryCard) return;
+
+      event.promise
+        ?.then((result) => {
+          if (result?.detail?.didError) return;
+          requestAnimationFrame(() => openCartDrawer());
+        })
+        .catch(() => {});
+    });
+  };
+
   const boot = (scope = document) => {
     initReveal();
     initHeroSlider(scope);
@@ -204,6 +241,7 @@
     initCarousels(scope);
     initStickyAtc();
     initRecentlyViewed();
+    initCartDrawerOnAdd();
   };
 
   if (document.readyState === 'loading') {

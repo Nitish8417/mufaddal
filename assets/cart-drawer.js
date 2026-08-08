@@ -77,7 +77,9 @@ class CartDrawerComponent extends Component {
       event.target instanceof Element ? event.target.closest('dialog:modal') : null
     );
 
-    if (shouldAutoOpen && !sourceModal && !this.#isCartEmpty()) {
+    // Open immediately on add (including first item into an empty cart).
+    // Content morphs in via the same cart:lines-update promise.
+    if (shouldAutoOpen && !sourceModal) {
       this.#themeDrawer?.open();
     }
 
@@ -105,10 +107,6 @@ class CartDrawerComponent extends Component {
         if (error?.name !== 'AbortError') console.warn('[cart-drawer] Event promise rejected:', error);
       });
   };
-
-  #isCartEmpty() {
-    return Boolean(this.querySelector('.cart-drawer--empty'));
-  }
 
   #updateStickyState() {
     const dialog = this.#dialog;

@@ -97,6 +97,7 @@
                         name="quantity"
                         value="{% if mj_variant.quantity_rule.min %}{{ mj_variant.quantity_rule.min }}{% else %}1{% endif %}"
                       >
+                      <input type="hidden" name="sections" value="cart-drawer-section">
                       {% render 'add-to-cart-button',
                         add_to_cart_text: mj_atc_text,
                         class: 'mj-btn mj-btn--outline mj-product-card__atc add-to-cart-button',
