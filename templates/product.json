@@ -450,7 +450,7 @@
         "background_color": "{{ settings.color_palette.background }}",
         "enable_jewelry_customization": true,
         "jewelry_in_stock_secondary_label": "Customize product",
-        "jewelry_whatsapp_number": "",
+        "jewelry_whatsapp_number": "8418020269",
         "jewelry_whatsapp_header_text": "Customization Request",
         "jewelry_whatsapp_logo_url": "",
         "jewelry_whatsapp_footer_text": "Thank you for choosing Mufaddal. Our team will contact you shortly.",
