@@ -9,9 +9,9 @@
  */
 {
   "current": {
-    "logo": "shopify://shop_images/mufaddal.jpg",
-    "logo_inverse": "shopify://shop_images/mufaddal.jpg",
-    "favicon": "shopify://shop_images/mufaddal.jpg",
+    "logo": "shopify://shop_images/al-mufaddal-logo.png",
+    "logo_inverse": "shopify://shop_images/al-mufaddal-logo.png",
+    "favicon": "shopify://shop_images/al-mufaddal-logo.png",
     "cart_type": "drawer",
     "auto_open_cart_drawer": true,
     "content_for_index": [],
@@ -22,15 +22,15 @@
   },
   "platform_customizations": {
     "custom_css": [
-      "body, body * {font-family: 'Alice', Georgia, serif; }",
-      "h1, h2, h3, h4, h5, h6, .h0, .h1, .h2, .h3, .h4, .h5, .h6, .hero__title, .section-heading, .card__heading, .product__title {font-family: 'Cormorant Garamond', Georgia, serif !important; letter-spacing: -0.02em; }",
-      "body, .page, .color-background-1, .color-background-2, .gradient {color: #37322A; background-color: #EFEBE7; }",
-      "header, .header-wrapper, footer, .footer, .drawer, .menu-drawer, .cart-drawer {background-color: #37322A; color: #EFEBE7; }",
-      ".button, button, input[type='submit'], .button--primary, .shopify-payment-button__button {background-color: #37322A; color: #EFEBE7; border-color: #37322A; }",
-      ".button:hover, button:hover, input[type='submit']:hover, .button--primary:hover, .shopify-payment-button__button:hover {background-color: #A2947C; border-color: #A2947C; color: #EFEBE7; }",
-      ".button--secondary, .button--tertiary {background-color: transparent; color: #37322A; border-color: #37322A; }",
-      ".card, .product-card, .collection-card, .facets-container, .field__input, input, select, textarea {background-color: #EFEBE7; color: #37322A; border-color: #D4C4AB; }",
-      ".price, .price-item, .badge {color: #37322A; }"
+      "body,body * {font-family: \"Alice\", Georgia, serif;}",
+      "h1,h2,h3,h4,h5,h6,.h0,.h1,.h2,.h3,.h4,.h5,.h6,.hero__title,.section-heading,.card__heading,.product__title {font-family: \"Cormorant Garamond\", Georgia, serif !important; letter-spacing: -0.02em;}",
+      "body,.page,.color-background-1,.color-background-2,.gradient {color: #37322a; background-color: #efebe7;}",
+      "header,.header-wrapper,footer,.footer,.drawer,.menu-drawer,.cart-drawer {background-color: #37322a; color: #efebe7;}",
+      ".button,button,input[type=\"submit\"],.button--primary,.shopify-payment-button__button {background-color: #37322a; color: #efebe7; border-color: #37322a;}",
+      ".button:hover,button:hover,input[type=\"submit\"]:hover,.button--primary:hover,.shopify-payment-button__button:hover {background-color: #a2947c; border-color: #a2947c; color: #efebe7;}",
+      ".button--secondary,.button--tertiary {background-color: transparent; color: #37322a; border-color: #37322a;}",
+      ".card,.product-card,.collection-card,.facets-container,.field__input,input,select,textarea {background-color: #efebe7; color: #37322a; border-color: #d4c4ab;}",
+      ".price,.price-item,.badge {color: #37322a;}"
     ]
   }
 }
