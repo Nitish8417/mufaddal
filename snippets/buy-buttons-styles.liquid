@@ -36,12 +36,18 @@
 
   .buy-buttons-block__jewelry-dual {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: var(--gap-sm);
     width: 100%;
     flex: 1 1 100%;
     min-width: 0;
     align-items: stretch;
+  }
+
+  @media screen and (min-width: 750px) {
+    .buy-buttons-block__jewelry-dual {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
   @media screen and (max-width: 749px) {
@@ -70,6 +76,18 @@
     flex: 1;
     min-height: var(--height-buy-buttons);
     justify-content: center;
+  }
+
+  /* Make Customize CTA unmistakable next to primary ATC */
+  .buy-buttons-block__jewelry-dual .add-to-cart-block--jewelry .add-to-cart-button {
+    border: 1px solid currentColor;
+    background: transparent;
+    color: var(--color-foreground, #37322a);
+  }
+
+  .buy-buttons-block__jewelry-dual .add-to-cart-block--jewelry .add-to-cart-button:hover {
+    background: var(--color-foreground, #37322a);
+    color: var(--color-background, #fff);
   }
 
   .product-form-buttons--jewelry-dual .accelerated-checkout-block {

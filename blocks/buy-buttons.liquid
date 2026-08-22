@@ -20,8 +20,14 @@
   assign customize_product_label = 'products.product.customize_product' | t
   assign jewelry_secondary_label = section.settings.jewelry_in_stock_secondary_label | strip
   if jewelry_secondary_label == blank
-    assign jewelry_secondary_label = 'Customize product'
+    assign jewelry_secondary_label = 'products.product.jewelry_secondary_in_stock' | t
+    if jewelry_secondary_label contains 'Translation missing'
+      assign jewelry_secondary_label = 'Customize product'
+    endif
   endif
+  # Theme-editor / Shopify sync often drops this key; default ON like Naqsh jewelry PDP.
+  assign jewelry_customization_enabled = section.settings.enable_jewelry_customization | default: true, allow_false: true
+  assign quantity_rule_soldout = false
 
   if variant
     if variant.quantity_rule.min > variant.inventory_quantity and inventory_managed and inventory_policy == 'deny'
@@ -42,7 +48,7 @@
 
   assign show_jewelry_customize = false
   assign jewelry_show_alongside_add_to_cart = false
-  if section.settings.enable_jewelry_customization and variant
+  if jewelry_customization_enabled and variant
     assign jewelry_is_oos = false
     if inventory_managed and inventory_quantity <= 0 or quantity_rule_soldout
       assign jewelry_is_oos = true
@@ -55,6 +61,10 @@
       assign jewelry_show_alongside_add_to_cart = false
       assign can_add_to_cart = true
       assign add_to_cart_text = customize_product_label
+    else
+      # Available without tracked inventory — still show Customize (Naqsh parity)
+      assign show_jewelry_customize = true
+      assign jewelry_show_alongside_add_to_cart = true
     endif
   endif
 %}
@@ -75,7 +85,7 @@
       on:submit="/handleSubmit"
       data-quantity-default="{% if product.selected_or_first_available_variant.quantity_rule.min %}{{ product.selected_or_first_available_variant.quantity_rule.min }}{% else %}1{% endif %}"
       data-quantity-error-max="{{ 'products.product.quantity_error_max' | t }}"
-      {% if section.settings.enable_jewelry_customization %}
+      {% if jewelry_customization_enabled %}
         data-jewelry-dynamic-buttons="true"
       {% endif %}
     >

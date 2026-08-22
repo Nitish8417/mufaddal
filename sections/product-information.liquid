@@ -43,8 +43,9 @@
     if current_variant.quantity_rule.min > current_variant.inventory_quantity and sticky_inventory_managed and current_variant.inventory_policy == 'deny'
       assign sticky_qty_rule_soldout = true
     endif
+    assign jewelry_customization_enabled = section.settings.enable_jewelry_customization | default: true, allow_false: true
     assign sticky_jewelry_customize = false
-    if section.settings.enable_jewelry_customization and current_variant
+    if jewelry_customization_enabled and current_variant
       if sticky_inventory_managed and current_variant.inventory_quantity <= 0 or sticky_qty_rule_soldout
         assign sticky_jewelry_customize = true
       endif
@@ -217,7 +218,10 @@
   Diamond-weight picker and jewelry customization modal are copied from the
   Naqsh PDP, but loaded only when the target product-information section opts in.
 {%- endcomment -%}
-{% if section.settings.enable_jewelry_customization %}
+{% liquid
+  assign jewelry_customization_enabled = section.settings.enable_jewelry_customization | default: true, allow_false: true
+%}
+{% if jewelry_customization_enabled %}
   {% render 'diamond-weight-picker', product: product, style: 'radio' %}
 
   {% liquid
@@ -557,13 +561,15 @@
       "type": "checkbox",
       "id": "enable_jewelry_customization",
       "label": "Enable customize flow",
-      "default": false
+      "default": true,
+      "info": "Shows Customize beside Add to cart when in stock, and replaces Add to cart when sold out (Naqsh parity)."
     },
     {
       "type": "text",
       "id": "jewelry_in_stock_secondary_label",
       "label": "Secondary button label when in stock",
-      "default": "Customize product"
+      "default": "Customize product",
+      "info": "Shown beside Add to cart when inventory is available."
     },
     {
       "type": "text",

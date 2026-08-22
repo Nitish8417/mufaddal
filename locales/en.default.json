@@ -375,7 +375,8 @@
       "customize_mf_stone_type_label": "Stone type",
       "customize_rates_required": "Gold and diamond rates are required for custom checkout.",
       "customize_checkout_blocked": "Custom checkout is currently disabled.",
-      "customize_product": "Customize"
+      "customize_product": "Customize",
+      "jewelry_secondary_in_stock": "Customize product"
     }
   },
   "mufaddal": {
