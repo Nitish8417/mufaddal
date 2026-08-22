@@ -36,6 +36,36 @@ body.mufaddal-luxury #MainContent {
   overflow-x: clip;
 }
 
+/*
+ * Product gallery uses width:0;min-width:100% on .product-information__media.
+ * Ancestor overflow-x:clip collapses that column to a solid color until zoom click.
+ */
+body.mufaddal-luxury:has(main[data-template='product']) .page-wrapper,
+body.mufaddal-luxury:has(main[data-template='product']) #MainContent,
+body.mufaddal-luxury main[data-template='product'] {
+  overflow-x: visible;
+}
+
+body.mufaddal-luxury main[data-template='product'] .mj-carousel-section,
+body.mufaddal-luxury main[data-template='product'] .mj-section {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* Keep product images visible even if a transition/clip glitch remains */
+body.mufaddal-luxury .product-information__media {
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+body.mufaddal-luxury .product-information__media .product-media__image,
+body.mufaddal-luxury .product-information__media .deferred-media__poster-image {
+  opacity: 1;
+  visibility: visible;
+  max-width: 100%;
+}
+
 body.mufaddal-luxury .mj-section,
 body.mufaddal-luxury .mj-section__inner,
 body.mufaddal-luxury .mj-carousel-section {
