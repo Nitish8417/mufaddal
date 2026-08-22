@@ -49,6 +49,23 @@ body.mufaddal-luxury main[data-template='product'] .section {
   --page-margin: var(--mj-gutter);
 }
 
+/* Keep PDP readable if theme editor re-applies a dark palette background */
+body.mufaddal-luxury .product-information.section,
+body.mufaddal-luxury .product-information.section.color-custom-main,
+body.mufaddal-luxury .section-background.color-custom-main {
+  background-color: var(--mj-bg) !important;
+  color: var(--mj-text);
+  --color-background: var(--mj-bg);
+  --color-foreground: var(--mj-text);
+  --color: var(--mj-text);
+}
+
+body.mufaddal-luxury .product-information .price,
+body.mufaddal-luxury .product-information .product-details,
+body.mufaddal-luxury .product-information .text-block {
+  color: var(--mj-text);
+}
+
 body.mufaddal-luxury ::selection {
   background: color-mix(in srgb, var(--mj-gold) 35%, white);
   color: var(--mj-ink);
