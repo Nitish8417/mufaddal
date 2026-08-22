@@ -179,13 +179,13 @@
               "type": "variant-picker",
               "settings": {
                 "variant_style": "buttons",
-                "show_swatches": false,
+                "show_swatches": true,
                 "option_label_text_color": "",
-                "variant_style_class": "default",
+                "variant_style_class": "custom",
                 "custom_variant_background": "{{ settings.color_palette.background }}",
                 "custom_variant_text": "{{ settings.color_palette.foreground }}",
                 "custom_variant_border": "{{ settings.color_palette.foreground }}",
-                "selected_variant_style_class": "default",
+                "selected_variant_style_class": "custom",
                 "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
                 "custom_selected_variant_text": "{{ settings.color_palette.background }}",
                 "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
@@ -200,7 +200,7 @@
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
-                "stacking": true,
+                "stacking": false,
                 "text_color": "",
                 "show_pickup_availability": false,
                 "gift_card_form": true,
@@ -250,6 +250,7 @@
                 },
                 "accelerated-checkout": {
                   "type": "accelerated-checkout",
+                  "disabled": true,
                   "static": true,
                   "settings": {},
                   "blocks": {}
@@ -304,74 +305,128 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "accordion_row_description": {
+                "accordion_row_YGTR9n": {
                   "type": "_accordion-row",
                   "settings": {
-                    "heading": "DESCRIPTION",
-                    "open_by_default": false,
+                    "heading": "Return policy",
+                    "open_by_default": true,
                     "icon": "none",
                     "width": 20
                   },
                   "blocks": {
-                    "custom_liquid_description": {
-                      "type": "custom-liquid",
+                    "text_ahij6B": {
+                      "type": "text",
                       "settings": {
-                        "custom_liquid": "{% assign variant = product.selected_or_first_available_variant %}\n{% assign product_size = variant.metafields.custom.product_size | metafield_text | strip %}\n{% if product_size == blank %}{% assign product_size = product.metafields.custom.product_size | metafield_text | strip %}{% endif %}\n{% assign product_number = variant.metafields.custom.product_number | metafield_text | strip %}\n{% if product_number == blank %}{% assign product_number = product.metafields.custom.product_number | metafield_text | strip %}{% endif %}\n{% assign flexible_fitting = variant.metafields.custom.flexible_fitting | metafield_text | strip %}\n{% if flexible_fitting == blank %}{% assign flexible_fitting = product.metafields.custom.flexible_fitting | metafield_text | strip %}{% endif %}\n{% assign gold_type = variant.metafields.custom.gold_type | metafield_text | strip %}\n{% if gold_type == blank %}{% assign gold_type = product.metafields.custom.gold_type | metafield_text | strip %}{% endif %}\n{% assign diamond_type = variant.metafields.custom.diamond_type | metafield_text | strip %}\n{% if diamond_type == blank %}{% assign diamond_type = product.metafields.custom.diamond_type | metafield_text | strip %}{% endif %}\n{% if product.description != blank %}<div class=\"rte\">{{ product.description }}</div>{% endif %}\n{% if product_size != blank or product_number != blank or flexible_fitting != blank or gold_type != blank or diamond_type != blank %}\n  <div class=\"product-specs-container\">\n    <div class=\"specs-wrapper\">\n      {% if product_number != blank %}<div class=\"spec-row\"><span class=\"spec-label\">Product Number</span><span class=\"spec-value\">{{ product_number }}</span></div>{% endif %}\n      {% if product_size != blank %}<div class=\"spec-row\"><span class=\"spec-label\">Product Size</span><span class=\"spec-value\">{{ product_size }}</span></div>{% endif %}\n      {% if flexible_fitting != blank %}<div class=\"spec-row\"><span class=\"spec-label\">Flexible Fitting</span><span class=\"spec-value\">{{ flexible_fitting }}</span></div>{% endif %}\n      {% if gold_type != blank %}<div class=\"spec-row\"><span class=\"spec-label\">Gold Type</span><span class=\"spec-value\">{{ gold_type }}</span></div>{% endif %}\n      {% if diamond_type != blank %}<div class=\"spec-row\"><span class=\"spec-label\">Diamond Type</span><span class=\"spec-value\">{{ diamond_type }}</span></div>{% endif %}\n    </div>\n  </div>\n{% endif %}"
+                        "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "text_color": "",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "custom_liquid_description"
+                    "text_ahij6B"
                   ]
                 },
-                "accordion_row_shipping_tax": {
+                "accordion_row_TBwmny": {
                   "type": "_accordion-row",
                   "settings": {
-                    "heading": "SHIPPING & TAX INFORMATION",
+                    "heading": "Shipping",
                     "open_by_default": false,
                     "icon": "none",
                     "width": 20
                   },
                   "blocks": {
-                    "custom_liquid_shipping_tax": {
-                      "type": "custom-liquid",
+                    "text_iEnDTD": {
+                      "type": "text",
                       "settings": {
-                        "custom_liquid": "{% assign shipping_tax_information = product.metafields.custom.shipping_tax_information %}\n{% if shipping_tax_information != blank %}\n  <div class=\"rte\">{{ shipping_tax_information | metafield_tag }}</div>\n{% endif %}"
+                        "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "text_color": "",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "custom_liquid_shipping_tax"
+                    "text_iEnDTD"
                   ]
                 },
-                "accordion_row_returns_exchanges": {
+                "accordion_row_9wzzcK": {
                   "type": "_accordion-row",
                   "settings": {
-                    "heading": "RETURNS & EXCHANGES",
+                    "heading": "Manufacturing",
                     "open_by_default": false,
                     "icon": "none",
                     "width": 20
                   },
                   "blocks": {
-                    "custom_liquid_returns_exchanges": {
-                      "type": "custom-liquid",
+                    "text_3aadPc": {
+                      "type": "text",
                       "settings": {
-                        "custom_liquid": "{% assign returns_exchanges = product.metafields.custom.returns_exchanges | default: product.metafields.custom.return_policy_description %}\n{% if returns_exchanges != blank %}\n  <div class=\"rte\">{{ returns_exchanges | metafield_tag }}</div>\n{% elsif product.metafields.custom.return_policy != blank %}\n  <div class=\"rte\">{{ product.metafields.custom.return_policy | metafield_tag }}</div>\n{% endif %}"
+                        "text": "<p>Our products are manufactured both locally and globally. We carefully select our manufacturing partners to ensure our products are high quality and a fair value.</p>",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "text_color": "",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
                       },
                       "blocks": {}
                     }
                   },
                   "block_order": [
-                    "custom_liquid_returns_exchanges"
+                    "text_3aadPc"
                   ]
                 }
               },
               "block_order": [
-                "accordion_row_description",
-                "accordion_row_shipping_tax",
-                "accordion_row_returns_exchanges"
+                "accordion_row_YGTR9n",
+                "accordion_row_TBwmny",
+                "accordion_row_9wzzcK"
               ]
             }
           },
@@ -380,6 +435,7 @@
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
+            "text_aEtTtq",
             "accordion_3Ncx9Y"
           ]
         }
@@ -391,15 +447,15 @@
         "limit_details_width": false,
         "gap": 48,
         "enable_sticky_add_to_cart": true,
-        "background_color": "",
-        "padding-block-start": 0,
-        "padding-block-end": 0,
+        "background_color": "{{ settings.color_palette.background }}",
         "enable_jewelry_customization": true,
         "jewelry_in_stock_secondary_label": "Customize product",
         "jewelry_whatsapp_number": "",
         "jewelry_whatsapp_header_text": "Customization Request",
         "jewelry_whatsapp_logo_url": "",
-        "jewelry_whatsapp_footer_text": "Thank you for choosing Mufaddal. Our team will contact you shortly."
+        "jewelry_whatsapp_footer_text": "Thank you for choosing Mufaddal. Our team will contact you shortly.",
+        "padding-block-start": 0,
+        "padding-block-end": 0
       }
     },
     "complete_the_look": {
