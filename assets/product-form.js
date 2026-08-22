@@ -800,46 +800,10 @@ class ProductFormComponent extends Component {
       const { variantId } = this.refs;
       variantId.value = resource?.id ?? '';
 
-      const { addToCartButtonContainer: currentAddToCartButtonContainer, acceleratedCheckoutButtonContainer } =
-        this.refs;
-      const currentAddToCartButton = currentAddToCartButtonContainer?.refs.addToCartButton;
-
-      // Update state and text for add-to-cart button
-      if (!currentAddToCartButtonContainer || (!currentAddToCartButton && !acceleratedCheckoutButtonContainer)) return;
-
-      // Update the button state
-      if (resource == null || resource.available == false) {
-        currentAddToCartButtonContainer.disable();
-      } else {
-        currentAddToCartButtonContainer.enable();
-      }
-
-      const newAddToCartButton = html.querySelector('product-form-component [ref="addToCartButton"]');
-      if (newAddToCartButton && currentAddToCartButton) {
-        morph(currentAddToCartButton, newAddToCartButton);
-      }
-
-      if (acceleratedCheckoutButtonContainer) {
-        if (resource == null || resource.available == false) {
-          acceleratedCheckoutButtonContainer?.setAttribute('hidden', 'true');
-        } else {
-          acceleratedCheckoutButtonContainer?.removeAttribute('hidden');
-        }
-      }
-
-      // Set the data attribute for the product variant media if it exists
-      if (resource) {
-        const productVariantMedia = resource.featured_media?.preview_image?.src;
-        if (productVariantMedia) {
-          this.refs.addToCartButtonContainer?.setAttribute(
-            'data-product-variant-media',
-            productVariantMedia + '&width=100'
-          );
-        }
-      }
-
       // Check if quantity rules, price-per-item, or add-to-cart are appearing/disappearing (causes layout shift)
       const {
+        addToCartButtonContainer: currentAddToCartButtonContainer,
+        acceleratedCheckoutButtonContainer,
         quantityRules,
         pricePerItem,
         quantitySelector,
@@ -848,8 +812,25 @@ class ProductFormComponent extends Component {
         quantitySelectorWrapper,
       } = this.refs;
 
+      if (!currentAddToCartButtonContainer && !acceleratedCheckoutButtonContainer) return;
+
+      const productFormInResponse =
+        html.querySelector(`product-form-component[data-product-id="${this.dataset.productId}"]`) ??
+        html.querySelector('product-form-component');
+
+      const newAddToCartContainer = productFormInResponse?.querySelector('[ref="addToCartButtonContainer"]');
+      const newQuantityRules = productFormInResponse?.querySelector('.quantity-rules');
+      const newPricePerItem = productFormInResponse?.querySelector('price-per-item');
+      const jewelryLayoutChanged =
+        currentAddToCartButtonContainer != null &&
+        newAddToCartContainer != null &&
+        currentAddToCartButtonContainer.getAttribute('data-jewelry-mode') !==
+          newAddToCartContainer.getAttribute('data-jewelry-mode');
+      const jewelryDynamicButtons = this.dataset.jewelryDynamicButtons === 'true';
+
       // Update quantity selector's min/max/step attributes and cart quantity for the new variant
       const newQuantityInput = /** @type {HTMLInputElement | null} */ (
+        productFormInResponse?.querySelector('quantity-selector-component input[ref="quantityInput"]') ??
         html.querySelector('quantity-selector-component input[ref="quantityInput"]')
       );
 
@@ -859,24 +840,23 @@ class ProductFormComponent extends Component {
         this.dataset.quantityDefault = newQuantityInput.min || '1';
       }
 
-      const newQuantityRules = html.querySelector('.quantity-rules');
       const isQuantityRulesChanging = !!quantityRules !== !!newQuantityRules;
-
-      const newPricePerItem = html.querySelector('price-per-item');
       const isPricePerItemChanging = !!pricePerItem !== !!newPricePerItem;
+      const needsFullProductFormButtonsMorph =
+        isQuantityRulesChanging || isPricePerItemChanging || jewelryLayoutChanged || jewelryDynamicButtons;
 
-      if ((isQuantityRulesChanging || isPricePerItemChanging) && quantitySelector) {
+      if (needsFullProductFormButtonsMorph && productFormButtons && productFormInResponse) {
         // Store quantity value before morphing entire container
-        const currentQuantityValue = quantitySelector.getValue?.();
+        const currentQuantityValue = quantitySelector?.getValue?.();
 
-        const newProductFormButtons = html.querySelector('.product-form-buttons');
+        const newProductFormButtons = productFormInResponse.querySelector('.product-form-buttons');
 
         if (productFormButtons && newProductFormButtons) {
           morph(productFormButtons, newProductFormButtons);
 
           // Get the NEW quantity selector after morphing and update its constraints
           const newQuantityInputElement = /** @type {HTMLInputElement | null} */ (
-            html.querySelector('quantity-selector-component input[ref="quantityInput"]')
+            productFormInResponse.querySelector('quantity-selector-component input[ref="quantityInput"]')
           );
 
           if (this.refs.quantitySelector?.updateConstraints && newQuantityInputElement && currentQuantityValue) {
@@ -891,8 +871,20 @@ class ProductFormComponent extends Component {
             // Keep data-quantity-default attribute in sync with new variant's minimum quantity
             this.dataset.quantityDefault = newQuantityInputElement.min || '1';
           }
+        } else if (newAddToCartContainer && currentAddToCartButtonContainer) {
+          morph(currentAddToCartButtonContainer, newAddToCartContainer);
         }
       } else {
+        if (newAddToCartContainer && currentAddToCartButtonContainer) {
+          morph(currentAddToCartButtonContainer, newAddToCartContainer);
+        } else {
+          const currentAddToCartButton = currentAddToCartButtonContainer?.refs.addToCartButton;
+          const newAddToCartButton = productFormInResponse?.querySelector('[ref="addToCartButton"]');
+          if (newAddToCartButton && currentAddToCartButton) {
+            morph(currentAddToCartButton, newAddToCartButton);
+          }
+        }
+
         // Update elements individually when layout isn't changing
         /** @type {Array<[string, HTMLElement | undefined, HTMLElement | undefined]>} */
         const morphTargets = [
@@ -902,13 +894,34 @@ class ProductFormComponent extends Component {
         ];
 
         for (const [selector, currentElement, fallback] of morphTargets) {
-          this.#morphOrUpdateElement(currentElement, html.querySelector(selector), fallback);
+          const newEl = productFormInResponse?.querySelector(selector) ?? html.querySelector(selector);
+          this.#morphOrUpdateElement(currentElement, newEl, fallback);
+        }
+      }
+
+      const newAccelerated = productFormInResponse?.querySelector('[ref="acceleratedCheckoutButtonContainer"]');
+      if (acceleratedCheckoutButtonContainer) {
+        if (newAccelerated?.hasAttribute('hidden')) {
+          acceleratedCheckoutButtonContainer.setAttribute('hidden', 'true');
+        } else {
+          acceleratedCheckoutButtonContainer.removeAttribute('hidden');
+        }
+      }
+
+      // Set the data attribute for the product variant media if it exists
+      if (resource) {
+        const productVariantMedia = resource.featured_media?.preview_image?.src;
+        if (productVariantMedia) {
+          this.refs.addToCartButtonContainer?.setAttribute(
+            'data-product-variant-media',
+            productVariantMedia + '&width=100'
+          );
         }
       }
 
       // Morph volume pricing if it exists
       const currentVolumePricing = this.refs.volumePricing;
-      const newVolumePricing = html.querySelector('volume-pricing');
+      const newVolumePricing = productFormInResponse?.querySelector('volume-pricing') ?? html.querySelector('volume-pricing');
       this.#morphOrUpdateElement(currentVolumePricing, newVolumePricing, this.refs.productFormButtons);
 
       const hasB2BFeatures =

@@ -34,11 +34,30 @@
     assign current_variant = product.selected_or_first_available_variant
     # Get the initial quantity based on quantity rules
     assign initial_quantity = current_variant.quantity_rule.min | default: 1
+
+    assign sticky_inventory_managed = false
+    if current_variant.inventory_management == 'shopify'
+      assign sticky_inventory_managed = true
+    endif
+    assign sticky_qty_rule_soldout = false
+    if current_variant.quantity_rule.min > current_variant.inventory_quantity and sticky_inventory_managed and current_variant.inventory_policy == 'deny'
+      assign sticky_qty_rule_soldout = true
+    endif
+    assign sticky_jewelry_customize = false
+    if section.settings.enable_jewelry_customization and current_variant
+      if sticky_inventory_managed and current_variant.inventory_quantity <= 0 or sticky_qty_rule_soldout
+        assign sticky_jewelry_customize = true
+      endif
+    endif
+    assign sticky_variant_available_for_bar = current_variant.available
+    if sticky_jewelry_customize
+      assign sticky_variant_available_for_bar = true
+    endif
   %}
 
   <sticky-add-to-cart
     class="sticky-add-to-cart"
-    data-variant-available="{{ current_variant.available }}"
+    data-variant-available="{{ sticky_variant_available_for_bar }}"
     data-product-id="{{ product.id }}"
     data-current-variant-id="{{ current_variant.id }}"
     data-initial-quantity="{{ initial_quantity }}"
@@ -125,23 +144,34 @@
         type="button"
         class="sticky-add-to-cart__button add-to-cart-button button"
         ref="addToCartButton"
-        on:click="/handleAddToCartClick"
+        {% if sticky_jewelry_customize %}
+          id="sticky-customize-btn"
+          data-jewelry-customize-open
+        {% else %}
+          on:click="/handleAddToCartClick"
+        {% endif %}
         {% unless current_variant.available %}
-          disabled
+          {% unless sticky_jewelry_customize %}
+            disabled
+          {% endunless %}
         {% endunless %}
       >
         <span
           class="add-to-cart-text"
         >
           {% if current_variant.available %}
-            <span class="svg-wrapper">
-              {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
-            </span>
+            {% unless sticky_jewelry_customize %}
+              <span class="svg-wrapper">
+                {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
+              </span>
+            {% endunless %}
           {% endif %}
           <span class="add-to-cart-text__content">
             <span>
               {%- if current_variant.available -%}
                 {{- 'products.product.add_to_cart' | t -}}
+              {%- elsif sticky_jewelry_customize -%}
+                {{- 'products.product.customize_product' | t -}}
               {%- elsif current_variant == blank -%}
                 {{- 'products.product.unavailable' | t -}}
               {%- else -%}
@@ -182,6 +212,41 @@
   product_details: product_details,
   additional_blocks: additional_blocks
 %}
+
+{%- comment -%}
+  Diamond-weight picker and jewelry customization modal are copied from the
+  Naqsh PDP, but loaded only when the target product-information section opts in.
+{%- endcomment -%}
+{% if section.settings.enable_jewelry_customization %}
+  {% render 'diamond-weight-picker', product: product, style: 'radio' %}
+
+  {% liquid
+    assign details_block = section.blocks | where: 'type', '_product-details' | first
+    assign variant_picker_block = nil
+    if details_block != blank
+      assign variant_picker_block = details_block.blocks | where: 'type', 'variant-picker' | first
+      if variant_picker_block == blank
+        for nested in details_block.blocks
+          if nested.type == 'group' and nested.blocks != blank
+            assign variant_picker_block = nested.blocks | where: 'type', 'variant-picker' | first
+            unless variant_picker_block == blank
+              break
+            endunless
+          endif
+        endfor
+      endif
+    endif
+  %}
+  {% render 'jewelry-customize-modal',
+    product: product,
+    section: section,
+    variant: product.selected_or_first_available_variant,
+    variant_picker_block: variant_picker_block
+  %}
+  <script src="{{ 'diamond-weight-price.js' | asset_url }}" defer></script>
+  <script src="{{ 'jewelry-customize.js' | asset_url }}" type="module"></script>
+  <meta name="money-format" content="{{ shop.money_format | escape }}">
+{% endif %}
 
 {% stylesheet %}
   .sticky-add-to-cart__bar {
@@ -240,6 +305,32 @@
     opacity: 0;
     transform: translateX(-50%) translateY(calc(100% + 40px));
     display: none;
+  }
+
+  .product-specs-container {
+    margin-block: var(--margin-lg);
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gap-md);
+    padding-block: var(--padding-sm);
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
+  }
+
+  .spec-label {
+    flex: 0 0 40%;
+    color: rgb(var(--color-foreground-rgb) / 0.65);
+    font-size: var(--font-size--xs);
+    text-transform: uppercase;
+  }
+
+  .spec-value {
+    flex: 1;
+    text-align: right;
+    word-break: break-word;
   }
 
   .sticky-add-to-cart__info[data-has-image='false'] {
@@ -453,6 +544,50 @@
       "id": "background_color",
       "label": "t:settings.background_color",
       "placeholder": "t:settings.default"
+    },
+    {
+      "type": "header",
+      "content": "Jewelry customization"
+    },
+    {
+      "type": "paragraph",
+      "content": "Catalog metafields are read from variants first, then product fallbacks. Relevant custom keys include product_size, gold_type, diamond_type, flexible_fitting, product_number, shipping_tax_information, returns_exchanges, and complete_the_look."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_jewelry_customization",
+      "label": "Enable customize flow",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "jewelry_in_stock_secondary_label",
+      "label": "Secondary button label when in stock",
+      "default": "Customize product"
+    },
+    {
+      "type": "text",
+      "id": "jewelry_whatsapp_number",
+      "label": "WhatsApp number for customization",
+      "info": "Use international format without spaces."
+    },
+    {
+      "type": "text",
+      "id": "jewelry_whatsapp_header_text",
+      "label": "WhatsApp header text",
+      "default": "Customization Request"
+    },
+    {
+      "type": "text",
+      "id": "jewelry_whatsapp_logo_url",
+      "label": "WhatsApp logo URL",
+      "info": "Paste a full HTTPS image URL for your logo."
+    },
+    {
+      "type": "textarea",
+      "id": "jewelry_whatsapp_footer_text",
+      "label": "WhatsApp footer text",
+      "default": "Thank you for choosing Mufaddal. Our team will contact you shortly."
     },
     {
       "type": "header",

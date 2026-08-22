@@ -1,0 +1,850 @@
+{% doc %}
+  Sold-out “Customize” modal: read-only summary of the current variant’s option values (Color, material, size, …)
+  plus variant metafields `custom.stone_type`, `custom.diamond_color`, `custom.gold_weight`, `custom.diamond_weight`.
+  Rows appear only when that metafield has a value for the selected variant (or product fallback).
+
+  @param {object} product - The current product.
+  @param {object} section - Current section (for settings and IDs).
+  @param {object} variant - Current variant (selected or first).
+  @param {object} [variant_picker_block] - The PDP variant-picker block (style, swatches, alignment); when blank, defaults match variant-main-picker.
+{% enddoc %}
+
+{% liquid
+  if variant == blank
+    assign variant = product.selected_or_first_available_variant
+  endif
+
+  # gold_weight / diamond_weight: metafield_text + .value fallback, then product metafields
+  assign mf_gold = variant.metafields.custom.gold_weight | metafield_text | strip
+  if mf_gold == blank and variant.metafields.custom.gold_weight != blank
+    assign mf_gold = variant.metafields.custom.gold_weight.value | append: '' | strip
+  endif
+  if mf_gold == blank
+    assign mf_gold = product.metafields.custom.gold_weight | metafield_text | strip
+  endif
+  if mf_gold == blank and product.metafields.custom.gold_weight != blank
+    assign mf_gold = product.metafields.custom.gold_weight.value | append: '' | strip
+  endif
+
+  assign mf_diamond = variant.metafields.custom.diamond_weight | metafield_text | strip
+  if mf_diamond == blank and variant.metafields.custom.diamond_weight != blank
+    assign mf_diamond = variant.metafields.custom.diamond_weight.value | append: '' | strip
+  endif
+  if mf_diamond == blank
+    assign mf_diamond = product.metafields.custom.diamond_weight | metafield_text | strip
+  endif
+  if mf_diamond == blank and product.metafields.custom.diamond_weight != blank
+    assign mf_diamond = product.metafields.custom.diamond_weight.value | append: '' | strip
+  endif
+
+  assign mf_stone = variant.metafields.custom.stone_type | metafield_text | strip
+  if mf_stone == blank and variant.metafields.custom.stone_type != blank
+    assign mf_stone = variant.metafields.custom.stone_type.value | append: '' | strip
+  endif
+  if mf_stone == blank
+    assign mf_stone = product.metafields.custom.stone_type | metafield_text | strip
+  endif
+  if mf_stone == blank and product.metafields.custom.stone_type != blank
+    assign mf_stone = product.metafields.custom.stone_type.value | append: '' | strip
+  endif
+
+  assign mf_diamond_color = variant.metafields.custom.diamond_color | metafield_text | strip
+  if mf_diamond_color == blank and variant.metafields.custom.diamond_color != blank
+    assign mf_diamond_color = variant.metafields.custom.diamond_color.value | append: '' | strip
+  endif
+  if mf_diamond_color == blank
+    assign mf_diamond_color = product.metafields.custom.diamond_color | metafield_text | strip
+  endif
+  if mf_diamond_color == blank and product.metafields.custom.diamond_color != blank
+    assign mf_diamond_color = product.metafields.custom.diamond_color.value | append: '' | strip
+  endif
+
+  # product-level fallbacks used when the selected variant metafields are empty
+  assign mf_gold_product = product.metafields.custom.gold_weight | metafield_text | strip
+  if mf_gold_product == blank and product.metafields.custom.gold_weight != blank
+    assign mf_gold_product = product.metafields.custom.gold_weight.value | append: '' | strip
+  endif
+  assign mf_diamond_product = product.metafields.custom.diamond_weight | metafield_text | strip
+  if mf_diamond_product == blank and product.metafields.custom.diamond_weight != blank
+    assign mf_diamond_product = product.metafields.custom.diamond_weight.value | append: '' | strip
+  endif
+
+  assign mf_stone_product = product.metafields.custom.stone_type | metafield_text | strip
+  if mf_stone_product == blank and product.metafields.custom.stone_type != blank
+    assign mf_stone_product = product.metafields.custom.stone_type.value | append: '' | strip
+  endif
+  assign mf_diamond_color_product = product.metafields.custom.diamond_color | metafield_text | strip
+  if mf_diamond_color_product == blank and product.metafields.custom.diamond_color != blank
+    assign mf_diamond_color_product = product.metafields.custom.diamond_color.value | append: '' | strip
+  endif
+
+  assign mf_product_size = variant.metafields.custom.product_size | metafield_text | strip
+  if mf_product_size == blank
+    assign mf_product_size = product.metafields.custom.product_size | metafield_text | strip
+  endif
+  assign mf_product_number = variant.metafields.custom.product_number | metafield_text | strip
+  if mf_product_number == blank
+    assign mf_product_number = product.metafields.custom.product_number | metafield_text | strip
+  endif
+  assign mf_flexible_fitting = variant.metafields.custom.flexible_fitting | metafield_text | strip
+  if mf_flexible_fitting == blank
+    assign mf_flexible_fitting = product.metafields.custom.flexible_fitting | metafield_text | strip
+  endif
+  assign mf_gold_type = variant.metafields.custom.gold_type | metafield_text | strip
+  if mf_gold_type == blank
+    assign mf_gold_type = product.metafields.custom.gold_type | metafield_text | strip
+  endif
+  assign mf_diamond_type = variant.metafields.custom.diamond_type | metafield_text | strip
+  if mf_diamond_type == blank
+    assign mf_diamond_type = product.metafields.custom.diamond_type | metafield_text | strip
+  endif
+
+  # Precious details column: Naqsh fields plus Mufaddal catalog metafields.
+  assign show_catalog_section = false
+  if mf_gold != blank or mf_diamond != blank or mf_stone != blank or mf_product_size != blank or mf_product_number != blank or mf_flexible_fitting != blank or mf_gold_type != blank or mf_diamond_type != blank
+    assign show_catalog_section = true
+  endif
+
+  assign lbl_mf_stone_type = 'products.product.customize_mf_stone_type_label' | t
+  if lbl_mf_stone_type contains 'Translation missing'
+    assign lbl_mf_stone_type = 'Stone type'
+  endif
+  assign lbl_mf_diamond_color = 'products.product.customize_mf_diamond_color_label' | t
+  if lbl_mf_diamond_color contains 'Translation missing'
+    assign lbl_mf_diamond_color = 'Diamond color'
+  endif
+
+%}
+
+<dialog
+  id="JewelryCustomize-{{ section.id }}"
+  class="dialog-modal jewelry-customize color-custom-drawer"
+  aria-labelledby="jewelry-customize-title-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-requested-variant-id="{{ variant.id }}"
+  data-requested-variant-title="{{ variant.title | escape }}"
+  data-requested-variant-available="{{ variant.available }}"
+  data-product-title="{{ product.title | escape }}"
+  data-store-name="{{ shop.name | escape }}"
+  data-store-url="{{ shop.url | escape }}"
+  data-whatsapp-number="{{ section.settings.jewelry_whatsapp_number | default: '' | strip | replace: ' ', '' | replace: '+', '' | escape }}"
+  data-whatsapp-header="{{ section.settings.jewelry_whatsapp_header_text | default: 'Customization Request' | strip | escape }}"
+  data-whatsapp-logo-url="{{ section.settings.jewelry_whatsapp_logo_url | default: '' | strip | escape }}"
+  data-whatsapp-footer="{{ section.settings.jewelry_whatsapp_footer_text | default: 'Thank you for choosing us. Our team will contact you shortly.' | strip | escape }}"
+  data-mf-gold-text="{{ mf_gold | escape }}"
+  data-mf-diamond-text="{{ mf_diamond | escape }}"
+  data-mf-stone-type-text="{{ mf_stone | escape }}"
+  data-mf-diamond-color-text="{{ mf_diamond_color | escape }}"
+  data-product-mf-gold-text="{{ mf_gold_product | escape }}"
+  data-product-mf-diamond-text="{{ mf_diamond_product | escape }}"
+  data-product-mf-stone-type-text="{{ mf_stone_product | escape }}"
+  data-product-mf-diamond-color-text="{{ mf_diamond_color_product | escape }}"
+  scroll-lock
+>
+  <div class="jewelry-customize__inner">
+
+    <div class="jewelry-customize__header">
+      <div class="jewelry-customize__header-text">
+        <h2 id="jewelry-customize-title-{{ section.id }}" class="jewelry-customize__title">
+          Design Your Signature Jewel
+        </h2>
+        <p class="jewelry-customize__hint">
+        Refine every detail below. Your selections are saved with this piece when you confirm.
+      </p>
+      </div>
+      <button
+        type="button"
+        class="button button-unstyled jewelry-customize__close"
+        data-jewelry-customize-close
+        aria-label="{{ 'accessibility.close_dialog' | t }}"
+      >
+        <span class="svg-wrapper">{{- 'icon-close.svg' | inline_asset_content -}}</span>
+      </button>
+    </div>
+
+    <div class="jewelry-customize__body">
+      
+      
+
+      <div class="jewelry-customize__grid">
+        <section class="jewelry-customize__panel">
+          <p class="jewelry-customize__section-label">Jewelry specifications</p>
+          <div class="jewelry-customize__readonly-group jewelry-customize__variant-picker-wrapper">
+            {% render 'variant-main-picker',
+              product_resource: product,
+              section: section,
+              product: product,
+              block: variant_picker_block,
+              is_modal_duplicate: true,
+              readonly: false
+            %}
+            <div
+              class="jewelry-customize__spec-diamond-color-wrap"
+              {% if mf_diamond_color == blank %}hidden{% endif %}
+            >
+              <div class="variant-picker jewelry-customize__spec-mf-picker" data-jewelry-spec-mf-anchor>
+                <fieldset
+                  class="variant-option variant-option--buttons"
+                  data-jewelry-mf-field-wrap="diamond-color"
+                  data-jewelry-mf-pill-field="diamond-color"
+                  {% if mf_diamond_color == blank %}hidden{% endif %}
+                >
+                  <legend>
+                    <span class="jewelry-customize__field-icon" aria-hidden="true" data-icon="diamond"></span>
+                    {{- lbl_mf_diamond_color | escape -}}
+                  </legend>
+                  <div class="variant-option--equal-width-buttons" data-jewelry-mf-pill-options="diamond-color"></div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      <script type="application/json" data-jewelry-variant-metafields>
+        {
+          {%- for v in product.variants -%}
+            {%- liquid
+              assign mf_gold_map = v.metafields.custom.gold_weight | metafield_text | strip
+              if mf_gold_map == blank and v.metafields.custom.gold_weight != blank
+                assign mf_gold_map = v.metafields.custom.gold_weight.value | append: '' | strip
+              endif
+              if mf_gold_map == blank
+                assign mf_gold_map = product.metafields.custom.gold_weight | metafield_text | strip
+              endif
+              if mf_gold_map == blank and product.metafields.custom.gold_weight != blank
+                assign mf_gold_map = product.metafields.custom.gold_weight.value | append: '' | strip
+              endif
+
+              assign mf_diamond_map = v.metafields.custom.diamond_weight | metafield_text | strip
+              if mf_diamond_map == blank and v.metafields.custom.diamond_weight != blank
+                assign mf_diamond_map = v.metafields.custom.diamond_weight.value | append: '' | strip
+              endif
+              if mf_diamond_map == blank
+                assign mf_diamond_map = product.metafields.custom.diamond_weight | metafield_text | strip
+              endif
+              if mf_diamond_map == blank and product.metafields.custom.diamond_weight != blank
+                assign mf_diamond_map = product.metafields.custom.diamond_weight.value | append: '' | strip
+              endif
+
+              assign mf_stone_map = v.metafields.custom.stone_type | metafield_text | strip
+              if mf_stone_map == blank and v.metafields.custom.stone_type != blank
+                assign mf_stone_map = v.metafields.custom.stone_type.value | append: '' | strip
+              endif
+              if mf_stone_map == blank
+                assign mf_stone_map = product.metafields.custom.stone_type | metafield_text | strip
+              endif
+              if mf_stone_map == blank and product.metafields.custom.stone_type != blank
+                assign mf_stone_map = product.metafields.custom.stone_type.value | append: '' | strip
+              endif
+
+              assign mf_diamond_color_map = v.metafields.custom.diamond_color | metafield_text | strip
+              if mf_diamond_color_map == blank and v.metafields.custom.diamond_color != blank
+                assign mf_diamond_color_map = v.metafields.custom.diamond_color.value | append: '' | strip
+              endif
+              if mf_diamond_color_map == blank
+                assign mf_diamond_color_map = product.metafields.custom.diamond_color | metafield_text | strip
+              endif
+              if mf_diamond_color_map == blank and product.metafields.custom.diamond_color != blank
+                assign mf_diamond_color_map = product.metafields.custom.diamond_color.value | append: '' | strip
+              endif
+            -%}
+            "{{ v.id }}": {
+              "gold_weight": {{ mf_gold_map | json }},
+              "diamond_weight": {{ mf_diamond_map | json }},
+              "stone_type": {{ mf_stone_map | json }},
+              "diamond_color": {{ mf_diamond_color_map | json }}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        }
+      </script>
+
+      <!-- Keeps values available for jewelry-customize.js without showing duplicate UI -->
+      <div class="jewelry-customize__readonly-group jewelry-customize__variant-data" aria-hidden="true">
+        {% for option in product.options_with_values %}
+          <div
+            class="jewelry-customize__readonly-row"
+            data-jewelry-variant-option
+            data-option-label="{{ option.name | escape }}"
+            data-option-value="{{ variant.options[forloop.index0] | escape }}"
+          >
+            <span class="jewelry-customize__readonly-label">{{ option.name | escape }}</span>
+            <span class="jewelry-customize__readonly-value">{{ variant.options[forloop.index0] | escape }}</span>
+          </div>
+        {% endfor %}
+      </div>
+
+        <section
+          class="jewelry-customize__panel jewelry-customize__catalog-metafields"
+          data-jewelry-catalog-block
+          {% unless show_catalog_section %}hidden{% endunless %}
+        >
+          <p class="jewelry-customize__section-label">Precious details</p>
+          <div class="jewelry-customize__readonly-group jewelry-customize__variant-picker-wrapper">
+            {% if mf_product_number != blank %}
+              <div class="jewelry-customize__readonly-row" data-jewelry-static-property data-property-label="Product Number" data-property-value="{{ mf_product_number | escape }}">
+                <span class="jewelry-customize__readonly-label">Product Number</span>
+                <span class="jewelry-customize__readonly-value">{{ mf_product_number }}</span>
+              </div>
+            {% endif %}
+            {% if mf_product_size != blank %}
+              <div class="jewelry-customize__readonly-row" data-jewelry-static-property data-property-label="Product Size" data-property-value="{{ mf_product_size | escape }}">
+                <span class="jewelry-customize__readonly-label">Product Size</span>
+                <span class="jewelry-customize__readonly-value">{{ mf_product_size }}</span>
+              </div>
+            {% endif %}
+            {% if mf_flexible_fitting != blank %}
+              <div class="jewelry-customize__readonly-row" data-jewelry-static-property data-property-label="Flexible Fitting" data-property-value="{{ mf_flexible_fitting | escape }}">
+                <span class="jewelry-customize__readonly-label">Flexible Fitting</span>
+                <span class="jewelry-customize__readonly-value">{{ mf_flexible_fitting }}</span>
+              </div>
+            {% endif %}
+            {% if mf_gold_type != blank %}
+              <div class="jewelry-customize__readonly-row" data-jewelry-static-property data-property-label="Gold Type" data-property-value="{{ mf_gold_type | escape }}">
+                <span class="jewelry-customize__readonly-label">Gold Type</span>
+                <span class="jewelry-customize__readonly-value">{{ mf_gold_type }}</span>
+              </div>
+            {% endif %}
+            {% if mf_diamond_type != blank %}
+              <div class="jewelry-customize__readonly-row" data-jewelry-static-property data-property-label="Diamond Type" data-property-value="{{ mf_diamond_type | escape }}">
+                <span class="jewelry-customize__readonly-label">Diamond Type</span>
+                <span class="jewelry-customize__readonly-value">{{ mf_diamond_type }}</span>
+              </div>
+            {% endif %}
+            <div class="variant-picker jewelry-customize__catalog-variant-picker">
+              <fieldset
+                class="variant-option variant-option--buttons"
+                data-jewelry-mf-field-wrap="diamond"
+                data-jewelry-mf-pill-field="diamond"
+                {% if mf_diamond == blank %}hidden{% endif %}
+              >
+              <legend><span class="jewelry-customize__field-icon" aria-hidden="true" data-icon="diamond"></span>{{ 'products.product.customize_mf_diamond_label' | t }}</legend>
+                <div class="variant-option--equal-width-buttons" data-jewelry-mf-pill-options="diamond"></div>
+              </fieldset>
+
+              <fieldset
+                class="variant-option variant-option--buttons"
+                data-jewelry-mf-field-wrap="stone-type"
+                data-jewelry-mf-pill-field="stone-type"
+                {% if mf_stone == blank %}hidden{% endif %}
+              >
+              <legend><span class="jewelry-customize__field-icon" aria-hidden="true" data-icon="stone"></span>{{ lbl_mf_stone_type | escape }}</legend>
+                <div class="variant-option--equal-width-buttons" data-jewelry-mf-pill-options="stone-type"></div>
+              </fieldset>
+
+              <fieldset
+                class="variant-option variant-option--buttons"
+                data-jewelry-mf-field-wrap="gold"
+                data-jewelry-mf-pill-field="gold"
+                {% if mf_gold == blank %}hidden{% endif %}
+              >
+              <legend><span class="jewelry-customize__field-icon" aria-hidden="true" data-icon="gold"></span>{{ 'products.product.customize_mf_gold_label' | t }}</legend>
+                <div class="variant-option--equal-width-buttons" data-jewelry-mf-pill-options="gold"></div>
+              </fieldset>
+            </div>
+          </div>
+        </section>
+      </div>
+
+     
+
+      {% comment %} <p
+        class="jewelry-customize__rates-warning{% if rates_ok %} jewelry-customize__rates-warning--hidden{% endif %}"
+        data-jewelry-rates-warning
+        role="status"
+      >
+        {{ 'products.product.customize_rates_required' | t }}
+      </p> {% endcomment %}
+
+      <p
+        class="jewelry-customize__checkout-error jewelry-customize__checkout-error--hidden"
+        data-jewelry-checkout-error
+        tabindex="-1"
+        role="alert"
+      >
+        {{ 'products.product.customize_checkout_blocked' | t }}
+      </p>
+
+      <div class="jewelry-customize__actions">
+        <div class="jewelry-customize__action-buttons">
+          <button type="button" class="button button-secondary" data-jewelry-customize-close>
+            {{ 'actions.cancel' | t }}
+          </button>
+          <button type="button" class="button" data-jewelry-confirm>
+            {{ 'products.product.customize_confirm' | t }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+{% stylesheet %}
+  /* Isolated form layout — do not use theme .field / .field__label (floating-label / absolute) */
+ .jewelry-customize {
+       max-width: 1024px;
+    width: 90%;
+    padding: 0;
+    border: none;
+    border-radius: var(--style-border-radius-popover, .75rem);
+    box-shadow: var(--shadow-popover);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    max-height: min(88vh, 72rem);
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+}
+
+  .jewelry-customize__inner {
+    display: flex;
+    flex-direction: column;
+    max-height: min(88vh, 72rem);
+  }
+
+  .jewelry-customize__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--gap-md);
+    padding: var(--padding-md) var(--padding-lg);
+    border-bottom: 1px solid rgb(var(--color-border-rgb) / 6%);
+    background: transparent;
+  }
+
+  .jewelry-customize__header-text {
+    min-width: 0;
+  }
+
+  .jewelry-customize__eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+  }
+
+  .jewelry-customize__title {
+    margin: 0;
+    font-size: clamp(1.5rem, 2vw, 1.95rem);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--color-foreground-heading, var(--color-foreground));
+  }
+
+ .jewelry-customize__close {
+    flex-shrink: 0;
+    padding: .5rem;
+    transition: background-color var(--animation-speed) var(--animation-easing), color var(--animation-speed) var(--animation-easing);
+    display: flex;
+    align-items: center;
+    background-color: #000;
+    color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+  .jewelry-customize__close:hover {
+    background: rgb(var(--color-foreground-rgb) / var(--opacity-10-25, 0.08));
+    color: var(--color-foreground);
+  }
+
+  .jewelry-customize__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--padding-md) var(--padding-lg) var(--padding-lg);
+  }
+
+  .jewelry-customize__hint {
+    margin: 0 0 var(--margin-md);
+    max-width: 42em;
+    font-size: var(--font-paragraph-small--size);
+    line-height: 1.55;
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+  }
+
+  .jewelry-customize__section-label {
+    margin: 0 0 var(--gap-sm);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.48);
+  }
+
+  .jewelry-customize__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--gap-md);
+    align-items: start;
+  }
+
+  .jewelry-customize__panel {
+    min-width: 0;
+  }
+
+  .jewelry-customize__generated-dropdown {
+    margin-bottom: var(--margin-sm);
+  }
+
+  .jewelry-customize__generated-dropdown:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .jewelry-customize__generated-dropdown > label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: var(--font-paragraph-small--size);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgb(var(--color-foreground-rgb) / 0.78);
+  }
+
+  .jewelry-customize [data-jewelry-mf-pill-options] {
+    display: block;
+    width: 100%;
+  }
+
+  .jewelry-customize [data-jewelry-mf-pill-options='gold'] {
+    display: flex;
+  }
+
+  .jewelry-customize [data-jewelry-mf-pill-options='gold'] .variant-option__button-label {
+    width: 100%;
+    justify-content: flex-start;
+    min-height: 2rem;
+    border-color: transparent;
+    box-shadow: none;
+    background: rgb(var(--color-foreground-rgb) / var(--opacity-5-15, 0.06));
+  }
+
+  .jewelry-customize [data-jewelry-mf-pill-options='gold'] .variant-option__button-label__pill {
+    display: none;
+  }
+
+  .jewelry-customize [data-jewelry-mf-pill-options='gold'] .variant-option__button-label:has(:checked) {
+    color: var(--color-selected-variant-text);
+    border-color: var(--color-selected-variant-border);
+    background: var(--color-selected-variant-background);
+  }
+
+  .jewelry-customize [data-jewelry-mf-pill-options='gold'] .variant-option__button-label__text {
+    text-align: left;
+    z-index: 3;
+  }
+
+  .jewelry-customize__field-icon {
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
+    margin-right: 0.65rem;
+    line-height: 1;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .jewelry-customize__field-icon::before,
+  .jewelry-customize__field-icon::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .jewelry-customize__field-icon[data-icon='color']::before {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      var(--color-background) 0 50%,
+      rgb(var(--color-primary-rgb) / 0.55) 50% 100%
+    );
+  }
+
+  .jewelry-customize__field-icon[data-icon='ring']::before {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 2px solid rgb(var(--color-foreground-rgb) / 0.55);
+    box-sizing: border-box;
+  }
+
+  .jewelry-customize__field-icon[data-icon='ring']::after {
+    width: 0.34rem;
+    height: 0.34rem;
+    border-radius: 50%;
+    background: rgb(var(--color-foreground-rgb) / 0.65);
+    top: 0.34rem;
+  }
+
+  .jewelry-customize__field-icon[data-icon='diamond']::before {
+    width: 0.75rem;
+    height: 0.75rem;
+    background: rgb(var(--color-foreground-rgb) / 0.72);
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-radius: 1px;
+  }
+
+  .jewelry-customize__field-icon[data-icon='gold']::before {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    border: 2px solid rgb(var(--color-foreground-rgb) / 0.55);
+    box-sizing: border-box;
+  }
+
+  .jewelry-customize__field-icon[data-icon='gold']::after {
+    width: 0.34rem;
+    height: 0.34rem;
+    border-radius: 50%;
+    background: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  .jewelry-customize__field-icon[data-icon='stone']::before {
+    width: 0.9rem;
+    height: 0.8rem;
+    background: rgb(var(--color-foreground-rgb) / 0.72);
+    clip-path: polygon(25% 0, 75% 0, 100% 45%, 75% 100%, 25% 100%, 0 45%);
+  }
+
+  .jewelry-customize__field-icon[data-icon='default']::before {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  .jewelry-customize__generated-dropdown > label,
+  .jewelry-customize [data-jewelry-mf-field-wrap] > legend {
+    display: flex;
+    align-items: center;
+  }
+
+  .jewelry-customize [data-jewelry-mf-pill-options] .variant-option__select-wrapper,
+  .jewelry-customize__generated-dropdown .variant-option__select-wrapper {
+    width: 100%;
+  }
+
+  .jewelry-customize__generated-dropdown .variant-option__select,
+  .jewelry-customize [data-jewelry-mf-pill-options] .variant-option__select {
+    min-height: 2.75rem;
+    border-radius: var(--style-border-radius-inputs);
+    /* background: var(--color-input-background); */
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 3.5rem;
+    padding-left: 0.85rem;
+    /* border: 1px solid var(--color-input-border); */
+    box-shadow: none;
+    color: var(--color-input-text);
+    font-weight: 500;
+    transition: background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  .jewelry-customize__generated-dropdown .variant-option__select:hover,
+  .jewelry-customize [data-jewelry-mf-pill-options] .variant-option__select:hover {
+    background: var(--color-input-hover-background);
+  }
+
+  .jewelry-customize__generated-dropdown .variant-option__select:focus,
+  .jewelry-customize [data-jewelry-mf-pill-options] .variant-option__select:focus {
+    outline: 2px solid rgb(var(--color-primary-rgb) / 0.35);
+    outline-offset: 2px;
+  }
+
+  .jewelry-customize__generated-dropdown .variant-option__select-wrapper,
+  .jewelry-customize [data-jewelry-mf-pill-options] .variant-option__select-wrapper {
+    position: relative;
+  }
+
+  .jewelry-customize__generated-dropdown .variant-option__select-wrapper::after,
+  .jewelry-customize [data-jewelry-mf-pill-options] .variant-option__select-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 1.35rem;
+    top: 50%;
+    width: 0.65rem;
+    height: 0.65rem;
+    border-right: 2px solid rgb(var(--color-input-text-rgb) / 0.55);
+    border-bottom: 2px solid rgb(var(--color-input-text-rgb) / 0.55);
+    transform: translateY(-55%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .jewelry-customize__variant-picker-wrapper--dropdown fieldset.variant-option--buttons:not(.variant-option--swatches):not([data-jewelry-mf-field-wrap]),
+  .jewelry-customize__variant-picker-wrapper--dropdown .variant-option[data-testid='variant-option-single'] {
+    display: none !important;
+  }
+
+ .jewelry-customize__readonly-group {
+    padding: 10px;
+    border-radius: var(--style-border-radius-inputs);
+    border: 1px solid rgb(0 0 0 / 7%);
+    box-shadow: none;
+}
+  .jewelry-customize__readonly-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .jewelry-customize__catalog-variant-picker,
+  .jewelry-customize__spec-mf-picker {
+    display: block;
+    width: 100%;
+  }
+/* 
+  .jewelry-customize__spec-diamond-color-wrap {
+    margin-top: var(--gap-md);
+    padding-top: var(--gap-md);
+    border-top: 1px solid rgb(var(--color-border-rgb) / 0.4);
+  } */
+
+  .jewelry-customize__variant-picker-wrapper {
+    margin: 0;
+  }
+
+  .jewelry-customize__variant-data {
+    display: none;
+  }
+
+  .jewelry-customize__readonly-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-xs) var(--gap-md);
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--padding-3xs) 0;
+    border-bottom: none;
+    font-size: var(--font-paragraph-small--size);
+  }
+
+  .jewelry-customize__readonly-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .jewelry-customize__readonly-label {
+    flex: 1 1 40%;
+    color: rgb(var(--color-foreground-rgb) / 0.72);
+  }
+
+  .jewelry-customize__readonly-value {
+    flex: 1 1 55%;
+    text-align: end;
+    font-weight: var(--font-weight-medium, 500);
+    color: var(--color-foreground);
+    word-break: break-word;
+  }
+
+  .jewelry-customize__rates-warning {
+    margin: 0 0 var(--margin-md);
+    padding: var(--padding-sm) var(--padding-md);
+    font-size: var(--font-paragraph-small--size);
+    line-height: 1.45;
+    color: rgb(var(--color-foreground-rgb) / 0.9);
+    background: rgb(var(--color-foreground-rgb) / 0.06);
+    border-radius: var(--style-border-radius-inputs);
+    border: none;
+    box-shadow: none;
+  }
+
+  .jewelry-customize__rates-warning--hidden {
+    display: none;
+  }
+
+  .jewelry-customize__checkout-error {
+    margin: 0 0 var(--margin-md);
+    padding: var(--padding-sm) var(--padding-md);
+    font-size: var(--font-paragraph-small--size);
+    line-height: 1.45;
+    color: var(--color-error, #b00020);
+    background: rgb(var(--color-foreground-rgb) / 0.06);
+    border-radius: var(--style-border-radius-inputs);
+    border: none;
+    box-shadow: none;
+  }
+
+  .jewelry-customize__checkout-error--hidden {
+    display: none;
+  }
+
+  .jewelry-customize__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-md);
+    margin-top: var(--margin-lg);
+    padding-top: var(--padding-md);
+    border-top: 1px solid rgb(var(--color-border-rgb) / 0.45);
+  }
+
+  .jewelry-customize__action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-sm);
+    flex-shrink: 0;
+  }
+
+  .jewelry-customize__actions .button--secondary,
+  .jewelry-customize__actions .button-secondary {
+    min-width: 6.5rem;
+  }
+
+  .jewelry-customize__actions .button:not(.button-secondary):not(.button--secondary) {
+    min-width: 10rem;
+  }
+
+  @media screen and (max-width: 749px) {
+    .jewelry-customize {
+      width: calc(100vw - 1.2rem);
+      max-height: calc(100dvh - 1.2rem);
+      border-radius: var(--style-border-radius-popover, 0.75rem);
+    }
+
+    .jewelry-customize__inner {
+      max-height: calc(100dvh - 1.2rem);
+    }
+
+    .jewelry-customize__header {
+      padding: var(--padding-sm) var(--padding-md);
+    }
+
+    .jewelry-customize__body {
+      padding: var(--padding-md);
+    }
+
+    .jewelry-customize__grid {
+      grid-template-columns: 1fr;
+      gap: var(--gap-sm);
+    }
+
+    .jewelry-customize__actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      margin-left: calc(-1 * var(--padding-md));
+      margin-right: calc(-1 * var(--padding-md));
+      padding: var(--padding-sm) var(--padding-md);
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--gap-sm);
+      background: var(--color-background);
+      border-top: 1px solid rgb(var(--color-border-rgb) / 0.45);
+      box-shadow: 0 -8px 24px rgb(var(--color-shadow-rgb) / 0.08);
+    }
+
+    .jewelry-customize__action-buttons {
+      width: 100%;
+      justify-content: stretch;
+    }
+
+    .jewelry-customize__action-buttons .button {
+      flex: 1 1 calc(50% - var(--gap-xs));
+    }
+  }
+{% endstylesheet %}

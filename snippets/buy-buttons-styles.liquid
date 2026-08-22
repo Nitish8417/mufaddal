@@ -17,6 +17,73 @@
     flex-wrap: wrap;
   }
 
+  .product-form-buttons--jewelry-dual {
+    row-gap: var(--gap-sm);
+  }
+
+  .product-form-buttons--jewelry-dual .quantity-selector-wrapper {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-form-buttons--jewelry-dual .quantity-selector-wrapper {
+      flex: 0 0 auto;
+      width: fit-content;
+      max-width: 12rem;
+    }
+  }
+
+  .buy-buttons-block__jewelry-dual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap-sm);
+    width: 100%;
+    flex: 1 1 100%;
+    min-width: 0;
+    align-items: stretch;
+  }
+
+  @media screen and (max-width: 749px) {
+    .buy-buttons-block__jewelry-dual {
+      gap: calc(var(--gap-sm) / 2);
+    }
+  }
+
+  .buy-buttons-block__jewelry-dual > * {
+    min-width: 0;
+    flex: initial;
+  }
+
+  .product-form-buttons--jewelry-dual .buy-buttons-block__jewelry-dual > span {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-form-buttons--jewelry-dual .buy-buttons-block__jewelry-dual add-to-cart-component {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  .product-form-buttons--jewelry-dual .buy-buttons-block__jewelry-dual .add-to-cart-button {
+    flex: 1;
+    min-height: var(--height-buy-buttons);
+    justify-content: center;
+  }
+
+  .product-form-buttons--jewelry-dual .accelerated-checkout-block {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-block-start: calc(var(--gap-xs) / 2);
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-form-buttons--jewelry-dual .accelerated-checkout-block {
+      margin-block-start: 0;
+    }
+  }
+
   .product-form-buttons:not(:has(.quantity-rules)) {
     gap: calc(var(--gap-sm) / 2);
 
@@ -26,13 +93,28 @@
   }
 
   .product-form-buttons
-    > *:not(.quantity-selector-wrapper, .quantity-rules, .quantity-label, .volume-pricing, .product-form-text__error) {
+    > *:not(
+      .quantity-selector-wrapper,
+      .quantity-rules,
+      .quantity-label,
+      .volume-pricing,
+      .product-form-text__error,
+      .buy-buttons-block__jewelry-dual
+    ) {
     flex: 1 1 var(--buy-button-preferred-width, 0);
     min-width: fit-content;
   }
 
   .product-form-buttons--stacked
-    > *:not(.quantity-selector-wrapper, .quantity-rules, .quantity-label, .volume-pricing, .product-form-text__error) {
+    > *:not(
+      .quantity-selector-wrapper,
+      .quantity-rules,
+      .quantity-label,
+      .volume-pricing,
+      .product-form-text__error,
+      .buy-buttons-block__jewelry-dual,
+      .accelerated-checkout-block
+    ) {
     flex-basis: 51%;
   }
 

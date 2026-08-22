@@ -1,0 +1,215 @@
+{%- doc -%}
+  diamond-weight-picker.liquid
+
+  Renders a diamond weight selector (radio buttons or dropdown) driven by the
+  product metafield custom.diamond_weight.
+  Injects the dynamic pricing script and embeds the product's variant JSON so
+  the script can read the initial base price.
+
+  @param {product}  product  - The current product object
+  @param {string}   [style]  - 'radio' (default) or 'select'
+
+  Usage (paste into sections/product-information.liquid or a custom-liquid block):
+    {% render 'diamond-weight-picker', product: product %}
+{%- enddoc -%}
+
+{%- liquid
+  assign picker_style = style | default: 'radio'
+  assign dw_metafield = product.metafields.custom.diamond_weight
+  assign dw_values    = dw_metafield.value
+-%}
+
+{%- comment -%}
+  Only render when the metafield has values.
+  The metafield must be a "List of single line text" type and have
+  Storefront API access enabled in Admin → Custom data.
+{%- endcomment -%}
+
+{%- if dw_values != blank -%}
+
+<div
+  class="diamond-weight-picker"
+  data-diamond-weight-picker
+  data-product-id="{{ product.id }}"
+>
+  <p class="diamond-weight-picker__label">
+    {{ 'Diamond Weight' }}
+    <span class="diamond-weight-picker__selected-value" id="dw-selected-value"></span>
+  </p>
+
+  {%- if picker_style == 'select' -%}
+
+    {%- comment -%} ── Dropdown style ─────────────────────────────── {%- endcomment -%}
+    <div class="diamond-weight-picker__select-wrapper">
+      <select
+        class="diamond-weight-picker__select"
+        data-diamond-weight-option
+        id="diamond-weight-select-{{ product.id }}"
+        aria-label="Select diamond weight"
+      >
+        <option value="">— Select weight —</option>
+        {%- for value in dw_values -%}
+          <option value="{{ value | escape }}">{{ value | escape }}</option>
+        {%- endfor -%}
+      </select>
+      <svg class="diamond-weight-picker__caret" aria-hidden="true" focusable="false" viewBox="0 0 10 6">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 0 0-.708 0L5 4.293 1.354.646a.5.5 0 0 0-.708.708l4 4a.5.5 0 0 0 .708 0l4-4a.5.5 0 0 0 0-.708Z" fill="currentColor"/>
+      </svg>
+    </div>
+
+  {%- else -%}
+
+    {%- comment -%} ── Radio button style (default) ───────────────── {%- endcomment -%}
+    <div class="diamond-weight-picker__options" role="radiogroup" aria-label="Diamond weight">
+      {%- for value in dw_values -%}
+        <label class="diamond-weight-picker__option-label">
+          <input
+            type="radio"
+            class="diamond-weight-picker__radio"
+            name="diamond-weight-{{ product.id }}"
+            value="{{ value | escape }}"
+            data-diamond-weight-option
+            aria-label="{{ value | escape }}"
+          >
+          <span class="diamond-weight-picker__option-pill">{{ value | escape }}</span>
+        </label>
+      {%- endfor -%}
+    </div>
+
+  {%- endif -%}
+
+  {%- comment -%} Surcharge indicator — hidden until a weight is chosen {%- endcomment -%}
+  <p
+    class="diamond-weight-picker__surcharge"
+    data-diamond-surcharge-display
+    hidden
+    aria-live="polite"
+  ></p>
+
+</div>
+
+
+<style>
+/* ── Diamond Weight Picker ──────────────────────────────────────────────── */
+.diamond-weight-picker {
+  margin-block: 1rem;
+}
+
+.diamond-weight-picker__label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-paragraph-small--size, 0.875rem);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-foreground, #111);
+  margin-block-end: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.diamond-weight-picker__selected-value {
+  color: var(--color-primary, #8b6f52);
+  font-weight: normal;
+}
+
+/* ── Radio pill options ──────────────────────────────────────────────────── */
+.diamond-weight-picker__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.diamond-weight-picker__option-label {
+  cursor: pointer;
+}
+
+.diamond-weight-picker__radio {
+  /* visually hidden but focusable */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.diamond-weight-picker__option-pill {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  border: 1.5px solid var(--color-border, #d4c5b0);
+  border-radius: var(--style-border-radius-inputs, 0.375rem);
+  font-size: var(--font-paragraph-small--size, 0.875rem);
+  color: var(--color-foreground, #111);
+  background: transparent;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  line-height: 1.5;
+}
+
+.diamond-weight-picker__option-label:hover .diamond-weight-picker__option-pill {
+  border-color: var(--color-foreground, #111);
+}
+
+.diamond-weight-picker__radio:checked + .diamond-weight-picker__option-pill {
+  background: var(--color-foreground, #111);
+  color: var(--color-background, #fff);
+  border-color: var(--color-foreground, #111);
+}
+
+.diamond-weight-picker__radio:focus-visible + .diamond-weight-picker__option-pill {
+  outline: var(--focus-outline-width, 2px) solid currentcolor;
+  outline-offset: 2px;
+}
+
+/* ── Select / dropdown style ─────────────────────────────────────────────── */
+.diamond-weight-picker__select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid var(--color-border, #d4c5b0);
+  border-radius: var(--style-border-radius-inputs, 0.375rem);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.diamond-weight-picker__select-wrapper:hover {
+  border-color: var(--color-foreground, #111);
+}
+
+.diamond-weight-picker__select {
+  appearance: none;
+  border: 0;
+  padding: 0.625rem 2.5rem 0.625rem 0.875rem;
+  font-size: var(--font-paragraph-small--size, 0.875rem);
+  color: var(--color-foreground, #111);
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  min-width: 180px;
+}
+
+.diamond-weight-picker__select:focus-visible {
+  outline: var(--focus-outline-width, 2px) solid currentcolor;
+  outline-offset: var(--focus-outline-offset, 2px);
+}
+
+.diamond-weight-picker__caret {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0.625rem;
+  height: 0.4rem;
+  pointer-events: none;
+  color: var(--color-foreground, #111);
+}
+
+/* ── Surcharge indicator ─────────────────────────────────────────────────── */
+.diamond-weight-picker__surcharge {
+  margin-block-start: 0.375rem;
+  font-size: var(--font-paragraph-small--size, 0.8rem);
+  color: var(--color-primary, #8b6f52);
+  font-style: italic;
+}
+</style>
+
+{%- endif -%}

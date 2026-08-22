@@ -17,6 +17,11 @@
 
   assign can_add_to_cart = false
   assign add_to_cart_text = 'products.product.unavailable' | t
+  assign customize_product_label = 'products.product.customize_product' | t
+  assign jewelry_secondary_label = section.settings.jewelry_in_stock_secondary_label | strip
+  if jewelry_secondary_label == blank
+    assign jewelry_secondary_label = 'Customize product'
+  endif
 
   if variant
     if variant.quantity_rule.min > variant.inventory_quantity and inventory_managed and inventory_policy == 'deny'
@@ -32,6 +37,24 @@
     else
       assign can_add_to_cart = false
       assign add_to_cart_text = 'products.product.unavailable' | t
+    endif
+  endif
+
+  assign show_jewelry_customize = false
+  assign jewelry_show_alongside_add_to_cart = false
+  if section.settings.enable_jewelry_customization and variant
+    assign jewelry_is_oos = false
+    if inventory_managed and inventory_quantity <= 0 or quantity_rule_soldout
+      assign jewelry_is_oos = true
+    endif
+    if variant.available and jewelry_is_oos == false
+      assign show_jewelry_customize = true
+      assign jewelry_show_alongside_add_to_cart = true
+    elsif jewelry_is_oos
+      assign show_jewelry_customize = true
+      assign jewelry_show_alongside_add_to_cart = false
+      assign can_add_to_cart = true
+      assign add_to_cart_text = customize_product_label
     endif
   endif
 %}
@@ -52,6 +75,9 @@
       on:submit="/handleSubmit"
       data-quantity-default="{% if product.selected_or_first_available_variant.quantity_rule.min %}{{ product.selected_or_first_available_variant.quantity_rule.min }}{% else %}1{% endif %}"
       data-quantity-error-max="{{ 'products.product.quantity_error_max' | t }}"
+      {% if section.settings.enable_jewelry_customization %}
+        data-jewelry-dynamic-buttons="true"
+      {% endif %}
     >
       <div
         class="visually-hidden"
@@ -72,7 +98,7 @@
           <span class="buy-buttons-block__bar">
         {%- endif -%}
         <div
-          class="product-form-buttons spacing-style{% if block_settings.stacking %} product-form-buttons--stacked{% endif %}"
+          class="product-form-buttons spacing-style{% if block_settings.stacking %} product-form-buttons--stacked{% endif %}{% if show_jewelry_customize and jewelry_show_alongside_add_to_cart %} product-form-buttons--jewelry-dual{% endif %}"
           style="{% render 'spacing-style', settings: block_settings %}"
           ref="productFormButtons"
         >
@@ -221,12 +247,47 @@
               </div>
             </volume-pricing>
           {%- endif -%}
-          {% content_for 'block',
-            type: 'add-to-cart',
-            id: 'add-to-cart',
-            can_add_to_cart: can_add_to_cart,
-            add_to_cart_text: add_to_cart_text
-          %}
+          {%- if show_jewelry_customize and jewelry_show_alongside_add_to_cart -%}
+            <div class="buy-buttons-block__jewelry-dual">
+              {% content_for 'block',
+                type: 'add-to-cart',
+                id: 'add-to-cart',
+                can_add_to_cart: can_add_to_cart,
+                add_to_cart_text: add_to_cart_text
+              %}
+              <span class="add-to-cart-block add-to-cart-block--jewelry">
+                {% render 'add-to-cart-button',
+                  id: 'customize-btn',
+                  class: 'add-to-cart-button button-secondary',
+                  can_add_to_cart: true,
+                  add_to_cart_text: jewelry_secondary_label,
+                  product: product,
+                  data_testid: 'jewelry-customize-open',
+                  jewelry_customize: true,
+                  container_ref: 'jewelryCustomizeButtonContainer'
+                %}
+              </span>
+            </div>
+          {%- elsif show_jewelry_customize -%}
+            <span class="add-to-cart-block add-to-cart-block--jewelry">
+              {% render 'add-to-cart-button',
+                id: 'customize-btn',
+                class: 'add-to-cart-button button-secondary',
+                can_add_to_cart: true,
+                add_to_cart_text: add_to_cart_text,
+                product: product,
+                data_testid: 'jewelry-customize-open',
+                jewelry_customize: true
+              %}
+            </span>
+          {%- else -%}
+            {% content_for 'block',
+              type: 'add-to-cart',
+              id: 'add-to-cart',
+              can_add_to_cart: can_add_to_cart,
+              add_to_cart_text: add_to_cart_text
+            %}
+          {%- endif -%}
 
           {% content_for 'block',
             type: 'accelerated-checkout',

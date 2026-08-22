@@ -85,6 +85,10 @@
             >
               {{- product_option.selected_value -}}
             </span>
+            {%- assign option_name_lower = product_option.name | downcase -%}
+            {%- if option_name_lower contains 'size' -%}
+              <button type="button" class="size-chart-trigger" aria-haspopup="dialog">Size chart</button>
+            {%- endif -%}
           </div>
         {%- elsif variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
           <fieldset
@@ -98,6 +102,10 @@
               {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
               {%- endif %}
+              {%- assign option_name_lower = product_option.name | downcase -%}
+              {%- if option_name_lower contains 'size' -%}
+                <button type="button" class="size-chart-trigger" aria-haspopup="dialog">Size chart</button>
+              {%- endif -%}
             </legend>
             {%- for product_option_value in product_option.values -%}
               {% if product_option_value.size > longest_value and option_id_attribute %}
@@ -191,6 +199,10 @@
 
           <div class="variant-option variant-option--dropdowns">
             <label for="Option-{{ block.id }}-{{ forloop.index0 }}">{{ product_option.name | escape }}</label>
+            {%- assign option_name_lower = product_option.name | downcase -%}
+            {%- if option_name_lower contains 'size' -%}
+              <button type="button" class="size-chart-trigger" aria-haspopup="dialog">Size chart</button>
+            {%- endif -%}
             <div
               class="variant-option__select-wrapper"
               style="
@@ -242,7 +254,149 @@
       </script>
     </form>
   </variant-picker>
+
+  {% unless is_modal_duplicate %}
+    <div class="size-chart-modal" role="dialog" aria-modal="true" aria-labelledby="size-modal-title-{{ section.id }}">
+      <button type="button" class="size-chart-modal__overlay" aria-label="Close size chart"></button>
+      <div class="size-chart-modal__content">
+        <div class="size-chart-modal__header">
+          <h2 class="size-chart-modal__title" id="size-modal-title-{{ section.id }}">Sizing Guide</h2>
+          <button type="button" class="size-chart-modal__close" aria-label="{{ 'actions.close' | t }}">
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </button>
+        </div>
+        <div class="size-chart-modal__body">
+          <table class="size-chart-modal__table">
+            <thead>
+              <tr>
+                <th>MM</th>
+                <th>USA</th>
+                <th>UK</th>
+                <th>Europe</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>50</td><td>5.25</td><td>K</td><td>50</td></tr>
+              <tr><td>51</td><td>5.75</td><td>L</td><td>51</td></tr>
+              <tr><td>52</td><td>6</td><td>L.5</td><td>52</td></tr>
+              <tr><td>53</td><td>6.25</td><td>M.5</td><td>53</td></tr>
+              <tr><td>54</td><td>6.75</td><td>N.5</td><td>54</td></tr>
+              <tr><td>55</td><td>7.25</td><td>O</td><td>55</td></tr>
+              <tr><td>56</td><td>7.5</td><td>P</td><td>56</td></tr>
+              <tr><td>57</td><td>8</td><td>P.5</td><td>57</td></tr>
+              <tr><td>58</td><td>8.25</td><td>Q.5</td><td>58</td></tr>
+              <tr><td>59</td><td>8.75</td><td>R</td><td>59</td></tr>
+              <tr><td>60</td><td>9</td><td>S</td><td>60</td></tr>
+              <tr><td>61</td><td>9.5</td><td>S.5</td><td>61</td></tr>
+              <tr><td>62</td><td>10</td><td>T.5</td><td>62</td></tr>
+              <tr><td>63</td><td>10.25</td><td>U.5</td><td>63</td></tr>
+              <tr><td>64</td><td>10.5</td><td>V</td><td>64</td></tr>
+              <tr><td>65</td><td>11</td><td>W</td><td>65</td></tr>
+              <tr><td>66</td><td>11.5</td><td>W.5</td><td>66</td></tr>
+              <tr><td>67</td><td>11.75</td><td>X.5</td><td>67</td></tr>
+              <tr><td>68</td><td>12.25</td><td>Z</td><td>68</td></tr>
+              <tr><td>69</td><td>12.5</td><td>Z.5</td><td>69</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const root = document.currentScript?.closest('.shopify-section') || document;
+        const modal = root.querySelector('.size-chart-modal');
+        if (!modal) return;
+        const open = () => modal.classList.add('is-open');
+        const close = () => modal.classList.remove('is-open');
+        root.querySelectorAll('.size-chart-trigger').forEach((button) => button.addEventListener('click', open));
+        modal.querySelectorAll('.size-chart-modal__overlay, .size-chart-modal__close').forEach((button) => button.addEventListener('click', close));
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') close();
+        });
+      })();
+    </script>
+  {% endunless %}
 {% endunless %}
 
 {% render 'swatch-styles' %}
 {% render 'variant-picker-styles' %}
+
+{% stylesheet %}
+  .size-chart-trigger {
+    margin-inline-start: var(--margin-xs);
+    border: 0;
+    background: transparent;
+    color: currentcolor;
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--font-size--xs);
+    text-decoration: underline;
+  }
+
+  .size-chart-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: var(--layer-modal);
+  }
+
+  .size-chart-modal.is-open {
+    display: block;
+  }
+
+  .size-chart-modal__overlay {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgb(0 0 0 / 0.45);
+  }
+
+  .size-chart-modal__content {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    width: min(92vw, 560px);
+    max-height: 86vh;
+    overflow: auto;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    box-shadow: var(--shadow-popover);
+  }
+
+  .size-chart-modal__header {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gap-md);
+    padding: var(--padding-lg);
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .size-chart-modal__title {
+    margin: 0;
+  }
+
+  .size-chart-modal__close {
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .size-chart-modal__body {
+    padding: var(--padding-lg);
+  }
+
+  .size-chart-modal__table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .size-chart-modal__table th,
+  .size-chart-modal__table td {
+    padding: var(--padding-xs) var(--padding-sm);
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+{% endstylesheet %}

@@ -367,7 +367,15 @@
       "quantity_maximum": "Maximum of {{ maximum }}",
       "in_cart": "in cart",
       "default_title": "Default Title",
-      "sticky_add_to_cart": "Quick add to cart bar"
+      "sticky_add_to_cart": "Quick add to cart bar",
+      "customize_confirm": "Confirm Selections",
+      "customize_mf_diamond_label": "Diamond weight",
+      "customize_mf_gold_label": "Gold weight",
+      "customize_mf_diamond_color_label": "Diamond color",
+      "customize_mf_stone_type_label": "Stone type",
+      "customize_rates_required": "Gold and diamond rates are required for custom checkout.",
+      "customize_checkout_blocked": "Custom checkout is currently disabled.",
+      "customize_product": "Customize"
     }
   },
   "mufaddal": {

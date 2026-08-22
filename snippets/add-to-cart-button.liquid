@@ -4,12 +4,16 @@
   @param {boolean} can_add_to_cart - Whether the product can be added to the cart.
   @param {string} add_to_cart_text - The text to display on the button.
   @param {object} product - The product object to be added to the cart.
+  @param {boolean} [icon_only_on_mobile] - If `true`, only the icon is shown on mobile devices.
   @param {string} [class] - Additional CSS classes to apply to the button.
   @param {string} [id] - The ID attribute for the button.
   @param {string} [data_testid] - The data-testid attribute for testing.
+  @param {boolean} [jewelry_customize] - Opens jewelry customize modal instead of submitting the product form.
+  @param {string} [container_ref] - Optional add-to-cart-component ref for secondary buttons.
 {%- enddoc -%}
 
 {%- liquid
+  assign container_ref = container_ref | default: 'addToCartButtonContainer'
   assign default_add_to_cart_text = 'actions.add_to_cart' | t
   assign product_variant_media = product.selected_or_first_available_variant.featured_media.preview_image | image_url: width: 100
   if product.selected_or_first_available_variant.featured_media.preview_image == blank
@@ -18,16 +22,24 @@
 -%}
 
 <add-to-cart-component
-  ref="addToCartButtonContainer"
+  ref="{{ container_ref }}"
   data-product-variant-media="{{ product_variant_media }}"
   data-add-to-cart-animation="{{ settings.add_to_cart_animation }}"
+  {% if jewelry_customize %}
+    data-jewelry-mode="true"
+  {% endif %}
 >
   <button
     {% if id != blank %}
       id="{{ id }}"
     {% endif %}
-    type="submit"
-    name="add"
+    {% if jewelry_customize %}
+      type="button"
+      data-jewelry-customize-open
+    {% else %}
+      type="submit"
+      name="add"
+    {% endif %}
     ref="addToCartButton"
     on:click="/handleClick"
     class="button {{ class }}"
@@ -35,18 +47,28 @@
       data-testid="{{ data_testid }}"
     {% endif %}
     {% unless can_add_to_cart %}
-      disabled
+      {% unless jewelry_customize %}
+        disabled
+      {% endunless %}
     {% endunless %}
   >
     {% if can_add_to_cart %}
+      {% unless jewelry_customize %}
       <span
         aria-hidden="true"
         class="svg-wrapper add-to-cart-icon"
       >
         {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
       </span>
+      {% endunless %}
     {% endif %}
-    {{- add_to_cart_text | default: default_add_to_cart_text -}}
+    <span class="add-to-cart-text__content{% if icon_only_on_mobile %} is-visually-hidden-mobile{% endif %}">
+      {%- if can_add_to_cart or jewelry_customize -%}
+        {{- add_to_cart_text | default: default_add_to_cart_text -}}
+      {%- else -%}
+        {{- 'products.product.sold_out' | t -}}
+      {%- endif -%}
+    </span>
     {% comment %} checkmark burst markup {% endcomment %}
     <span class="add-to-cart__added">
       <span class="svg-wrapper add-to-cart__added-icon">
