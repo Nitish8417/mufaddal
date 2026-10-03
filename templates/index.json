@@ -310,76 +310,6 @@
         "padding_y": 96
       }
     },
-    "luxury_instagram": {
-      "type": "luxury-instagram",
-      "blocks": {
-        "ig1": {
-          "type": "image",
-          "settings": {
-            "link": "",
-            "caption": "",
-            "cta_label": ""
-          }
-        },
-        "ig2": {
-          "type": "image",
-          "settings": {
-            "link": "",
-            "caption": "",
-            "cta_label": ""
-          }
-        },
-        "ig3": {
-          "type": "image",
-          "settings": {
-            "link": "",
-            "caption": "",
-            "cta_label": ""
-          }
-        },
-        "ig4": {
-          "type": "image",
-          "settings": {
-            "link": "",
-            "caption": "",
-            "cta_label": ""
-          }
-        },
-        "ig5": {
-          "type": "image",
-          "settings": {
-            "link": "",
-            "caption": "",
-            "cta_label": ""
-          }
-        },
-        "ig6": {
-          "type": "image",
-          "settings": {
-            "link": "",
-            "caption": "",
-            "cta_label": ""
-          }
-        }
-      },
-      "block_order": [
-        "ig1",
-        "ig2",
-        "ig3",
-        "ig4",
-        "ig5",
-        "ig6"
-      ],
-      "settings": {
-        "eyebrow": "Social",
-        "heading": "Follow the maison",
-        "profile_label": "@mufaddaljewellers",
-        "profile_url": "",
-        "shop_look_label": "Shop the Look",
-        "background": "#ffffff",
-        "padding_y": 88
-      }
-    },
     "luxury_trust": {
       "type": "luxury-trust",
       "blocks": {
@@ -475,7 +405,6 @@
     "luxury_bridal",
     "luxury_custom_journey",
     "luxury_testimonials",
-    "luxury_instagram",
     "luxury_trust",
     "luxury_newsletter"
   ]
