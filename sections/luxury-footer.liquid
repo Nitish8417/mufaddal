@@ -1,0 +1,1013 @@
+{%- liquid
+  assign brand_name = section.settings.brand_name | default: shop.name
+  assign wordmark = section.settings.wordmark_text | default: brand_name
+  assign current_year = 'now' | date: '%Y'
+  assign form_id = 'FooterNewsletter-' | append: section.id
+  assign logo_style = 'max-width: ' | append: section.settings.logo_width | append: 'px'
+-%}
+
+<footer
+  class="mj-footer"
+  style="
+    --mj-footer-bg: {{ section.settings.background }};
+    --mj-footer-text: {{ section.settings.text_color }};
+    --mj-footer-pad-top: {{ section.settings.padding_top }}px;
+  "
+>
+  <div class="mj-footer__glow" aria-hidden="true"></div>
+
+  {%- if section.settings.show_newsletter -%}
+    <div class="mj-footer__newsletter">
+      <div class="mj-footer__inner mj-footer__newsletter-inner mj-reveal">
+        <div class="mj-footer__newsletter-copy">
+          {%- if section.settings.newsletter_eyebrow != blank -%}
+            <p class="mj-eyebrow">{{ section.settings.newsletter_eyebrow }}</p>
+          {%- endif -%}
+          {%- if section.settings.newsletter_heading != blank -%}
+            <h2 class="mj-footer__newsletter-heading">{{ section.settings.newsletter_heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.newsletter_text != blank -%}
+            <p class="mj-footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
+          {%- endif -%}
+        </div>
+
+        {% form 'customer', id: form_id, class: 'mj-footer__form' %}
+          <input type="hidden" name="contact[tags]" value="newsletter,vip,mufaddal">
+          <label class="visually-hidden" for="FooterEmail-{{ section.id }}">
+            {{- 'mufaddal.newsletter.email' | t -}}
+          </label>
+          <div class="mj-footer__field">
+            <input
+              id="FooterEmail-{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              placeholder="{{ section.settings.newsletter_placeholder }}"
+              required
+              autocomplete="email"
+            >
+            <button type="submit" class="mj-footer__submit">
+              <span>{{ section.settings.newsletter_button }}</span>
+              <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+                <path d="M0 5h16m0 0L12 1m4 4-4 4" stroke="currentColor" stroke-width="1.1"/>
+              </svg>
+            </button>
+          </div>
+          {%- if form.posted_successfully? -%}
+            <p class="mj-footer__form-msg mj-footer__form-msg--ok" role="status">
+              {{ section.settings.newsletter_success }}
+            </p>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <p class="mj-footer__form-msg mj-footer__form-msg--error" role="alert">
+              {{ form.errors | default_errors }}
+            </p>
+          {%- endif -%}
+        {% endform %}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="mj-footer__inner mj-footer__main mj-reveal">
+    <div class="mj-footer__brand">
+      {%- if section.settings.logo != blank -%}
+        <a href="{{ routes.root_url }}" class="mj-footer__logo-link">
+          {{
+            section.settings.logo
+            | image_url: width: 480
+            | image_tag:
+              class: 'mj-footer__logo-img',
+              alt: brand_name,
+              loading: 'lazy',
+              style: logo_style
+          }}
+        </a>
+      {%- else -%}
+        <a href="{{ routes.root_url }}" class="mj-footer__logo">{{ brand_name }}</a>
+      {%- endif -%}
+
+      {%- if section.settings.tagline != blank -%}
+        <p class="mj-footer__tagline">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+
+      <address class="mj-footer__contact">
+        {%- if section.settings.address != blank -%}
+          <span>{{ section.settings.address | newline_to_br }}</span>
+        {%- endif -%}
+        {%- if section.settings.phone != blank -%}
+          <a href="tel:{{ section.settings.phone | remove: ' ' | remove: '-' }}">{{ section.settings.phone }}</a>
+        {%- endif -%}
+        {%- if section.settings.email != blank -%}
+          <a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a>
+        {%- endif -%}
+        {%- if section.settings.hours != blank -%}
+          <span class="mj-footer__hours">{{ section.settings.hours }}</span>
+        {%- endif -%}
+      </address>
+
+      {%- if section.settings.appointment_label != blank and section.settings.appointment_link != blank -%}
+        <a href="{{ section.settings.appointment_link }}" class="mj-footer__appointment">
+          {{ section.settings.appointment_label }}
+          <svg width="14" height="8" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+            <path d="M0 5h16m0 0L12 1m4 4-4 4" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <nav class="mj-footer__menus" aria-label="Footer">
+      {%- for i in (1..3) -%}
+        {%- liquid
+          assign menu_key = 'menu_' | append: i
+          assign heading_key = 'menu_' | append: i | append: '_heading'
+          assign menu = section.settings[menu_key]
+          assign menu_heading = section.settings[heading_key] | default: menu.title
+        -%}
+        {%- if menu != blank and menu.links.size > 0 -%}
+          <div class="mj-footer__col">
+            <h3 class="mj-footer__col-heading">{{ menu_heading }}</h3>
+            <ul class="mj-footer__links" role="list">
+              {%- for link in menu.links -%}
+                <li>
+                  <a href="{{ link.url }}" class="mj-footer__link"{% if link.current %} aria-current="page"{% endif %}>
+                    {{- link.title -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+  </div>
+
+  {%- liquid
+    assign has_trust = false
+    for i in (1..4)
+      assign trust_key = 'trust_' | append: i
+      if section.settings[trust_key] != blank
+        assign has_trust = true
+      endif
+    endfor
+  -%}
+  {%- if section.settings.show_trust and has_trust -%}
+    <div class="mj-footer__inner">
+      <ul class="mj-footer__trust mj-reveal" role="list">
+        {%- for i in (1..4) -%}
+          {%- assign trust_key = 'trust_' | append: i -%}
+          {%- if section.settings[trust_key] != blank -%}
+            <li class="mj-footer__trust-item">
+              <svg class="mj-footer__diamond" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                <path d="M6 0.8 11.2 6 6 11.2 0.8 6Z" fill="none" stroke="currentColor" stroke-width="0.9"/>
+              </svg>
+              <span>{{ section.settings[trust_key] }}</span>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_wordmark and wordmark != blank -%}
+    <div class="mj-footer__wordmark" aria-hidden="true">
+      <span>{{ wordmark }}</span>
+    </div>
+  {%- endif -%}
+
+  <div class="mj-footer__bottom">
+    <div class="mj-footer__inner mj-footer__bottom-inner">
+      <p class="mj-footer__copyright">
+        &copy; {{ current_year }}
+        {{ brand_name -}}
+        {%- if section.settings.copyright_suffix != blank %}. {{ section.settings.copyright_suffix }}{% endif %}
+      </p>
+
+      {%- if section.settings.show_policies and shop.policies.size > 0 -%}
+        <ul class="mj-footer__policies" role="list">
+          {%- for policy in shop.policies -%}
+            <li><a href="{{ policy.url }}">{{ policy.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <div class="mj-footer__bottom-end">
+        {%- liquid
+          assign socials = 'instagram,facebook,pinterest,youtube,whatsapp' | split: ','
+        -%}
+        <ul class="mj-footer__social" role="list">
+          {%- for network in socials -%}
+            {%- assign social_key = 'social_' | append: network -%}
+            {%- assign social_url = section.settings[social_key] -%}
+            {%- if social_url != blank -%}
+              <li>
+                <a href="{{ social_url }}" target="_blank" rel="noopener" aria-label="{{ network | capitalize }}">
+                  {%- case network -%}
+                    {%- when 'instagram' -%}
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor"/></svg>
+                    {%- when 'facebook' -%}
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4a21 21 0 0 0-2.3-.1c-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21z" fill="currentColor"/></svg>
+                    {%- when 'pinterest' -%}
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-3.3 17.4c-.1-.7-.1-1.8 0-2.6l1.1-4.6s-.3-.6-.3-1.4c0-1.3.8-2.3 1.7-2.3.8 0 1.2.6 1.2 1.3 0 .8-.5 2-.8 3.1-.2.9.5 1.7 1.4 1.7 1.7 0 3-1.8 3-4.4 0-2.3-1.6-3.9-4-3.9-2.7 0-4.3 2-4.3 4.2 0 .8.3 1.7.7 2.2l.1.3-.3 1.1c0 .2-.2.2-.4.1-1.2-.6-2-2.4-2-3.8 0-3.1 2.3-6 6.5-6 3.4 0 6.1 2.4 6.1 5.7 0 3.4-2.1 6.1-5.1 6.1-1 0-2-.5-2.3-1.1l-.6 2.4c-.2.9-.8 2-1.3 2.6A9 9 0 1 0 12 3z" fill="currentColor"/></svg>
+                    {%- when 'youtube' -%}
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z" fill="currentColor"/></svg>
+                    {%- when 'whatsapp' -%}
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3zm0 16.4a7.4 7.4 0 0 1-3.8-1l-.3-.2-2.7.7.7-2.6-.2-.3A7.4 7.4 0 1 1 12 19.4zm4.1-5.5c-.2-.1-1.3-.7-1.5-.7-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6 6 0 0 1-3-2.6c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.1 1.7 2.6 4.1 3.7 1.5.6 2.1.7 2.9.6.5-.1 1.3-.6 1.5-1.1.2-.5.2-1 .1-1.1l-.5-.3z" fill="currentColor"/></svg>
+                  {%- endcase -%}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+          <ul class="mj-footer__payments" role="list">
+            {%- for type in shop.enabled_payment_types -%}
+              <li>{{ type | payment_type_svg_tag: class: 'mj-footer__payment-icon' }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% stylesheet %}
+  .mj-footer {
+    --mj-footer-muted: color-mix(in srgb, var(--mj-footer-text) 58%, transparent);
+    --mj-footer-line: color-mix(in srgb, var(--mj-footer-text) 12%, transparent);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-top: var(--mj-footer-pad-top);
+    background: var(--mj-footer-bg);
+    color: var(--mj-footer-text);
+  }
+
+  .mj-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--mj-gold) 50%, transparent);
+    opacity: 0.7;
+  }
+
+  .mj-footer__glow {
+    position: absolute;
+    z-index: -1;
+    top: -18rem;
+    left: 50%;
+    width: 60rem;
+    height: 36rem;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--mj-gold) 14%, transparent), transparent);
+    pointer-events: none;
+  }
+
+  .mj-footer__inner {
+    width: var(--mj-container-width, min(100% - 2.5rem, 120rem));
+    margin-inline: auto;
+  }
+
+  .mj-footer a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Newsletter band */
+  .mj-footer__newsletter {
+    padding-bottom: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .mj-footer__newsletter-inner {
+    display: grid;
+    gap: 2rem;
+    padding-bottom: clamp(3rem, 6vw, 4.5rem);
+    border-bottom: 1px solid var(--mj-footer-line);
+  }
+
+  .mj-footer__newsletter-heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.85rem, 3.6vw, 3rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--mj-footer-text);
+  }
+
+  .mj-footer__newsletter-text {
+    margin: 0.9rem 0 0;
+    max-width: 30rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--mj-footer-muted);
+  }
+
+  .mj-footer__form {
+    align-self: end;
+    width: 100%;
+  }
+
+  .mj-footer__field {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid color-mix(in srgb, var(--mj-footer-text) 35%, transparent);
+    transition: border-color 0.4s var(--mj-ease);
+  }
+
+  .mj-footer__field:focus-within {
+    border-color: var(--mj-gold);
+  }
+
+  .mj-footer__field input {
+    flex: 1;
+    min-width: 0;
+    padding: 1rem 0;
+    border: 0;
+    background: transparent;
+    color: var(--mj-footer-text);
+    font: inherit;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  .mj-footer__field input::placeholder {
+    color: var(--mj-footer-muted);
+  }
+
+  .mj-footer__field input:focus {
+    outline: none;
+  }
+
+  .mj-footer__submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 0 0 1rem;
+    border: 0;
+    background: transparent;
+    color: var(--mj-gold);
+    font-family: var(--font-subheading--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .mj-footer__submit svg {
+    transition: transform 0.4s var(--mj-ease);
+  }
+
+  .mj-footer__submit:hover svg,
+  .mj-footer__submit:focus-visible svg {
+    transform: translateX(4px);
+  }
+
+  .mj-footer__submit:focus-visible {
+    outline: 1px solid var(--mj-gold);
+    outline-offset: 4px;
+  }
+
+  .mj-footer__form-msg {
+    margin: 0.85rem 0 0;
+    font-size: 0.8125rem;
+  }
+
+  .mj-footer__form-msg--ok {
+    color: var(--mj-gold);
+  }
+
+  .mj-footer__form-msg--error {
+    color: #e08a8a;
+  }
+
+  /* Main grid */
+  .mj-footer__main {
+    display: grid;
+    gap: 3rem;
+    padding-bottom: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .mj-footer__logo {
+    display: inline-block;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    line-height: 1;
+  }
+
+  .mj-footer__logo-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .mj-footer__tagline {
+    margin: 1.25rem 0 0;
+    max-width: 22rem;
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--mj-footer-muted);
+  }
+
+  .mj-footer__contact {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 1.75rem;
+    font-style: normal;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--mj-footer-muted);
+  }
+
+  .mj-footer__contact a {
+    width: fit-content;
+    transition: color 0.3s var(--mj-ease);
+  }
+
+  .mj-footer__contact a:hover {
+    color: var(--mj-gold);
+  }
+
+  .mj-footer__hours {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+  }
+
+  .mj-footer__appointment {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    padding: 0.85rem 1.4rem;
+    border: 1px solid color-mix(in srgb, var(--mj-gold) 60%, transparent);
+    color: var(--mj-gold) !important;
+    font-family: var(--font-subheading--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: background-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease);
+  }
+
+  .mj-footer__appointment:hover {
+    background: var(--mj-gold);
+    color: var(--mj-footer-bg) !important;
+  }
+
+  .mj-footer__menus {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 1.5rem;
+  }
+
+  .mj-footer__col-heading {
+    margin: 0 0 1.4rem;
+    font-family: var(--font-subheading--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--mj-letter-eyebrow);
+    text-transform: uppercase;
+    color: var(--mj-gold);
+  }
+
+  .mj-footer__links {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mj-footer__link {
+    position: relative;
+    display: inline-block;
+    font-size: 0.9rem;
+    color: color-mix(in srgb, var(--mj-footer-text) 82%, transparent) !important;
+    transition: color 0.3s var(--mj-ease), transform 0.4s var(--mj-ease);
+  }
+
+  .mj-footer__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.15em;
+    width: 100%;
+    height: 1px;
+    background: var(--mj-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s var(--mj-ease);
+  }
+
+  .mj-footer__link:hover,
+  .mj-footer__link[aria-current='page'] {
+    color: var(--mj-footer-text) !important;
+  }
+
+  .mj-footer__link:hover::after,
+  .mj-footer__link[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  /* Trust strip */
+  .mj-footer__trust {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 1.5rem;
+    margin: 0;
+    padding: 1.75rem 0;
+    list-style: none;
+    border-block: 1px solid var(--mj-footer-line);
+  }
+
+  .mj-footer__trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-subheading--family);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--mj-footer-text) 80%, transparent);
+  }
+
+  .mj-footer__diamond {
+    flex: none;
+    color: var(--mj-gold);
+  }
+
+  /* Wordmark */
+  .mj-footer__wordmark {
+    display: flex;
+    justify-content: center;
+    padding-top: clamp(2rem, 5vw, 3.5rem);
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .mj-footer__wordmark span {
+    font-family: var(--font-heading--family);
+    font-size: clamp(4rem, 17vw, 16rem);
+    font-weight: 400;
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--mj-gold) 55%, transparent) 0%, transparent 92%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Bottom bar */
+  .mj-footer__bottom {
+    border-top: 1px solid var(--mj-footer-line);
+  }
+
+  .mj-footer__bottom-inner {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: center;
+    padding-block: 1.75rem calc(1.75rem + env(safe-area-inset-bottom));
+    text-align: center;
+  }
+
+  .mj-footer__copyright {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--mj-footer-muted);
+  }
+
+  .mj-footer__policies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--mj-footer-muted);
+  }
+
+  .mj-footer__policies a {
+    transition: color 0.3s var(--mj-ease);
+  }
+
+  .mj-footer__policies a:hover {
+    color: var(--mj-gold);
+  }
+
+  .mj-footer__bottom-end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem 2rem;
+  }
+
+  .mj-footer__social {
+    display: flex;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mj-footer__social a {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 1px solid var(--mj-footer-line);
+    border-radius: 50%;
+    color: color-mix(in srgb, var(--mj-footer-text) 80%, transparent);
+    transition: border-color 0.35s var(--mj-ease), color 0.35s var(--mj-ease), transform 0.35s var(--mj-ease);
+  }
+
+  .mj-footer__social a:hover {
+    border-color: var(--mj-gold);
+    color: var(--mj-gold);
+    transform: translateY(-2px);
+  }
+
+  .mj-footer__social svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .mj-footer__payments {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mj-footer__payment-icon {
+    display: block;
+    width: 2.4rem;
+    height: auto;
+    opacity: 0.75;
+    filter: grayscale(1);
+    transition: opacity 0.3s var(--mj-ease), filter 0.3s var(--mj-ease);
+  }
+
+  .mj-footer__payments li:hover .mj-footer__payment-icon {
+    opacity: 1;
+    filter: none;
+  }
+
+  @media (min-width: 750px) {
+    .mj-footer__newsletter-inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: end;
+      gap: 4rem;
+    }
+
+    .mj-footer__menus {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .mj-footer__trust {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .mj-footer__trust-item {
+      justify-content: center;
+    }
+  }
+
+  @media (min-width: 990px) {
+    .mj-footer__main {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr);
+      gap: 5rem;
+    }
+
+    .mj-footer__bottom-inner {
+      grid-template-columns: auto 1fr auto;
+      justify-items: stretch;
+      align-items: center;
+      gap: 2rem;
+      text-align: left;
+    }
+
+    .mj-footer__policies {
+      justify-content: center;
+    }
+
+    .mj-footer__bottom-end {
+      justify-content: flex-end;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mj-footer *,
+    .mj-footer *::before,
+    .mj-footer *::after {
+      transition: none !important;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Luxury Footer",
+  "tag": "section",
+  "class": "shopify-section-luxury-footer",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo (optional — falls back to text)"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 80,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "info": "Defaults to store name"
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Heirloom jewellery, handcrafted with certified gold and conflict-free diamonds — made to be worn for a lifetime and passed on for generations."
+    },
+    {
+      "type": "header",
+      "content": "Contact"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Opening hours",
+      "default": "Mon – Sat · 11:00 – 20:00"
+    },
+    {
+      "type": "text",
+      "id": "appointment_label",
+      "label": "Appointment button label",
+      "default": "Book a private appointment"
+    },
+    {
+      "type": "url",
+      "id": "appointment_link",
+      "label": "Appointment button link"
+    },
+    {
+      "type": "header",
+      "content": "Menus"
+    },
+    {
+      "type": "text",
+      "id": "menu_1_heading",
+      "label": "Column 1 heading",
+      "default": "Shop"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_1",
+      "label": "Column 1 menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_2_heading",
+      "label": "Column 2 heading",
+      "default": "Client care"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_2",
+      "label": "Column 2 menu",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "menu_3_heading",
+      "label": "Column 3 heading",
+      "default": "The house"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_3",
+      "label": "Column 3 menu"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_eyebrow",
+      "label": "Eyebrow",
+      "default": "Private Access"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Heading",
+      "default": "Join the inner circle"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_text",
+      "label": "Text",
+      "default": "Exclusive launches, private collection previews, and VIP invitations."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_success",
+      "label": "Success message",
+      "default": "Welcome to Mufaddal. Your private access awaits."
+    },
+    {
+      "type": "header",
+      "content": "Trust strip"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust",
+      "label": "Show trust strip",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_1",
+      "label": "Item 1",
+      "default": "BIS Hallmarked Gold"
+    },
+    {
+      "type": "text",
+      "id": "trust_2",
+      "label": "Item 2",
+      "default": "Certified Diamonds"
+    },
+    {
+      "type": "text",
+      "id": "trust_3",
+      "label": "Item 3",
+      "default": "Lifetime Exchange"
+    },
+    {
+      "type": "text",
+      "id": "trust_4",
+      "label": "Item 4",
+      "default": "Insured Shipping"
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook",
+      "label": "Facebook"
+    },
+    {
+      "type": "url",
+      "id": "social_pinterest",
+      "label": "Pinterest"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube"
+    },
+    {
+      "type": "url",
+      "id": "social_whatsapp",
+      "label": "WhatsApp"
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wordmark",
+      "label": "Show large wordmark",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "wordmark_text",
+      "label": "Wordmark text",
+      "info": "Defaults to brand name"
+    },
+    {
+      "type": "text",
+      "id": "copyright_suffix",
+      "label": "Copyright suffix",
+      "default": "All rights reserved."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policies",
+      "label": "Show policy links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#0E0E0E"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#F4F1EA"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 40,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Footer",
+      "category": "Mufaddal Luxury"
+    }
+  ]
+}
+{% endschema %}

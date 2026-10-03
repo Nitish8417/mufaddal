@@ -11,8 +11,21 @@
   "type": "footer",
   "name": "t:names.footer",
   "sections": {
+    "luxury_footer": {
+      "type": "luxury-footer",
+      "settings": {
+        "menu_1_heading": "Shop",
+        "menu_1": "main-menu",
+        "menu_2_heading": "Client care",
+        "menu_2": "footer",
+        "social_instagram": "https://www.instagram.com/",
+        "social_facebook": "https://www.facebook.com/",
+        "social_youtube": "https://www.youtube.com/"
+      }
+    },
     "footer_m9NzUG": {
       "type": "footer",
+      "disabled": true,
       "blocks": {
         "group_H6VpwJ": {
           "type": "group",
@@ -145,6 +158,7 @@
     },
     "footer_utilities_jLGE8U": {
       "type": "footer-utilities",
+      "disabled": true,
       "blocks": {
         "footer_copyright_jweRK8": {
           "type": "footer-copyright",
@@ -193,6 +207,7 @@
     }
   },
   "order": [
+    "luxury_footer",
     "footer_m9NzUG",
     "footer_utilities_jLGE8U"
   ]
