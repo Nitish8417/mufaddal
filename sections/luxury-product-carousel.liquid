@@ -4,12 +4,12 @@
 -%}
 
 <section
-  class="mj-section mj-carousel-section"
+  class="mj-section mj-carousel-section mj-pc"
   style="--mj-section-bg: {{ section.settings.background }}; --mj-pad-y: {{ section.settings.padding_y }}px;"
   data-mj-carousel
 >
   <div class="mj-section__inner">
-    <div class="mj-section__header mj-section__header--row mj-reveal">
+    <div class="mj-section__header mj-section__header--row mj-pc__header mj-reveal">
       <div>
         {%- if section.settings.eyebrow != blank -%}
           <p class="mj-eyebrow">{{ section.settings.eyebrow }}</p>
@@ -18,129 +18,548 @@
           <h2 class="mj-heading mj-carousel-section__heading">{{ section.settings.heading }}</h2>
         {%- endif -%}
       </div>
-      <div class="mj-carousel__controls">
-        <button type="button" class="mj-carousel__btn" data-mj-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">‹</button>
-        <button type="button" class="mj-carousel__btn" data-mj-next aria-label="{{ 'accessibility.slideshow_next' | t }}">›</button>
+      <div class="mj-pc__controls">
+        <button type="button" class="mj-pc__arrow" data-mj-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
+          <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+            <path d="M18 5H2m0 0 4-4M2 5l4 4" stroke="currentColor" stroke-width="1.1"/>
+          </svg>
+        </button>
+        <button type="button" class="mj-pc__arrow" data-mj-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
+          <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+            <path d="M0 5h16m0 0L12 1m4 4-4 4" stroke="currentColor" stroke-width="1.1"/>
+          </svg>
+        </button>
       </div>
     </div>
 
-    <div class="mj-carousel__track" data-mj-track tabindex="0">
+    <div class="mj-carousel__track mj-pc__track" data-mj-track tabindex="0">
       {%- if collection != blank -%}
         {%- for product in collection.products limit: product_limit -%}
-          <article class="mj-product-card mj-reveal">
-            <a class="mj-product-card__link" href="{{ product.url }}">
-              <div class="mj-media mj-product-card__media">
+          {%- liquid
+            assign mj_variant = product.selected_or_first_available_variant
+            assign mj_can_add = false
+            if mj_variant != blank and mj_variant.available
+              assign mj_can_add = true
+            endif
+            assign mj_alt_media = nil
+            if section.settings.show_secondary_image and product.media.size > 1
+              assign mj_alt_media = product.media[1]
+            endif
+          -%}
+          <article class="mj-product-card mj-pc__card mj-reveal">
+            <a class="mj-pc__media-link" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+              <div class="mj-pc__media{% if mj_alt_media %} has-alt{% endif %}">
                 {%- if product.featured_media -%}
                   {{
                     product.featured_media
                     | image_url: width: 1200
-                    | image_tag: widths: '400, 600, 800, 1000, 1200', sizes: '(min-width: 990px) 28vw, 70vw', loading: 'lazy', alt: product.featured_media.alt | default: product.title
+                    | image_tag:
+                      widths: '400, 600, 800, 1000, 1200',
+                      sizes: '(min-width: 990px) 22vw, (min-width: 750px) 34vw, 70vw',
+                      loading: 'lazy',
+                      class: 'mj-pc__img',
+                      alt: product.featured_media.alt | default: product.title
                   }}
+                  {%- if mj_alt_media -%}
+                    {{
+                      mj_alt_media
+                      | image_url: width: 1200
+                      | image_tag:
+                        widths: '400, 600, 800, 1000, 1200',
+                        sizes: '(min-width: 990px) 22vw, (min-width: 750px) 34vw, 70vw',
+                        loading: 'lazy',
+                        class: 'mj-pc__img mj-pc__img--alt',
+                        alt: ''
+                    }}
+                  {%- endif -%}
                 {%- else -%}
-                  {{ 'product-1' | placeholder_svg_tag }}
+                  {{ 'product-1' | placeholder_svg_tag: 'mj-pc__img' }}
                 {%- endif -%}
+
                 {%- if section.settings.show_badges -%}
-                  <div class="mj-product-card__badges">
+                  <div class="mj-pc__badges">
                     {%- if product.tags contains 'best-seller' or product.tags contains 'Best Seller' -%}
-                      <span class="mj-badge mj-badge--gold">{{ 'mufaddal.badges.best_seller' | t }}</span>
+                      <span class="mj-pc__badge mj-pc__badge--gold">{{ 'mufaddal.badges.best_seller' | t }}</span>
                     {%- elsif product.tags contains 'new' or product.tags contains 'New' -%}
-                      <span class="mj-badge">{{ 'mufaddal.badges.new' | t }}</span>
+                      <span class="mj-pc__badge">{{ 'mufaddal.badges.new' | t }}</span>
                     {%- elsif product.tags contains 'limited' or product.tags contains 'Limited' -%}
-                      <span class="mj-badge">{{ 'mufaddal.badges.limited' | t }}</span>
+                      <span class="mj-pc__badge">{{ 'mufaddal.badges.limited' | t }}</span>
                     {%- elsif product.tags contains 'wedding' or product.tags contains 'Wedding' -%}
-                      <span class="mj-badge">{{ 'mufaddal.badges.wedding' | t }}</span>
+                      <span class="mj-pc__badge">{{ 'mufaddal.badges.wedding' | t }}</span>
                     {%- endif -%}
                   </div>
                 {%- endif -%}
-              </div>
-              <div class="mj-product-card__meta">
-                <h3 class="mj-product-card__title">{{ product.title }}</h3>
-                <p class="mj-product-card__price">
-                  {% render 'price', product_resource: product %}
-                </p>
+
+                {%- unless product.available -%}
+                  <span class="mj-pc__badge mj-pc__badge--muted mj-pc__soldout">{{ 'products.product.sold_out' | t }}</span>
+                {%- endunless -%}
               </div>
             </a>
-            {%- if section.settings.show_quick_actions -%}
-              {%- liquid
-                assign mj_variant = product.selected_or_first_available_variant
-                assign mj_form_id = 'MjCarousel-' | append: section.id | append: '-' | append: product.id
-                assign mj_atc_text = 'products.product.add_to_cart' | t
-                assign mj_can_add = false
-                if mj_variant != blank and mj_variant.available
-                  assign mj_can_add = true
-                endif
-              -%}
-              <div class="mj-product-card__actions">
-                {%- if mj_can_add -%}
-                  <product-form-component
-                    class="mj-product-card__form"
-                    data-section-id="{{ section.id }}"
-                    data-product-id="{{ product.id }}"
-                    on:submit="/handleSubmit"
-                  >
-                    <div
-                      class="visually-hidden"
-                      aria-live="assertive"
-                      role="status"
-                      aria-atomic="true"
-                      ref="liveRegion"
-                    ></div>
-                    {%- form 'product', product, id: mj_form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-                      <input
-                        type="hidden"
-                        name="id"
-                        ref="variantId"
-                        value="{{ mj_variant.id }}"
-                      >
-                      <input
-                        type="hidden"
-                        name="quantity"
-                        value="{% if mj_variant.quantity_rule.min %}{{ mj_variant.quantity_rule.min }}{% else %}1{% endif %}"
-                      >
-                      <input type="hidden" name="sections" value="cart-drawer-section">
-                      {% render 'add-to-cart-button',
-                        add_to_cart_text: mj_atc_text,
-                        class: 'mj-btn mj-btn--outline mj-product-card__atc add-to-cart-button',
-                        can_add_to_cart: mj_can_add,
-                        product: product
-                      %}
-                    {%- endform -%}
-                  </product-form-component>
+
+            <div class="mj-pc__body">
+              {%- if section.settings.show_product_type -%}
+                <p class="mj-pc__type">
+                  {%- if product.type != blank -%}{{ product.type }}{%- else -%}&nbsp;{%- endif -%}
+                </p>
+              {%- endif -%}
+
+              <h3 class="mj-pc__title">
+                <a href="{{ product.url }}">{{ product.title | escape }}</a>
+              </h3>
+
+              <div class="mj-pc__price">
+                {%- if product.price_max == 0 and section.settings.price_on_request_label != blank -%}
+                  <span class="mj-pc__on-request">{{ section.settings.price_on_request_label }}</span>
                 {%- else -%}
-                  <button type="button" class="mj-btn mj-btn--outline mj-product-card__atc" disabled>
-                    {{ 'products.product.sold_out' | t }}
-                  </button>
-                {%- endif -%}
-                {%- if section.settings.customise_link != blank -%}
-                  <a class="mj-link" href="{{ section.settings.customise_link }}">{{ 'mufaddal.actions.customise' | t }}</a>
+                  {% render 'price', product_resource: product %}
                 {%- endif -%}
               </div>
-            {%- endif -%}
+
+              {%- if section.settings.show_quick_actions -%}
+                <div class="mj-pc__actions">
+                  {%- if mj_can_add and product.price_max > 0 -%}
+                    {%- assign mj_form_id = 'MjCarousel-' | append: section.id | append: '-' | append: product.id -%}
+                    <product-form-component
+                      class="mj-pc__form"
+                      data-section-id="{{ section.id }}"
+                      data-product-id="{{ product.id }}"
+                      on:submit="/handleSubmit"
+                    >
+                      <div class="visually-hidden" aria-live="assertive" role="status" aria-atomic="true" ref="liveRegion"></div>
+                      {%- form 'product', product, id: mj_form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                        <input type="hidden" name="id" ref="variantId" value="{{ mj_variant.id }}">
+                        <input
+                          type="hidden"
+                          name="quantity"
+                          value="{% if mj_variant.quantity_rule.min %}{{ mj_variant.quantity_rule.min }}{% else %}1{% endif %}"
+                        >
+                        <input type="hidden" name="sections" value="cart-drawer-section">
+                        {%- assign mj_atc_text = 'products.product.add_to_cart' | t -%}
+                        {% render 'add-to-cart-button',
+                          add_to_cart_text: mj_atc_text,
+                          class: 'mj-pc__atc add-to-cart-button',
+                          can_add_to_cart: mj_can_add,
+                          product: product
+                        %}
+                      {%- endform -%}
+                    </product-form-component>
+                  {%- else -%}
+                    <a class="mj-pc__atc mj-pc__atc--link" href="{{ product.url }}">
+                      {{- section.settings.details_label -}}
+                    </a>
+                  {%- endif -%}
+
+                  {%- if section.settings.customise_link != blank -%}
+                    <a class="mj-link mj-pc__customise" href="{{ section.settings.customise_link }}">
+                      {{- 'mufaddal.actions.customise' | t -}}
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
           </article>
         {%- endfor -%}
       {%- else -%}
         {%- for i in (1..4) -%}
-          <article class="mj-product-card mj-reveal">
-            <div class="mj-media mj-product-card__media">
-              {{ 'product-1' | placeholder_svg_tag }}
+          <article class="mj-product-card mj-pc__card mj-reveal">
+            <div class="mj-pc__media">
+              {{ 'product-1' | placeholder_svg_tag: 'mj-pc__img' }}
             </div>
-            <div class="mj-product-card__meta">
-              <h3 class="mj-product-card__title">{{ 'mufaddal.onboarding.product_title' | t }}</h3>
+            <div class="mj-pc__body">
+              <h3 class="mj-pc__title">{{ 'mufaddal.onboarding.product_title' | t }}</h3>
             </div>
           </article>
         {%- endfor -%}
       {%- endif -%}
     </div>
 
+    <div class="mj-pc__progress" aria-hidden="true"><span data-mj-progress></span></div>
+
     {%- if section.settings.view_all_label != blank and collection != blank -%}
-      <div class="mj-carousel__footer mj-reveal">
-        <a class="mj-link" href="{{ collection.url }}">{{ section.settings.view_all_label }}</a>
+      <div class="mj-pc__footer mj-reveal">
+        <a class="mj-pc__view-all" href="{{ collection.url }}">
+          {{ section.settings.view_all_label }}
+          <svg width="16" height="9" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+            <path d="M0 5h16m0 0L12 1m4 4-4 4" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </a>
       </div>
     {%- endif -%}
   </div>
 </section>
 
 {% render 'add-to-cart-button-styles' %}
+
+{% stylesheet %}
+  .mj-pc {
+    --mj-ink: var(--mj-brown);
+    --mj-text: var(--mj-brown);
+    --mj-border: var(--mj-sand);
+    --mj-pc-media-bg: #f6f3ee;
+  }
+
+  .mj-pc__header {
+    align-items: flex-end;
+  }
+
+  .mj-pc__controls {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .mj-pc .mj-pc__arrow,
+  .mj-pc .mj-pc__arrow:hover {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--mj-ink) 20%, transparent);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--mj-ink);
+    cursor: pointer;
+    transition: background-color 0.4s var(--mj-ease), border-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease);
+  }
+
+  .mj-pc .mj-pc__arrow:hover,
+  .mj-pc .mj-pc__arrow:focus-visible {
+    background: var(--mj-ink);
+    border-color: var(--mj-ink);
+    color: var(--mj-cream);
+  }
+
+  /* Track & card */
+  .mj-pc .mj-pc__track {
+    gap: 1.25rem;
+    align-items: stretch;
+    padding-bottom: 0;
+  }
+
+  .mj-pc__card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .mj-pc__media-link {
+    display: block;
+    color: inherit;
+  }
+
+  .mj-pc__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--mj-pc-media-bg);
+  }
+
+  .mj-pc__media::after {
+    content: '';
+    position: absolute;
+    inset: 0.6rem;
+    border: 1px solid color-mix(in srgb, var(--mj-gold) 0%, transparent);
+    pointer-events: none;
+    transition: border-color 0.6s var(--mj-ease), inset 0.6s var(--mj-ease);
+  }
+
+  .mj-pc__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--mj-ease), opacity 0.7s var(--mj-ease);
+  }
+
+  .mj-pc__img--alt {
+    opacity: 0;
+  }
+
+  @media (hover: hover) {
+    .mj-pc__card:hover .mj-pc__media::after {
+      inset: 0.85rem;
+      border-color: color-mix(in srgb, var(--mj-gold) 55%, transparent);
+    }
+
+    .mj-pc__card:hover .mj-pc__img {
+      transform: scale(1.045);
+    }
+
+    .mj-pc__card:hover .mj-pc__media.has-alt .mj-pc__img--alt {
+      opacity: 1;
+    }
+  }
+
+  .mj-pc__badges {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .mj-pc__badge {
+    display: inline-flex;
+    padding: 0.4rem 0.7rem;
+    background: rgba(255, 255, 255, 0.92);
+    font-family: var(--font-subheading--family);
+    font-size: 0.5625rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mj-ink);
+    backdrop-filter: blur(6px);
+  }
+
+  .mj-pc__badge--gold {
+    background: var(--mj-gold);
+    color: #fff;
+  }
+
+  .mj-pc__soldout {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1;
+    color: color-mix(in srgb, var(--mj-ink) 70%, transparent);
+  }
+
+  /* Body */
+  .mj-pc__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 1.1rem;
+  }
+
+  .mj-pc__type {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-subheading--family);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--mj-gold);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .mj-pc .mj-pc__title {
+    --mj-pc-title-lh: 1.4;
+    display: -webkit-box;
+    min-height: calc(2em * var(--mj-pc-title-lh));
+    margin: 0;
+    overflow: hidden;
+    font-family: var(--mj-serif) !important;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: var(--mj-pc-title-lh);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mj-ink);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .mj-pc__title a {
+    color: inherit;
+    text-decoration: none;
+    background: linear-gradient(var(--mj-gold), var(--mj-gold)) 0 100% / 0 1px no-repeat;
+    transition: background-size 0.5s var(--mj-ease);
+  }
+
+  .mj-pc__title a:hover {
+    background-size: 100% 1px;
+  }
+
+  .mj-pc__price {
+    margin-top: 0.55rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+    color: color-mix(in srgb, var(--mj-ink) 72%, transparent);
+  }
+
+  .mj-pc__price .price {
+    color: inherit;
+  }
+
+  .mj-pc__on-request {
+    font-style: italic;
+  }
+
+  /* Actions pinned to the bottom so every card lines up */
+  .mj-pc__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 1.1rem;
+  }
+
+  .mj-pc__form,
+  .mj-pc__form form,
+  .mj-pc__form add-to-cart-component {
+    display: block;
+    width: 100%;
+  }
+
+  .mj-pc .mj-pc__atc,
+  .mj-pc .mj-pc__atc.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 2.9rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--mj-ink);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--mj-ink);
+    font-family: var(--font-subheading--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease), border-color 0.4s var(--mj-ease);
+  }
+
+  .mj-pc .mj-pc__atc:hover,
+  .mj-pc .mj-pc__atc.button:hover:not(:disabled) {
+    background: var(--mj-ink);
+    border-color: var(--mj-ink);
+    color: var(--mj-cream);
+  }
+
+  .mj-pc .mj-pc__atc--link {
+    border-color: color-mix(in srgb, var(--mj-ink) 25%, transparent);
+    color: color-mix(in srgb, var(--mj-ink) 80%, transparent);
+  }
+
+  .mj-pc .mj-pc__atc .add-to-cart-icon {
+    display: none;
+  }
+
+  .mj-pc__customise {
+    font-size: 0.6875rem;
+  }
+
+  /* Scroll progress */
+  .mj-pc__progress {
+    position: relative;
+    height: 1px;
+    margin-top: 2.25rem;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--mj-ink) 12%, transparent);
+  }
+
+  .mj-pc__progress span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--mj-pc-thumb, 25%);
+    background: var(--mj-gold);
+    transform: translateX(var(--mj-pc-offset, 0%));
+    transition: transform 0.2s linear;
+  }
+
+  .mj-pc__footer {
+    margin-top: 2.25rem;
+    text-align: center;
+  }
+
+  .mj-pc__view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem 2.25rem;
+    border: 1px solid var(--mj-ink);
+    color: var(--mj-ink);
+    font-family: var(--font-subheading--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease);
+  }
+
+  .mj-pc__view-all svg {
+    transition: transform 0.4s var(--mj-ease);
+  }
+
+  .mj-pc__view-all:hover {
+    background: var(--mj-ink);
+    color: var(--mj-cream);
+  }
+
+  .mj-pc__view-all:hover svg {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 749px) {
+    .mj-pc__controls {
+      display: none;
+    }
+
+    .mj-pc .mj-pc__track {
+      grid-auto-columns: 72%;
+      gap: 0.9rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mj-pc__img,
+    .mj-pc__media::after,
+    .mj-pc__progress span {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    const init = (root) => {
+      const track = root.querySelector('[data-mj-track]');
+      const bar = root.querySelector('[data-mj-progress]');
+      if (!track || !bar || root.dataset.mjProgressReady) return;
+      root.dataset.mjProgressReady = 'true';
+
+      const update = () => {
+        const max = track.scrollWidth - track.clientWidth;
+        const ratio = track.scrollWidth ? track.clientWidth / track.scrollWidth : 1;
+        const thumb = Math.min(100, Math.max(12, ratio * 100));
+        const progress = max > 0 ? track.scrollLeft / max : 0;
+        bar.parentElement.hidden = max <= 1;
+        bar.style.setProperty('--mj-pc-thumb', `${thumb}%`);
+        bar.style.setProperty('--mj-pc-offset', `${progress * ((100 - thumb) / thumb) * 100}%`);
+      };
+
+      track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+      new ResizeObserver(update).observe(track);
+      update();
+    };
+
+    const run = () => document.querySelectorAll('.mj-pc').forEach(init);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run);
+    } else {
+      run();
+    }
+    document.addEventListener('shopify:section:load', run);
+  })();
+{% endjavascript %}
 
 {% schema %}
 {
@@ -178,6 +597,22 @@
       "default": 8
     },
     {
+      "type": "header",
+      "content": "Card"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show second image on hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_type",
+      "label": "Show product type above title",
+      "default": true
+    },
+    {
       "type": "checkbox",
       "id": "show_badges",
       "label": "Show product badges",
@@ -185,10 +620,22 @@
       "info": "Uses product tags: new, limited, best-seller, wedding"
     },
     {
+      "type": "text",
+      "id": "price_on_request_label",
+      "label": "Label when price is 0",
+      "default": "Price on request"
+    },
+    {
       "type": "checkbox",
       "id": "show_quick_actions",
       "label": "Show add to cart",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "details_label",
+      "label": "Button label for sold out pieces",
+      "default": "View details"
     },
     {
       "type": "url",
@@ -200,6 +647,10 @@
       "id": "view_all_label",
       "label": "View all label",
       "default": "View collection"
+    },
+    {
+      "type": "header",
+      "content": "Style"
     },
     {
       "type": "color",
