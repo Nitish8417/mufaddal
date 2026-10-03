@@ -397,6 +397,7 @@
     "onboarding": {
       "product_title": "Signature diamond piece"
     },
+    "price_on_request": "Price on request",
     "proof": {
       "low_stock": "Only {{ count }} left — secure this piece soon",
       "visitors": "{{ count }} people are viewing this piece"

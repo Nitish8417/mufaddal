@@ -791,3 +791,108 @@ body.mufaddal-luxury .mj-carousel__track {
     grid-auto-columns: minmax(20%, 1fr);
   }
 }
+
+/* ========== Collection / search product grid cards ========== */
+body.mufaddal-luxury .product-grid .product-card,
+body.mufaddal-luxury .product-grid .product-card .product-card__content {
+  background: transparent !important;
+  color: var(--mj-brown);
+}
+
+body.mufaddal-luxury .product-grid .product-card .card-gallery {
+  position: relative;
+  background: #f6f3ee;
+  overflow: hidden;
+}
+
+body.mufaddal-luxury .product-grid .product-card .card-gallery::after {
+  content: '';
+  position: absolute;
+  inset: 0.6rem;
+  z-index: 1;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.6s var(--mj-ease), inset 0.6s var(--mj-ease);
+}
+
+@media (hover: hover) {
+  body.mufaddal-luxury .product-grid .product-card:hover .card-gallery::after {
+    inset: 0.85rem;
+    border-color: color-mix(in srgb, var(--mj-gold) 55%, transparent);
+  }
+}
+
+body.mufaddal-luxury .product-grid .product-card .product-badges__badge {
+  padding: 0.4rem 0.7rem;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.92);
+  color: color-mix(in srgb, var(--mj-brown) 75%, transparent);
+  font-family: var(--font-subheading--family);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+}
+
+body.mufaddal-luxury .product-grid .product-card .product-badges__badge.color-custom-badge-sale {
+  background: var(--mj-gold);
+  color: #fff;
+}
+
+body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block {
+  margin-top: 0.85rem;
+}
+
+body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block {
+  display: block;
+  min-height: calc(2em * 1.4);
+}
+
+body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block,
+body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block p {
+  margin-block: 0;
+  font-family: var(--mj-serif) !important;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mj-brown);
+}
+
+body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  text-decoration: underline 1px transparent;
+  text-underline-offset: 0.3em;
+  transition: text-decoration-color 0.4s var(--mj-ease);
+}
+
+body.mufaddal-luxury .product-grid .product-card:hover [ref='productTitleLink'] .text-block p {
+  text-decoration-color: var(--mj-gold);
+}
+
+body.mufaddal-luxury .product-grid .product-card product-price,
+body.mufaddal-luxury .product-grid .product-card product-price .price {
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--mj-brown) 72%, transparent);
+}
+
+body.mufaddal-luxury .price--on-request {
+  font-style: italic;
+}
+
+@media (max-width: 749px) {
+  body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block,
+  body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block p {
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+  }
+}

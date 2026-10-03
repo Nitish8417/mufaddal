@@ -51,11 +51,15 @@
   "
   {{ block.shopify_attributes }}
 >
-  {% render 'price',
-    show_unit_price: true,
-    product_resource: product_resource,
-    show_sale_price_first: block_settings.show_sale_price_first
-  %}
+  {%- if product_resource.price_max == 0 -%}
+    <span class="price price--on-request">{{ 'mufaddal.price_on_request' | t }}</span>
+  {%- else -%}
+    {% render 'price',
+      show_unit_price: true,
+      product_resource: product_resource,
+      show_sale_price_first: block_settings.show_sale_price_first
+    %}
+  {%- endif -%}
 
   {% if block_settings.show_tax_info %}
     <div class="tax-note">
