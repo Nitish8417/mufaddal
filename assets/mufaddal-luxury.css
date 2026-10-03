@@ -793,19 +793,19 @@ body.mufaddal-luxury .mj-carousel__track {
 }
 
 /* ========== Collection / search product grid cards ========== */
-body.mufaddal-luxury .product-grid .product-card,
-body.mufaddal-luxury .product-grid .product-card .product-card__content {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .product-card__content {
   background: transparent !important;
   color: var(--mj-brown);
 }
 
-body.mufaddal-luxury .product-grid .product-card .card-gallery {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .card-gallery {
   position: relative;
   background: #f6f3ee;
   overflow: hidden;
 }
 
-body.mufaddal-luxury .product-grid .product-card .card-gallery::after {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .card-gallery::after {
   content: '';
   position: absolute;
   inset: 0.6rem;
@@ -816,13 +816,13 @@ body.mufaddal-luxury .product-grid .product-card .card-gallery::after {
 }
 
 @media (hover: hover) {
-  body.mufaddal-luxury .product-grid .product-card:hover .card-gallery::after {
+  body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card:hover .card-gallery::after {
     inset: 0.85rem;
     border-color: color-mix(in srgb, var(--mj-gold) 55%, transparent);
   }
 }
 
-body.mufaddal-luxury .product-grid .product-card .product-badges__badge {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .product-badges__badge {
   padding: 0.4rem 0.7rem;
   border-radius: 0;
   background: rgba(255, 255, 255, 0.92);
@@ -835,22 +835,22 @@ body.mufaddal-luxury .product-grid .product-card .product-badges__badge {
   backdrop-filter: blur(6px);
 }
 
-body.mufaddal-luxury .product-grid .product-card .product-badges__badge.color-custom-badge-sale {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .product-badges__badge.color-custom-badge-sale {
   background: var(--mj-gold);
   color: #fff;
 }
 
-body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card [ref='productTitleLink'] .text-block {
   margin-top: 0.85rem;
 }
 
-body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card [ref='productTitleLink'] .text-block {
   display: block;
   min-height: calc(2em * 1.4);
 }
 
-body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block,
-body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block p {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card [ref='productTitleLink'] .text-block,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card [ref='productTitleLink'] .text-block p {
   margin-block: 0;
   font-family: var(--mj-serif) !important;
   font-size: 1rem;
@@ -861,7 +861,7 @@ body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-
   color: var(--mj-brown);
 }
 
-body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block p {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card [ref='productTitleLink'] .text-block p {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -872,12 +872,12 @@ body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-
   transition: text-decoration-color 0.4s var(--mj-ease);
 }
 
-body.mufaddal-luxury .product-grid .product-card:hover [ref='productTitleLink'] .text-block p {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card:hover [ref='productTitleLink'] .text-block p {
   text-decoration-color: var(--mj-gold);
 }
 
-body.mufaddal-luxury .product-grid .product-card product-price,
-body.mufaddal-luxury .product-grid .product-card product-price .price {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card product-price,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card product-price .price {
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 400;
@@ -890,8 +890,8 @@ body.mufaddal-luxury .price--on-request {
 }
 
 @media (max-width: 749px) {
-  body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block,
-  body.mufaddal-luxury .product-grid .product-card [ref='productTitleLink'] .text-block p {
+  body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card [ref='productTitleLink'] .text-block,
+  body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card [ref='productTitleLink'] .text-block p {
     font-size: 0.875rem;
     letter-spacing: 0.04em;
   }
@@ -899,43 +899,44 @@ body.mufaddal-luxury .price--on-request {
 
 /* Grid card buy buttons: pinned to the bottom, square, stacked */
 body.mufaddal-luxury .product-grid .product-grid__item,
-body.mufaddal-luxury .product-grid .product-card {
+body.mufaddal-luxury .product-recommendations .resource-list__item,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card {
   height: 100%;
 }
 
-body.mufaddal-luxury .product-grid .product-card .product-card__content {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .product-card__content {
   height: 100%;
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block {
   display: block;
   width: 100%;
   margin-top: auto;
   padding-top: 0.75rem;
 }
 
-body.mufaddal-luxury .product-grid .product-card .product-form-buttons,
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block__jewelry-dual {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .product-form-buttons,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block__jewelry-dual {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .product-form-buttons > *,
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block__jewelry-dual > *,
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block :is(add-to-cart-component, .add-to-cart-block) {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .product-form-buttons > *,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block__jewelry-dual > *,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block :is(add-to-cart-component, .add-to-cart-block) {
   display: block;
   width: 100%;
   min-width: 0;
   flex: none;
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .product-form-text__error.hidden {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .product-form-text__error.hidden {
   display: none;
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .button {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -957,45 +958,45 @@ body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .button {
   transition: background-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease), border-color 0.4s var(--mj-ease);
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .button:hover:not(:disabled) {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .button:hover:not(:disabled) {
   background: var(--mj-gold);
   border-color: var(--mj-gold);
   color: #fff;
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .button.button-secondary,
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .add-to-cart-block--jewelry .button {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .button.button-secondary,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .add-to-cart-block--jewelry .button {
   background: transparent;
   color: var(--mj-brown);
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .button.button-secondary:hover,
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .add-to-cart-block--jewelry .button:hover {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .button.button-secondary:hover,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .add-to-cart-block--jewelry .button:hover {
   background: var(--mj-brown);
   border-color: var(--mj-brown);
   color: var(--mj-cream);
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .button:disabled {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .button:disabled {
   background: transparent;
   border-color: color-mix(in srgb, var(--mj-brown) 25%, transparent);
   color: color-mix(in srgb, var(--mj-brown) 55%, transparent);
   opacity: 1;
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .add-to-cart-icon {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .add-to-cart-icon {
   display: none;
 }
 
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .add-to-cart-text,
-body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .add-to-cart-text__content {
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .add-to-cart-text,
+body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .add-to-cart-text__content {
   display: inline;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 @media (max-width: 749px) {
-  body.mufaddal-luxury .product-grid .product-card .buy-buttons-block .button {
+  body.mufaddal-luxury :is(.product-grid, .product-recommendations) .product-card .buy-buttons-block .button {
     min-height: 2.5rem;
     padding-inline: 0.4rem;
     font-size: 0.6rem;
@@ -1066,4 +1067,15 @@ body.mufaddal-luxury #cart-drawer .cart__checkout-button.button:hover:not(:disab
   background: var(--mj-gold);
   border-color: var(--mj-gold);
   color: #fff;
+}
+
+/* Product recommendations heading */
+body.mufaddal-luxury .product-recommendations .section-resource-list__content .text-block,
+body.mufaddal-luxury .product-recommendations .section-resource-list__content .text-block :is(h1, h2, h3, h4, p) {
+  font-family: var(--mj-serif) !important;
+  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--mj-brown);
 }
