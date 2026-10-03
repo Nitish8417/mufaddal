@@ -429,6 +429,24 @@
                 "accordion_row_TBwmny",
                 "accordion_row_9wzzcK"
               ]
+            },
+            "complete_the_look": {
+              "type": "complete-the-look",
+              "settings": {
+                "eyebrow": "Styling",
+                "heading": "Complete the look",
+                "product_list": [
+                  "amethyst-cluster-bangle",
+                  "amethyst-cluster-pendant",
+                  "amethyst-cluster-earrings",
+                  "amethyst-cocktail-ring",
+                  "amethyst-healing-bracelet"
+                ],
+                "collection": "",
+                "products_to_show": 4,
+                "per_view": 3
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -437,7 +455,8 @@
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "text_aEtTtq",
-            "accordion_3Ncx9Y"
+            "accordion_3Ncx9Y",
+            "complete_the_look"
           ]
         }
       },
@@ -457,24 +476,6 @@
         "jewelry_whatsapp_footer_text": "Thank you for choosing Mufaddal. Our team will contact you shortly.",
         "padding-block-start": 0,
         "padding-block-end": 0
-      }
-    },
-    "complete_the_look": {
-      "type": "complete-the-look",
-      "settings": {
-        "eyebrow": "Styling",
-        "heading": "Complete the look",
-        "product_list": [
-          "amethyst-cluster-bangle",
-          "amethyst-cluster-pendant",
-          "amethyst-cluster-earrings",
-          "amethyst-cocktail-ring",
-          "amethyst-healing-bracelet"
-        ],
-        "collection": "",
-        "products_to_show": 4,
-        "background": "#ffffff",
-        "padding_y": 72
       }
     },
     "product_recommendations_qggXJq": {
@@ -622,7 +623,6 @@
   },
   "order": [
     "main",
-    "complete_the_look",
     "product_recommendations_qggXJq"
   ]
 }

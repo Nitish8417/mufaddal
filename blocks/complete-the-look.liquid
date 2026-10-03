@@ -1,0 +1,305 @@
+{%- liquid
+  assign current_product = closest.product
+  assign look_products = block.settings.product_list
+  if look_products == blank and current_product.metafields.custom.complete_the_look != blank
+    assign look_products = current_product.metafields.custom.complete_the_look.value
+  endif
+  if look_products == blank and block.settings.collection != blank
+    assign look_products = block.settings.collection.products
+  endif
+-%}
+
+{%- if look_products != blank -%}
+  <div
+    class="mj-ctl"
+    style="--mj-ctl-per-view: {{ block.settings.per_view }};"
+    data-mj-carousel
+    {{ block.shopify_attributes }}
+  >
+    <div class="mj-ctl__header">
+      <div>
+        {%- if block.settings.eyebrow != blank -%}
+          <p class="mj-ctl__eyebrow">{{ block.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if block.settings.heading != blank -%}
+          <h3 class="mj-ctl__heading">{{ block.settings.heading }}</h3>
+        {%- endif -%}
+      </div>
+      <div class="mj-ctl__controls">
+        <button type="button" class="mj-ctl__arrow" data-mj-prev aria-label="{{ 'accessibility.slideshow_previous' | t }}">
+          <svg width="14" height="8" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+            <path d="M18 5H2m0 0 4-4M2 5l4 4" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </button>
+        <button type="button" class="mj-ctl__arrow" data-mj-next aria-label="{{ 'accessibility.slideshow_next' | t }}">
+          <svg width="14" height="8" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+            <path d="M0 5h16m0 0L12 1m4 4-4 4" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="mj-ctl__track" data-mj-track>
+      {%- assign shown = 0 -%}
+      {%- for look_product in look_products -%}
+        {%- if look_product.id == current_product.id -%}{%- continue -%}{%- endif -%}
+        {%- if shown >= block.settings.products_to_show -%}{%- break -%}{%- endif -%}
+        {%- assign shown = shown | plus: 1 -%}
+        <a class="mj-ctl__card" href="{{ look_product.url }}">
+          <div class="mj-ctl__media">
+            {%- if look_product.featured_media -%}
+              {{
+                look_product.featured_media
+                | image_url: width: 600
+                | image_tag:
+                  widths: '200, 300, 400, 600',
+                  sizes: '(min-width: 990px) 12vw, 40vw',
+                  loading: 'lazy',
+                  alt: look_product.featured_media.alt | default: look_product.title
+              }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag }}
+            {%- endif -%}
+          </div>
+          <p class="mj-ctl__title">{{ look_product.title | escape }}</p>
+          <p class="mj-ctl__price">
+            {%- if look_product.price_max == 0 -%}
+              <span class="mj-ctl__on-request">{{ 'mufaddal.price_on_request' | t }}</span>
+            {%- else -%}
+              {{ look_product.price | money }}
+            {%- endif -%}
+          </p>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- elsif request.design_mode -%}
+  <div class="mj-ctl mj-ctl--empty" {{ block.shopify_attributes }}>
+    <p class="mj-ctl__eyebrow">{{ block.settings.eyebrow }}</p>
+    <p>Select products, a fallback collection, or set the custom.complete_the_look metafield.</p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .mj-ctl {
+    --mj-ctl-gap: 0.75rem;
+    width: 100%;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--mj-sand, #d4c4ab);
+    color: var(--mj-brown, #37322a);
+  }
+
+  .mj-ctl__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .mj-ctl__eyebrow {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-subheading--family);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--mj-gold, #c4a35a);
+  }
+
+  .mj-ctl .mj-ctl__heading {
+    margin: 0;
+    font-family: var(--mj-serif) !important;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: inherit;
+  }
+
+  .mj-ctl__controls {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .mj-ctl .mj-ctl__arrow,
+  .mj-ctl .mj-ctl__arrow:hover {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--mj-brown, #37322a) 20%, transparent);
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease), border-color 0.4s var(--mj-ease);
+  }
+
+  .mj-ctl .mj-ctl__arrow:hover,
+  .mj-ctl .mj-ctl__arrow:focus-visible {
+    background: var(--mj-brown, #37322a);
+    border-color: var(--mj-brown, #37322a);
+    color: var(--mj-cream, #efebe7);
+  }
+
+  .mj-ctl__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - (var(--mj-ctl-per-view) - 1) * var(--mj-ctl-gap)) / var(--mj-ctl-per-view));
+    gap: var(--mj-ctl-gap);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .mj-ctl__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mj-ctl__card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+    scroll-snap-align: start;
+  }
+
+  .mj-ctl__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #f6f3ee;
+  }
+
+  .mj-ctl__media img,
+  .mj-ctl__media svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1s var(--mj-ease);
+  }
+
+  .mj-ctl__media::after {
+    content: '';
+    position: absolute;
+    inset: 0.4rem;
+    border: 1px solid transparent;
+    pointer-events: none;
+    transition: border-color 0.5s var(--mj-ease), inset 0.5s var(--mj-ease);
+  }
+
+  @media (hover: hover) {
+    .mj-ctl__card:hover .mj-ctl__media img {
+      transform: scale(1.05);
+    }
+
+    .mj-ctl__card:hover .mj-ctl__media::after {
+      inset: 0.55rem;
+      border-color: color-mix(in srgb, var(--mj-gold, #c4a35a) 55%, transparent);
+    }
+  }
+
+  .mj-ctl__title {
+    display: -webkit-box;
+    min-height: calc(2em * 1.35);
+    margin: 0.65rem 0 0;
+    overflow: hidden;
+    font-family: var(--mj-serif) !important;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .mj-ctl__price {
+    margin: 0.3rem 0 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: color-mix(in srgb, var(--mj-brown, #37322a) 70%, transparent);
+  }
+
+  .mj-ctl__on-request {
+    font-style: italic;
+  }
+
+  .mj-ctl--empty {
+    padding: 1.25rem;
+    border: 1px dashed var(--mj-sand, #d4c4ab);
+    font-size: 0.8125rem;
+  }
+
+  @media (max-width: 749px) {
+    .mj-ctl {
+      --mj-ctl-per-view: 2 !important;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Complete the look",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Styling"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Complete the look"
+    },
+    {
+      "type": "product_list",
+      "id": "product_list",
+      "label": "Products",
+      "limit": 8
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Fallback collection"
+    },
+    {
+      "type": "paragraph",
+      "content": "If no products are selected, the product metafield custom.complete_the_look (list of products) is used, then the fallback collection."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "per_view",
+      "label": "Cards visible on desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    }
+  ],
+  "presets": [
+    {
+      "name": "Complete the look"
+    }
+  ]
+}
+{% endschema %}
