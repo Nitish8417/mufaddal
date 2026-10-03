@@ -125,11 +125,11 @@
       "settings": {
         "eyebrow": "Featured",
         "heading": "Selected pieces",
-        "collection": "necklaces",
+        "collection": "bracelets",
         "products_to_show": 13,
         "show_badges": true,
         "show_quick_actions": true,
-        "customise_link": "",
+        "customise_link": "shopify://collections/bracelets",
         "view_all_label": "View collection",
         "background": "#f7f6f3",
         "padding_y": 72
