@@ -119,7 +119,7 @@
               "type": "buy-buttons",
               "name": "t:names.product_buy_buttons",
               "settings": {
-                "stacking": false,
+                "stacking": true,
                 "text_color": "",
                 "show_pickup_availability": true,
                 "gift_card_form": true,
