@@ -1,144 +1,706 @@
+{%- liquid
+  assign slide_count = section.blocks.size
+  assign autoplay_ms = section.settings.autoplay_speed | times: 1000
+-%}
+
 <section
   class="mj-section mj-testimonials"
-  style="--mj-section-bg: {{ section.settings.background }}; --mj-pad-y: {{ section.settings.padding_y }}px;"
+  style="
+    --mj-section-bg: {{ section.settings.background }};
+    --mj-pad-y: {{ section.settings.padding_y }}px;
+    --mj-card-bg: {{ section.settings.card_background }};
+    --mj-autoplay: {{ autoplay_ms }}ms;
+  "
 >
-  <div class="mj-section__inner">
-    <div class="mj-section__header mj-reveal">
+  <div class="mj-section__inner mj-testimonials__layout">
+    <div class="mj-testimonials__intro mj-reveal">
       {%- if section.settings.eyebrow != blank -%}
         <p class="mj-eyebrow">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
       {%- if section.settings.heading != blank -%}
-        <h2 class="mj-heading" style="font-size: clamp(2rem, 4vw, 3.25rem);">{{ section.settings.heading }}</h2>
+        <h2 class="mj-heading mj-testimonials__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.rating_score != blank -%}
+        <div class="mj-testimonials__summary">
+          <p class="mj-testimonials__score">
+            {{ section.settings.rating_score }}<span>/5</span>
+          </p>
+          <div class="mj-testimonials__summary-meta">
+            <div class="mj-testimonials__stars" aria-hidden="true">
+              {%- for i in (1..5) -%}
+                <svg viewBox="0 0 12 12"><path d="M6 .6l1.6 3.4 3.8.5-2.8 2.6.7 3.7L6 9 2.7 10.8l.7-3.7L.6 4.5l3.8-.5z"/></svg>
+              {%- endfor -%}
+            </div>
+            {%- if section.settings.review_count != blank -%}
+              <p class="mj-testimonials__count">{{ section.settings.review_count }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.reviews_label != blank and section.settings.reviews_link != blank -%}
+        <a class="mj-link mj-testimonials__all" href="{{ section.settings.reviews_link }}">
+          {{- section.settings.reviews_label -}}
+        </a>
+      {%- endif -%}
+
+      {%- if slide_count > 1 -%}
+        <div class="mj-testimonials__controls">
+          <button type="button" class="mj-testimonials__arrow" data-prev aria-label="Previous testimonial">
+            <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+              <path d="M18 5H2m0 0 4-4M2 5l4 4" stroke="currentColor" stroke-width="1.1"/>
+            </svg>
+          </button>
+          <p class="mj-testimonials__counter" aria-hidden="true">
+            <span data-current>01</span>
+            <span class="mj-testimonials__counter-line"></span>
+            <span>{% if slide_count < 10 %}0{% endif %}{{ slide_count }}</span>
+          </p>
+          <button type="button" class="mj-testimonials__arrow" data-next aria-label="Next testimonial">
+            <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+              <path d="M0 5h16m0 0L12 1m4 4-4 4" stroke="currentColor" stroke-width="1.1"/>
+            </svg>
+          </button>
+        </div>
       {%- endif -%}
     </div>
 
-    <div class="mj-testimonials__grid">
-      {%- for block in section.blocks -%}
-        <article class="mj-testimonials__card mj-reveal" {{ block.shopify_attributes }}>
-          {%- if block.settings.rating > 0 -%}
-            <div class="mj-testimonials__stars" aria-label="{{ 'accessibility.rating' | t: rating: block.settings.rating }}">
-              {%- for i in (1..5) -%}
-                <span class="{% if i <= block.settings.rating %}is-on{% endif %}">★</span>
-              {%- endfor -%}
-            </div>
-          {%- endif -%}
-          {%- if block.settings.quote != blank -%}
-            <blockquote class="mj-testimonials__quote">“{{ block.settings.quote }}”</blockquote>
-          {%- endif -%}
-          <div class="mj-testimonials__author">
-            {%- if block.settings.image != blank -%}
-              <div class="mj-testimonials__photo">
-                {{
-                  block.settings.image
-                  | image_url: width: 160
-                  | image_tag: widths: '80, 120, 160', sizes: '64px', loading: 'lazy', alt: block.settings.name
-                }}
-              </div>
-            {%- endif -%}
-            <div>
-              <p class="mj-testimonials__name">{{ block.settings.name }}</p>
-              {%- if block.settings.source != blank -%}
-                <p class="mj-testimonials__source">{{ block.settings.source }}</p>
+    <mj-testimonials
+      class="mj-testimonials__stage mj-reveal"
+      data-autoplay="{{ section.settings.autoplay }}"
+      data-interval="{{ autoplay_ms }}"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="{{ section.settings.heading | escape }}"
+    >
+      <div class="mj-testimonials__frame">
+        <span class="mj-testimonials__mark" aria-hidden="true">&ldquo;</span>
+
+        <div class="mj-testimonials__track" data-track>
+          {%- for block in section.blocks -%}
+            <article
+              class="mj-testimonials__slide{% if forloop.first %} is-active{% endif %}"
+              role="group"
+              aria-roledescription="slide"
+              aria-label="{{ forloop.index }} / {{ slide_count }}"
+              data-slide
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.rating > 0 -%}
+                <div
+                  class="mj-testimonials__stars mj-testimonials__stars--slide"
+                  role="img"
+                  aria-label="{{ block.settings.rating }} / 5"
+                >
+                  {%- for i in (1..5) -%}
+                    <svg viewBox="0 0 12 12" class="{% if i > block.settings.rating %}is-off{% endif %}">
+                      <path d="M6 .6l1.6 3.4 3.8.5-2.8 2.6.7 3.7L6 9 2.7 10.8l.7-3.7L.6 4.5l3.8-.5z"/>
+                    </svg>
+                  {%- endfor -%}
+                </div>
               {%- endif -%}
-            </div>
-          </div>
-          {%- if block.settings.video_url != blank -%}
-            <a class="mj-link mj-testimonials__video" href="{{ block.settings.video_url }}" target="_blank" rel="noopener">
-              {{ 'mufaddal.actions.watch_review' | t }}
-            </a>
-          {%- endif -%}
-        </article>
-      {%- endfor -%}
-    </div>
+
+              {%- if block.settings.quote != blank -%}
+                <blockquote class="mj-testimonials__quote">{{ block.settings.quote }}</blockquote>
+              {%- endif -%}
+
+              <footer class="mj-testimonials__author">
+                <div class="mj-testimonials__avatar">
+                  {%- if block.settings.image != blank -%}
+                    {{
+                      block.settings.image
+                      | image_url: width: 192
+                      | image_tag: widths: '96, 144, 192', sizes: '56px', loading: 'lazy', alt: block.settings.name
+                    }}
+                  {%- else -%}
+                    <span aria-hidden="true">{{ block.settings.name | slice: 0 | upcase }}</span>
+                  {%- endif -%}
+                </div>
+                <div class="mj-testimonials__who">
+                  <p class="mj-testimonials__name">
+                    {{ block.settings.name }}
+                    {%- if block.settings.verified %}
+                      <svg class="mj-testimonials__verified" viewBox="0 0 16 16" role="img" aria-label="Verified">
+                        <path d="M8 .8l1.9 1.4 2.3-.2.7 2.2 1.9 1.4-.8 2.2.8 2.2-1.9 1.4-.7 2.2-2.3-.2L8 15.2l-1.9-1.4-2.3.2-.7-2.2-1.9-1.4.8-2.2-.8-2.2 1.9-1.4.7-2.2 2.3.2z" fill="currentColor"/>
+                        <path d="M5.2 8.2l1.9 1.8 3.7-3.8" fill="none" stroke="#fff" stroke-width="1.3"/>
+                      </svg>
+                    {%- endif -%}
+                  </p>
+                  {%- if block.settings.source != blank or block.settings.location != blank -%}
+                    <p class="mj-testimonials__source">
+                      {{- block.settings.source -}}
+                      {%- if block.settings.source != blank and block.settings.location != blank %} · {% endif -%}
+                      {{- block.settings.location -}}
+                    </p>
+                  {%- endif -%}
+                </div>
+
+                {%- if block.settings.piece != blank -%}
+                  <p class="mj-testimonials__piece">
+                    <span>Purchased</span>
+                    {{ block.settings.piece }}
+                  </p>
+                {%- endif -%}
+              </footer>
+
+              {%- if block.settings.video_url != blank -%}
+                <a class="mj-testimonials__video" href="{{ block.settings.video_url }}" target="_blank" rel="noopener">
+                  <span class="mj-testimonials__play" aria-hidden="true">
+                    <svg viewBox="0 0 10 12"><path d="M0 0l10 6-10 6z" fill="currentColor"/></svg>
+                  </span>
+                  {{ 'mufaddal.actions.watch_review' | t }}
+                </a>
+              {%- endif -%}
+            </article>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- if slide_count > 1 -%}
+        <div class="mj-testimonials__progress" role="tablist" aria-label="Choose testimonial">
+          {%- for block in section.blocks -%}
+            <button
+              type="button"
+              class="mj-testimonials__bar{% if forloop.first %} is-active{% endif %}"
+              role="tab"
+              aria-label="{{ block.settings.name | escape }}"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              data-dot="{{ forloop.index0 }}"
+            >
+              <span></span>
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </mj-testimonials>
   </div>
 </section>
 
 {% stylesheet %}
-  .mj-testimonials__grid {
-    display: grid;
-    gap: 2rem 0;
+  .mj-testimonials {
+    overflow: hidden;
   }
 
-  .mj-testimonials__card {
+  .mj-testimonials__layout {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .mj-testimonials__heading {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    max-width: 14ch;
+  }
+
+  /* Rating summary */
+  .mj-testimonials__summary {
     display: flex;
-    flex-direction: column;
-    gap: 1.35rem;
-    padding: 0 0 2rem;
-    background: transparent;
-    border: 0;
-    border-bottom: 1px solid var(--mj-border);
+    align-items: center;
+    gap: 1.1rem;
+    margin-top: 2rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--mj-border);
+  }
+
+  .mj-testimonials__score {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.75rem, 5vw, 3.75rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--mj-ink);
+  }
+
+  .mj-testimonials__score span {
+    margin-left: 0.15rem;
+    font-size: 0.4em;
+    letter-spacing: 0;
+    color: color-mix(in srgb, var(--mj-text) 45%, transparent);
   }
 
   .mj-testimonials__stars {
-    color: #e6dcc6;
-    letter-spacing: 0.14em;
-    font-size: 0.8rem;
+    display: flex;
+    gap: 0.2rem;
+    color: var(--mj-gold);
   }
 
-  .mj-testimonials__stars .is-on {
+  .mj-testimonials__stars svg {
+    width: 0.8rem;
+    height: 0.8rem;
+    fill: currentColor;
+  }
+
+  .mj-testimonials__stars svg.is-off {
+    fill: var(--mj-accent);
+  }
+
+  .mj-testimonials__count {
+    margin: 0.45rem 0 0;
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--mj-text) 60%, transparent);
+  }
+
+  .mj-testimonials__all {
+    margin-top: 1.5rem;
+  }
+
+  /* Controls */
+  .mj-testimonials__controls {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 2.25rem;
+  }
+
+  .mj-testimonials__arrow {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid color-mix(in srgb, var(--mj-ink) 18%, transparent);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--mj-ink);
+    cursor: pointer;
+    transition: background-color 0.4s var(--mj-ease), border-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease);
+  }
+
+  .mj-testimonials__arrow:hover,
+  .mj-testimonials__arrow:focus-visible {
+    background: var(--mj-ink);
+    border-color: var(--mj-ink);
+    color: #fff;
+  }
+
+  .mj-testimonials__counter {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--mj-text) 55%, transparent);
+  }
+
+  .mj-testimonials__counter [data-current] {
+    color: var(--mj-ink);
+  }
+
+  .mj-testimonials__counter-line {
+    width: 2rem;
+    height: 1px;
+    background: var(--mj-gold);
+  }
+
+  /* Stage */
+  .mj-testimonials__stage {
+    display: block;
+    min-width: 0;
+  }
+
+  .mj-testimonials__frame {
+    position: relative;
+    background: var(--mj-card-bg);
+    isolation: isolate;
+  }
+
+  .mj-testimonials__frame::before {
+    content: '';
+    position: absolute;
+    inset: 0.75rem;
+    z-index: -1;
+    border: 1px solid color-mix(in srgb, var(--mj-gold) 35%, transparent);
+    pointer-events: none;
+  }
+
+  .mj-testimonials__mark {
+    position: absolute;
+    top: -0.2em;
+    left: 1.25rem;
+    z-index: -1;
+    font-family: var(--font-heading--family);
+    font-size: clamp(9rem, 18vw, 15rem);
+    line-height: 1;
     color: var(--mj-gold);
+    opacity: 0.16;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .mj-testimonials__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .mj-testimonials__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mj-testimonials__slide {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    padding: clamp(3.25rem, 6vw, 5rem) clamp(1.75rem, 5vw, 4.5rem) clamp(2.5rem, 5vw, 4rem);
+    scroll-snap-align: start;
+    opacity: 0.25;
+    transition: opacity 0.8s var(--mj-ease);
+  }
+
+  .mj-testimonials__slide.is-active {
+    opacity: 1;
+  }
+
+  .mj-testimonials__slide .mj-testimonials__quote,
+  .mj-testimonials__slide .mj-testimonials__author {
+    transform: translateY(0.75rem);
+    transition: transform 0.9s var(--mj-ease);
+  }
+
+  .mj-testimonials__slide.is-active .mj-testimonials__quote,
+  .mj-testimonials__slide.is-active .mj-testimonials__author {
+    transform: none;
+  }
+
+  .mj-testimonials__slide.is-active .mj-testimonials__author {
+    transition-delay: 0.08s;
   }
 
   .mj-testimonials__quote {
     margin: 0;
     font-family: var(--font-heading--family);
-    font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+    font-size: clamp(1.5rem, 2.9vw, 2.4rem);
     font-weight: 400;
-    line-height: 1.4;
-    letter-spacing: -0.01em;
+    line-height: 1.32;
+    letter-spacing: -0.015em;
+    color: var(--mj-ink);
+    text-wrap: pretty;
   }
 
+  /* Author */
   .mj-testimonials__author {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.85rem;
+    gap: 1rem 1.1rem;
     margin-top: auto;
+    padding-top: 1.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--mj-gold) 30%, transparent);
   }
 
-  .mj-testimonials__photo {
-    width: 2.75rem;
-    height: 2.75rem;
+  .mj-testimonials__avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 3.5rem;
+    height: 3.5rem;
     overflow: hidden;
     border-radius: 50%;
+    border: 1px solid var(--mj-gold);
+    padding: 3px;
+    background: var(--mj-card-bg);
   }
 
-  .mj-testimonials__photo img {
+  .mj-testimonials__avatar img {
     width: 100%;
     height: 100%;
+    border-radius: 50%;
     object-fit: cover;
   }
 
+  .mj-testimonials__avatar span {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--mj-ink);
+    color: var(--mj-gold);
+    font-family: var(--font-heading--family);
+    font-size: 1.25rem;
+  }
+
+  .mj-testimonials__who {
+    min-width: 0;
+  }
+
   .mj-testimonials__name {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     margin: 0;
+    font-family: var(--font-subheading--family);
     font-size: 0.8125rem;
-    letter-spacing: 0.08em;
+    font-weight: 500;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    color: var(--mj-ink);
+  }
+
+  .mj-testimonials__verified {
+    width: 0.95rem;
+    height: 0.95rem;
+    color: var(--mj-gold);
   }
 
   .mj-testimonials__source {
-    margin: 0.25rem 0 0;
-    font-size: 0.75rem;
-    color: color-mix(in srgb, var(--mj-text) 55%, transparent);
+    margin: 0.3rem 0 0;
+    font-size: 0.8125rem;
+    color: color-mix(in srgb, var(--mj-text) 58%, transparent);
   }
 
-  @media (min-width: 750px) {
-    .mj-testimonials__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0 2.5rem;
-    }
+  .mj-testimonials__piece {
+    display: grid;
+    gap: 0.2rem;
+    margin: 0 0 0 auto;
+    font-family: var(--font-heading--family);
+    font-size: 0.95rem;
+    font-style: italic;
+    text-align: right;
+    color: var(--mj-ink);
+  }
 
-    .mj-testimonials__card {
-      padding: 0.5rem 0 2.25rem;
+  .mj-testimonials__piece span {
+    font-family: var(--font-subheading--family);
+    font-size: 0.625rem;
+    font-style: normal;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mj-gold);
+  }
+
+  .mj-testimonials__video {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: fit-content;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--mj-ink);
+  }
+
+  .mj-testimonials__play {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--mj-gold);
+    border-radius: 50%;
+    color: var(--mj-gold);
+    transition: background-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease);
+  }
+
+  .mj-testimonials__play svg {
+    width: 0.6rem;
+    height: 0.7rem;
+    margin-left: 2px;
+  }
+
+  .mj-testimonials__video:hover .mj-testimonials__play {
+    background: var(--mj-gold);
+    color: #fff;
+  }
+
+  /* Progress bars */
+  .mj-testimonials__progress {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .mj-testimonials__bar {
+    flex: 1;
+    height: 1.25rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .mj-testimonials__bar span {
+    position: relative;
+    display: block;
+    height: 1px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--mj-ink) 15%, transparent);
+  }
+
+  .mj-testimonials__bar span::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--mj-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .mj-testimonials__bar.is-done span::after {
+    transform: scaleX(1);
+  }
+
+  .mj-testimonials__bar.is-active span::after {
+    transform: scaleX(1);
+    transition: transform 0.6s var(--mj-ease);
+  }
+
+  [data-playing] .mj-testimonials__bar.is-active span::after {
+    animation: mj-testimonial-progress var(--mj-autoplay) linear forwards;
+  }
+
+  [data-paused] .mj-testimonials__bar.is-active span::after {
+    animation-play-state: paused;
+  }
+
+  @keyframes mj-testimonial-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
     }
   }
 
-  @media (min-width: 1100px) {
-    .mj-testimonials__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0 2.75rem;
+  @media (min-width: 990px) {
+    .mj-testimonials__layout {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: center;
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+  }
+
+  @media (max-width: 749px) {
+    .mj-testimonials__piece {
+      margin-left: 0;
+      flex-basis: 100%;
+      text-align: left;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mj-testimonials__slide,
+    .mj-testimonials__slide .mj-testimonials__quote,
+    .mj-testimonials__slide .mj-testimonials__author {
+      transition: none;
+      transform: none;
     }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('mj-testimonials')) {
+    customElements.define(
+      'mj-testimonials',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.section = this.closest('.mj-testimonials');
+          this.track = this.querySelector('[data-track]');
+          this.slides = [...this.querySelectorAll('[data-slide]')];
+          this.dots = [...this.querySelectorAll('[data-dot]')];
+          this.counter = this.section.querySelector('[data-current]');
+          this.index = 0;
+          this.interval = Number(this.dataset.interval) || 7000;
+          this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (this.slides.length < 2) return;
+
+          this.section.querySelector('[data-prev]')?.addEventListener('click', () => this.go(this.index - 1));
+          this.section.querySelector('[data-next]')?.addEventListener('click', () => this.go(this.index + 1));
+          this.dots.forEach((dot) => dot.addEventListener('click', () => this.go(Number(dot.dataset.dot))));
+
+          this.onScroll = () => {
+            clearTimeout(this.scrollTimer);
+            this.scrollTimer = setTimeout(() => {
+              const i = Math.round(this.track.scrollLeft / this.track.clientWidth);
+              if (i !== this.index) this.setActive(i);
+            }, 80);
+          };
+          this.track.addEventListener('scroll', this.onScroll, { passive: true });
+
+          if (this.dataset.autoplay === 'true' && !this.reduceMotion) {
+            ['mouseenter', 'focusin', 'touchstart'].forEach((e) =>
+              this.addEventListener(e, () => this.pause(), { passive: true })
+            );
+            ['mouseleave', 'focusout'].forEach((e) => this.addEventListener(e, () => this.resume()));
+            this.visibility = new IntersectionObserver(([entry]) =>
+              entry.isIntersecting ? this.resume() : this.pause()
+            );
+            this.visibility.observe(this);
+          }
+        }
+
+        disconnectedCallback() {
+          this.stop();
+          this.visibility?.disconnect();
+        }
+
+        go(i) {
+          const next = (i + this.slides.length) % this.slides.length;
+          this.track.scrollTo({
+            left: next * this.track.clientWidth,
+            behavior: this.reduceMotion ? 'auto' : 'smooth',
+          });
+          this.setActive(next);
+        }
+
+        setActive(i) {
+          this.index = i;
+          this.slides.forEach((s, n) => s.classList.toggle('is-active', n === i));
+          this.dots.forEach((d, n) => {
+            d.classList.toggle('is-done', n < i);
+            d.setAttribute('aria-selected', n === i ? 'true' : 'false');
+          });
+          if (this.counter) this.counter.textContent = String(i + 1).padStart(2, '0');
+          if (this.timer) {
+            this.start();
+          } else {
+            this.restartBar();
+          }
+        }
+
+        restartBar() {
+          this.dots.forEach((d) => d.classList.remove('is-active'));
+          const dot = this.dots[this.index];
+          if (!dot) return;
+          void dot.offsetWidth;
+          dot.classList.add('is-active');
+        }
+
+        start() {
+          this.stop();
+          this.setAttribute('data-playing', '');
+          this.removeAttribute('data-paused');
+          this.restartBar();
+          this.timer = setTimeout(() => this.go(this.index + 1), this.interval);
+        }
+
+        stop() {
+          clearTimeout(this.timer);
+          this.timer = null;
+        }
+
+        pause() {
+          if (!this.hasAttribute('data-playing')) return;
+          this.stop();
+          this.setAttribute('data-paused', '');
+        }
+
+        resume() {
+          if (this.matches(':hover') || this.contains(document.activeElement)) return;
+          this.start();
+        }
+      }
+    );
+  }
+{% endjavascript %}
 
 {% schema %}
 {
@@ -162,10 +724,67 @@
       "default": "Trusted by discerning clients worldwide"
     },
     {
+      "type": "header",
+      "content": "Rating summary"
+    },
+    {
+      "type": "text",
+      "id": "rating_score",
+      "label": "Average rating",
+      "info": "e.g. 4.9 — leave blank to hide the summary"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review count text",
+      "info": "e.g. From 500+ verified clients"
+    },
+    {
+      "type": "text",
+      "id": "reviews_label",
+      "label": "All reviews link label",
+      "default": "Read all reviews"
+    },
+    {
+      "type": "url",
+      "id": "reviews_link",
+      "label": "All reviews link"
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Time per testimonial",
+      "min": 4,
+      "max": 15,
+      "step": 1,
+      "unit": "s",
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
       "type": "color",
       "id": "background",
       "label": "Background",
       "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#F7F6F3"
     },
     {
       "type": "range",
@@ -205,15 +824,33 @@
           "default": "Aisha R."
         },
         {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Show verified badge",
+          "default": false
+        },
+        {
           "type": "text",
           "id": "source",
           "label": "Source",
           "default": "Google Review"
         },
         {
+          "type": "text",
+          "id": "location",
+          "label": "Location"
+        },
+        {
+          "type": "text",
+          "id": "piece",
+          "label": "Piece purchased",
+          "info": "e.g. Solitaire Engagement Ring"
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "Customer photo"
+          "label": "Customer photo",
+          "info": "Without a photo, the first initial is shown as a monogram"
         },
         {
           "type": "url",
@@ -233,7 +870,8 @@
           "settings": {
             "quote": "The craftsmanship is exquisite. Our engagement ring feels timeless and deeply personal.",
             "name": "Aisha R.",
-            "source": "Google Review"
+            "source": "Google Review",
+            "piece": "Solitaire Engagement Ring"
           }
         },
         {
@@ -241,7 +879,8 @@
           "settings": {
             "quote": "A private consultation experience that matches the world's finest maisons.",
             "name": "Daniel K.",
-            "source": "Verified Buyer"
+            "source": "Verified Buyer",
+            "piece": "Bespoke Diamond Band"
           }
         },
         {
@@ -249,7 +888,8 @@
           "settings": {
             "quote": "Every detail — from diamonds to packaging — felt considered and luxurious.",
             "name": "Meera S.",
-            "source": "Bridal Client"
+            "source": "Bridal Client",
+            "piece": "Bridal Polki Set"
           }
         }
       ]
