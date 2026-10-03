@@ -377,23 +377,6 @@
         "background": "#faf8f4",
         "padding_y": 72
       }
-    },
-    "luxury_newsletter": {
-      "type": "luxury-newsletter",
-      "settings": {
-        "eyebrow": "Private Access",
-        "heading": "Join the inner circle",
-        "text": "Receive exclusive launches, private collection previews, and VIP invitations.",
-        "show_perks": true,
-        "perk_1": "Exclusive Launches",
-        "perk_2": "Private Collection",
-        "perk_3": "VIP Access",
-        "placeholder": "Email address",
-        "button_label": "Subscribe",
-        "success_message": "Welcome to Mufaddal. Your private access awaits.",
-        "background": "#ffffff",
-        "padding_y": 100
-      }
     }
   },
   "order": [
@@ -405,7 +388,6 @@
     "luxury_bridal",
     "luxury_custom_journey",
     "luxury_testimonials",
-    "luxury_trust",
-    "luxury_newsletter"
+    "luxury_trust"
   ]
 }
