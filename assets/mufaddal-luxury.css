@@ -12,6 +12,11 @@
   --mj-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --mj-duration: 0.7s;
   --mj-letter-eyebrow: 0.24em;
+  --mj-serif: 'Cormorant Garamond', Georgia, serif;
+  --mj-brown: #37322a;
+  --mj-cream: #efebe7;
+  --mj-taupe: #a2947c;
+  --mj-sand: #d4c4ab;
 }
 
 body.mufaddal-luxury {

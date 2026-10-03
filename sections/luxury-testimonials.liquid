@@ -105,7 +105,7 @@
                 <blockquote class="mj-testimonials__quote">{{ block.settings.quote }}</blockquote>
               {%- endif -%}
 
-              <footer class="mj-testimonials__author">
+              <div class="mj-testimonials__author">
                 <div class="mj-testimonials__avatar">
                   {%- if block.settings.image != blank -%}
                     {{
@@ -142,7 +142,7 @@
                     {{ block.settings.piece }}
                   </p>
                 {%- endif -%}
-              </footer>
+              </div>
 
               {%- if block.settings.video_url != blank -%}
                 <a class="mj-testimonials__video" href="{{ block.settings.video_url }}" target="_blank" rel="noopener">
@@ -179,6 +179,9 @@
 
 {% stylesheet %}
   .mj-testimonials {
+    --mj-ink: var(--mj-brown);
+    --mj-text: var(--mj-brown);
+    --mj-border: var(--mj-sand);
     overflow: hidden;
   }
 
@@ -204,7 +207,7 @@
 
   .mj-testimonials__score {
     margin: 0;
-    font-family: var(--font-heading--family);
+    font-family: var(--mj-serif);
     font-size: clamp(2.75rem, 5vw, 3.75rem);
     font-weight: 400;
     line-height: 1;
@@ -226,8 +229,8 @@
   }
 
   .mj-testimonials__stars svg {
-    width: 0.8rem;
-    height: 0.8rem;
+    width: 0.95rem;
+    height: 0.95rem;
     fill: currentColor;
   }
 
@@ -280,7 +283,7 @@
     align-items: center;
     gap: 0.75rem;
     margin: 0;
-    font-family: var(--font-heading--family);
+    font-family: var(--mj-serif);
     font-size: 0.95rem;
     font-variant-numeric: tabular-nums;
     color: color-mix(in srgb, var(--mj-text) 55%, transparent);
@@ -319,14 +322,14 @@
 
   .mj-testimonials__mark {
     position: absolute;
-    top: -0.2em;
-    left: 1.25rem;
+    top: clamp(1.25rem, 2.5vw, 2rem);
+    right: clamp(1.75rem, 4vw, 3.5rem);
     z-index: -1;
-    font-family: var(--font-heading--family);
-    font-size: clamp(9rem, 18vw, 15rem);
-    line-height: 1;
+    font-family: var(--mj-serif);
+    font-size: clamp(7rem, 12vw, 10rem);
+    line-height: 0.8;
     color: var(--mj-gold);
-    opacity: 0.16;
+    opacity: 0.22;
     pointer-events: none;
     user-select: none;
   }
@@ -376,11 +379,12 @@
 
   .mj-testimonials__quote {
     margin: 0;
-    font-family: var(--font-heading--family);
-    font-size: clamp(1.5rem, 2.9vw, 2.4rem);
+    font-family: var(--mj-serif);
+    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+    font-style: italic;
     font-weight: 400;
-    line-height: 1.32;
-    letter-spacing: -0.015em;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
     color: var(--mj-ink);
     text-wrap: pretty;
   }
@@ -424,7 +428,7 @@
     border-radius: 50%;
     background: var(--mj-ink);
     color: var(--mj-gold);
-    font-family: var(--font-heading--family);
+    font-family: var(--mj-serif);
     font-size: 1.25rem;
   }
 
@@ -461,7 +465,7 @@
     display: grid;
     gap: 0.2rem;
     margin: 0 0 0 auto;
-    font-family: var(--font-heading--family);
+    font-family: var(--mj-serif);
     font-size: 0.95rem;
     font-style: italic;
     text-align: right;
@@ -518,7 +522,8 @@
     margin-top: 1.5rem;
   }
 
-  .mj-testimonials__bar {
+  .mj-testimonials__bar,
+  .mj-testimonials__bar:hover {
     flex: 1;
     height: 1.25rem;
     padding: 0;
@@ -784,7 +789,7 @@
       "type": "color",
       "id": "card_background",
       "label": "Card background",
-      "default": "#F7F6F3"
+      "default": "#EFEBE7"
     },
     {
       "type": "range",
