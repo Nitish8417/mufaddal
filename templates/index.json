@@ -127,8 +127,12 @@
         "heading": "Selected pieces",
         "collection": "bracelets",
         "products_to_show": 13,
+        "show_secondary_image": true,
+        "show_product_type": true,
         "show_badges": true,
-        "show_quick_actions": true,
+        "price_on_request_label": "Price on request",
+        "show_quick_actions": false,
+        "details_label": "View details",
         "customise_link": "shopify://collections/bracelets",
         "view_all_label": "View collection",
         "background": "#f7f6f3",
@@ -191,8 +195,12 @@
         "heading": "Most coveted creations",
         "collection": "all",
         "products_to_show": 8,
+        "show_secondary_image": true,
+        "show_product_type": true,
         "show_badges": true,
-        "show_quick_actions": true,
+        "price_on_request_label": "Price on request",
+        "show_quick_actions": false,
+        "details_label": "View details",
         "customise_link": "",
         "view_all_label": "Shop bestsellers",
         "background": "#ffffff",
@@ -273,7 +281,10 @@
             "rating": 5,
             "quote": "The craftsmanship is exquisite. Our engagement ring feels timeless and deeply personal.",
             "name": "Aisha R.",
+            "verified": false,
             "source": "Google Review",
+            "location": "",
+            "piece": "",
             "video_url": ""
           }
         },
@@ -283,7 +294,10 @@
             "rating": 5,
             "quote": "A private consultation experience that matches the world's finest maisons.",
             "name": "Daniel K.",
+            "verified": false,
             "source": "Verified Buyer",
+            "location": "",
+            "piece": "",
             "video_url": ""
           }
         },
@@ -293,7 +307,10 @@
             "rating": 5,
             "quote": "Every detail — from diamonds to packaging — felt considered and luxurious.",
             "name": "Meera S.",
+            "verified": false,
             "source": "Bridal Client",
+            "location": "",
+            "piece": "",
             "video_url": ""
           }
         }
@@ -306,7 +323,14 @@
       "settings": {
         "eyebrow": "Client Stories",
         "heading": "Trusted by discerning clients worldwide",
+        "rating_score": "",
+        "review_count": "",
+        "reviews_label": "Read all reviews",
+        "reviews_link": "",
+        "autoplay": true,
+        "autoplay_speed": 7,
         "background": "#ffffff",
+        "card_background": "#efebe7",
         "padding_y": 96
       }
     },
