@@ -101,6 +101,265 @@ body.mufaddal-luxury .product-information .text-block {
   color: var(--mj-text);
 }
 
+/* ========== Premium PDP (tighter, refined jewelry look) ========== */
+body.mufaddal-luxury .product-information.section {
+  padding-block: 1.25rem 2rem;
+}
+
+@media (min-width: 750px) {
+  body.mufaddal-luxury .product-information.section {
+    padding-block: 1.75rem 2.75rem;
+  }
+}
+
+body.mufaddal-luxury .product-information__grid--limit-details .product-details > .group-block {
+  --details-max-width: min(26.5rem, 100%);
+  max-width: var(--details-max-width);
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  body.mufaddal-luxury .product-information__grid--limit-details .product-details > .group-block {
+    --details-max-width: 28rem;
+  }
+}
+
+/* Gallery: quiet frame, smaller thumbs */
+body.mufaddal-luxury .product-information__media media-gallery,
+body.mufaddal-luxury .product-information__media .product-media-container {
+  background: #faf8f5;
+}
+
+body.mufaddal-luxury .product-information__media slideshow-controls[pagination-position='bottom'] {
+  margin-block-start: 0.65rem;
+  gap: 0.4rem;
+}
+
+body.mufaddal-luxury .product-information__media .slideshow-control,
+body.mufaddal-luxury .product-information__media .thumbnail-list__item,
+body.mufaddal-luxury .product-information__media button.slideshow-control {
+  border: 1px solid color-mix(in srgb, var(--mj-brown) 12%, transparent);
+  border-radius: 0;
+  overflow: hidden;
+  opacity: 0.72;
+  transition: opacity 0.35s var(--mj-ease), border-color 0.35s var(--mj-ease);
+}
+
+body.mufaddal-luxury .product-information__media .slideshow-control:hover,
+body.mufaddal-luxury .product-information__media .slideshow-control[aria-current='true'],
+body.mufaddal-luxury .product-information__media .thumbnail-list__item[aria-current='true'],
+body.mufaddal-luxury .product-information__media button.slideshow-control[aria-current='true'] {
+  opacity: 1;
+  border-color: var(--mj-brown);
+}
+
+/* Title + price */
+body.mufaddal-luxury .product-information .product-details .text-block :is(h1, h2, h3, h4) {
+  font-family: var(--mj-serif) !important;
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem) !important;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mj-brown);
+  margin: 0;
+}
+
+body.mufaddal-luxury .product-information .product-details product-price,
+body.mufaddal-luxury .product-information .product-details .price {
+  font-family: var(--font-body--family);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--mj-brown);
+}
+
+body.mufaddal-luxury .product-information .product-details > .group-block > .group-block-content {
+  gap: 1rem;
+}
+
+body.mufaddal-luxury .product-information .product-details .divider {
+  opacity: 0.45;
+  margin-block: 0.15rem;
+}
+
+/* Variant picker — compact luxury controls */
+body.mufaddal-luxury .product-information .variant-picker {
+  gap: 0.85rem;
+}
+
+body.mufaddal-luxury .product-information .variant-option__label,
+body.mufaddal-luxury .product-information .variant-option legend,
+body.mufaddal-luxury .product-information .variant-picker .form__label {
+  font-family: var(--font-subheading--family);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mj-brown) 72%, transparent);
+  margin-bottom: 0.45rem;
+}
+
+body.mufaddal-luxury .product-information .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+  flex: 0 0 auto;
+  min-height: 2.35rem;
+  min-width: 2.35rem;
+  padding-block: 0.4rem;
+  padding-inline: 0.75rem;
+  border-radius: 0;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.mufaddal-luxury .product-information .variant-option__button-label--has-swatch {
+  min-height: auto;
+  min-width: auto;
+  padding: 0.15rem;
+  border-radius: 50%;
+}
+
+body.mufaddal-luxury .product-information .variant-option__button-label--has-swatch .swatch {
+  --swatch-size: 1.65rem;
+  width: var(--swatch-size);
+  height: var(--swatch-size);
+}
+
+body.mufaddal-luxury .product-information .variant-option__select-wrapper,
+body.mufaddal-luxury .product-information .variant-option select {
+  min-height: 2.5rem;
+  border-radius: 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+
+/* Buy buttons — refined, not oversized */
+body.mufaddal-luxury .product-information .buy-buttons-block {
+  --height-buy-buttons: 2.85rem;
+  margin-block-start: 0.15rem;
+}
+
+body.mufaddal-luxury .product-information .product-form-buttons button,
+body.mufaddal-luxury .product-information .add-to-cart-button,
+body.mufaddal-luxury .product-information .buy-buttons-block .button {
+  min-height: var(--height-buy-buttons);
+  height: var(--height-buy-buttons);
+  padding-block: 0;
+  padding-inline: 1.25rem;
+  border-radius: 0;
+  font-family: var(--font-subheading--family);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: background-color 0.4s var(--mj-ease), border-color 0.4s var(--mj-ease), color 0.4s var(--mj-ease);
+}
+
+body.mufaddal-luxury .product-information .buy-buttons-block__jewelry-dual {
+  gap: 0.55rem;
+}
+
+body.mufaddal-luxury .product-information .buy-buttons-block .button:hover:not(:disabled),
+body.mufaddal-luxury .product-information .add-to-cart-button:hover:not(:disabled) {
+  background: var(--mj-gold);
+  border-color: var(--mj-gold);
+  color: #fff;
+}
+
+body.mufaddal-luxury .product-information .buy-buttons-block .button.button-secondary,
+body.mufaddal-luxury .product-information .add-to-cart-block--jewelry .button {
+  background: transparent;
+  border: 1px solid var(--mj-brown);
+  color: var(--mj-brown);
+}
+
+body.mufaddal-luxury .product-information .buy-buttons-block .button.button-secondary:hover,
+body.mufaddal-luxury .product-information .add-to-cart-block--jewelry .button:hover {
+  background: var(--mj-brown);
+  border-color: var(--mj-brown);
+  color: var(--mj-cream);
+}
+
+body.mufaddal-luxury .product-information .quantity-selector {
+  height: var(--height-buy-buttons);
+  border-radius: 0;
+}
+
+body.mufaddal-luxury .product-information .add-to-cart-icon {
+  display: none;
+}
+
+/* Description + accordion */
+body.mufaddal-luxury .product-information .product-details .text-block--rte,
+body.mufaddal-luxury .product-information .product-details .rte {
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--mj-brown) 82%, transparent);
+}
+
+body.mufaddal-luxury .product-information .accordion {
+  margin-block-start: 0.35rem;
+  border-top: 1px solid color-mix(in srgb, var(--mj-sand) 80%, transparent);
+}
+
+body.mufaddal-luxury .product-information .accordion details,
+body.mufaddal-luxury .product-information .accordion-row,
+body.mufaddal-luxury .product-information .details {
+  border-bottom: 1px solid color-mix(in srgb, var(--mj-sand) 80%, transparent);
+}
+
+body.mufaddal-luxury .product-information .accordion summary,
+body.mufaddal-luxury .product-information .accordion .details__header {
+  padding-block: 0.85rem;
+  font-family: var(--font-subheading--family) !important;
+  font-size: 0.6875rem !important;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mj-brown);
+}
+
+body.mufaddal-luxury .product-information .accordion .details-content,
+body.mufaddal-luxury .product-information .accordion .rte {
+  padding-block: 0 0.95rem;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--mj-brown) 78%, transparent);
+}
+
+/* Complete the look — slightly tighter on PDP */
+body.mufaddal-luxury .product-information .mj-ctl {
+  padding-top: 1.15rem;
+  margin-top: 0.25rem;
+}
+
+body.mufaddal-luxury .product-information .mj-ctl .mj-ctl__heading {
+  font-size: 1.25rem;
+}
+
+body.mufaddal-luxury .product-information .mj-ctl__media {
+  aspect-ratio: 1;
+  background: #faf8f5;
+}
+
+body.mufaddal-luxury .product-information .mj-ctl__title {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+}
+
+body.mufaddal-luxury .product-information .mj-ctl__price {
+  font-size: 0.75rem;
+}
+
+/* Recommendations heading — less oversized */
+body.mufaddal-luxury .product-recommendations .section-resource-list__content .text-block,
+body.mufaddal-luxury .product-recommendations .section-resource-list__content .text-block :is(h1, h2, h3, h4, p) {
+  font-size: clamp(1.35rem, 2vw, 1.75rem) !important;
+  letter-spacing: -0.005em;
+}
+
 body.mufaddal-luxury ::selection {
   background: color-mix(in srgb, var(--mj-gold) 35%, white);
   color: var(--mj-ink);
@@ -1073,9 +1332,9 @@ body.mufaddal-luxury #cart-drawer .cart__checkout-button.button:hover:not(:disab
 body.mufaddal-luxury .product-recommendations .section-resource-list__content .text-block,
 body.mufaddal-luxury .product-recommendations .section-resource-list__content .text-block :is(h1, h2, h3, h4, p) {
   font-family: var(--mj-serif) !important;
-  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  font-size: clamp(1.35rem, 2vw, 1.75rem) !important;
   font-weight: 400;
   line-height: 1.15;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
   color: var(--mj-brown);
 }
