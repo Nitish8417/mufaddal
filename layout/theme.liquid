@@ -50,7 +50,13 @@
   </head>
 
   <body
-    class="mufaddal-luxury page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}"
+    class="mufaddal-luxury page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}{% if settings.show_section_top_borders %} section-top-borders{% endif %}"
+    {% if settings.show_section_top_borders %}
+      style="
+        --section-top-border-color: {{ settings.section_top_border_color }};
+        --section-top-border-thickness: {{ settings.section_top_border_thickness }}px;
+      "
+    {% endif %}
     {% if product %}
       data-product-id="{{ product.id }}"
     {% endif %}

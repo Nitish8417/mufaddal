@@ -103,6 +103,8 @@
                 </p>
               {%- endif -%}
 
+              {% render 'product-meta-label', product: product %}
+
               <h3 class="mj-pc__title">
                 <a href="{{ product.url }}">{{ product.title | escape }}</a>
               </h3>

@@ -16,6 +16,9 @@
     "auto_open_cart_drawer": true,
     "mobile_quick_add": true,
     "show_variant_image": true,
+    "show_section_top_borders": true,
+    "section_top_border_color": "#E5E5E5",
+    "section_top_border_thickness": 1,
     "content_for_index": [],
     "color_palette": {
       "background": "#37322A",

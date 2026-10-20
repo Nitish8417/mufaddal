@@ -1125,6 +1125,36 @@
           }
         ],
         "default": "narrow"
+      },
+      {
+        "type": "header",
+        "content": "t:content.section_top_borders"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_section_top_borders",
+        "label": "t:settings.show_section_top_borders",
+        "info": "t:info.show_section_top_borders",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "section_top_border_color",
+        "label": "t:settings.section_top_border_color",
+        "default": "#E5E5E5",
+        "alpha": true,
+        "visible_if": "{{ settings.show_section_top_borders }}"
+      },
+      {
+        "type": "range",
+        "id": "section_top_border_thickness",
+        "label": "t:settings.section_top_border_thickness",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "unit": "px",
+        "default": 1,
+        "visible_if": "{{ settings.show_section_top_borders }}"
       }
     ]
   },

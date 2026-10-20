@@ -1,0 +1,99 @@
+{%- doc -%}
+  Renders gold type and diamond type labels above the product title on product cards.
+  Uses catalog metafields: custom.gold_type (e.g. "18KT") and custom.diamond_type (e.g. "LGD").
+  Variant values are preferred, then product-level fallback.
+
+  @param {object} product - The product object
+{%- enddoc -%}
+
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+
+  assign gold_type = variant.metafields.custom.gold_type | metafield_text | strip
+  if gold_type == blank and variant.metafields.custom.gold_type != blank
+    assign gold_raw = variant.metafields.custom.gold_type.value
+    if gold_raw.first != blank
+      assign gold_type = gold_raw | join: ', ' | strip
+    else
+      assign gold_type = gold_raw | append: '' | strip
+    endif
+  endif
+  if gold_type == blank
+    assign gold_type = product.metafields.custom.gold_type | metafield_text | strip
+  endif
+  if gold_type == blank and product.metafields.custom.gold_type != blank
+    assign gold_raw = product.metafields.custom.gold_type.value
+    if gold_raw.first != blank
+      assign gold_type = gold_raw | join: ', ' | strip
+    else
+      assign gold_type = gold_raw | append: '' | strip
+    endif
+  endif
+
+  assign diamond_type = variant.metafields.custom.diamond_type | metafield_text | strip
+  if diamond_type == blank and variant.metafields.custom.diamond_type != blank
+    assign diamond_raw = variant.metafields.custom.diamond_type.value
+    if diamond_raw.first != blank
+      assign diamond_type = diamond_raw | join: ', ' | strip
+    else
+      assign diamond_type = diamond_raw | append: '' | strip
+    endif
+  endif
+  if diamond_type == blank
+    assign diamond_type = product.metafields.custom.diamond_type | metafield_text | strip
+  endif
+  if diamond_type == blank and product.metafields.custom.diamond_type != blank
+    assign diamond_raw = product.metafields.custom.diamond_type.value
+    if diamond_raw.first != blank
+      assign diamond_type = diamond_raw | join: ', ' | strip
+    else
+      assign diamond_type = diamond_raw | append: '' | strip
+    endif
+  endif
+-%}
+
+<div class="product-meta-label">
+  {%- if gold_type != blank -%}
+    <span class="product-meta-label__tag product-meta-label__tag--karat">{{ gold_type | escape }}</span>
+  {%- endif -%}
+  {%- if diamond_type != blank -%}
+    <span class="product-meta-label__tag product-meta-label__tag--stone">{{ diamond_type | escape }}</span>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .product-meta-label {
+    display: none;
+  }
+
+  .product-card .product-meta-label,
+  .mj-pc__body .product-meta-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 20px;
+    margin: 0 0 2px;
+  }
+
+  .product-meta-label__tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .product-meta-label__tag--karat {
+    color: #8a6a1f;
+    background-color: #f5ecd7;
+  }
+
+  .product-meta-label__tag--stone {
+    color: #1f6b52;
+    background-color: #e1f1ea;
+  }
+{% endstylesheet %}

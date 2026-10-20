@@ -32,14 +32,37 @@
  * ⚠️  Replace 0 with real variant IDs before uploading the theme.
  * @type {Record<string, number>}
  */
-const DIAMOND_WEIGHT_VARIANT_IDS = {};
+const DIAMOND_WEIGHT_VARIANT_IDS = {
+  '1.00': 51944484503783,
+  '1.50': 51944484536551,
+  '2.00': 51944484569319,
+  '2.50': 51944484602087,
+  '3.00': 51952467181799,
+  '3.50': 51952467214567,
+  '4.00': 51952467247335,
+  '4.50': 51952467280103,
+  '5.00': 51952467312871,
+  '5.50': 51952467345639,
+  '6.00': 51952467378407,
+  '6.50': 51952467411175,
+  '7.00': 51952467443943,
+  '7.50': 51952467476711,
+  '8.00': 51952467509479,
+  '8.50': 51952467542247,
+  '9.00': 51952467575015
+};
 
 /**
  * Surcharge variant IDs from your "Diamond Color Surcharge" Shopify product.
  * Key = exact string from custom.diamond_color metafield (e.g. "E", "D", "F")
  * @type {Record<string, number>}
  */
-const DIAMOND_COLOR_VARIANT_IDS = {};
+const DIAMOND_COLOR_VARIANT_IDS = {
+  E: 51966988157159,
+  F: 51966988189927,
+  G: 51966988222695,
+  H: 51966988255463
+};
 
 /**
  * Surcharge amounts in minor currency units (diamond color).

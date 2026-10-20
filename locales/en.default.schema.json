@@ -139,6 +139,7 @@
     "section_layout": "Section layout",
     "section_link": "Section link",
     "section_size": "Section size",
+    "section_top_borders": "Section dividers",
     // Section header for width and height controls
     "size": "Size",
     "slideshow_width": "Slide width",
@@ -249,7 +250,8 @@
     "video_autoplay": "Videos will be muted by default",
     "video_external": "Use a YouTube or Vimeo URL",
     "pills_usage": "Used for applied filters, discount codes, and search suggestions",
-    "media_type_info": "Features are populated from your menu links"
+    "media_type_info": "Features are populated from your menu links",
+    "show_section_top_borders": "Adds a thin horizontal line at the top of each main content and footer section"
   },
   "names": {
     "column": "Column",
@@ -1083,6 +1085,9 @@
     "show_powered_by_shopify": "Show \"Powered by Shopify\"",
     "show_sale_price_first": "Show sale price first",
     "show_search": "Show search",
+    "show_section_top_borders": "Show section top borders",
+    "section_top_border_color": "Border color",
+    "section_top_border_thickness": "Border thickness",
     "show_second_image_on_hover": "Show second image on hover",
     "show_swatch_label": "Text labels for swatches",
     "show_tax_info": "Tax information",
