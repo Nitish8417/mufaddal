@@ -1,6 +1,7 @@
 {%- doc -%}
-  Renders product/variant spec rows for the Description accordion (Naqsh-style metafields).
+  Naqsh-style Description accordion: metafield spec rows + footer note.
   Prefers selected variant metafields, then product metafields.
+  Uses metafield_text so list/metaobject values render as readable text.
 
   @param {object} [product] - Product object (defaults to closest.product)
 {%- enddoc -%}
@@ -9,107 +10,117 @@
   if product == blank
     assign product = closest.product
   endif
+-%}
+{%- if product != blank -%}
+{%- liquid
   assign variant = product.selected_or_first_available_variant
 
-  assign diamond_weight = variant.metafields.custom.diamond_weight.value | default: product.metafields.custom.diamond_weight.value
-  assign diamond_color = variant.metafields.custom.diamond_color.value | default: product.metafields.custom.diamond_color.value
-  assign stone_type = variant.metafields.custom.stone_type.value | default: product.metafields.custom.stone_type.value
-  assign gold_weight = variant.metafields.custom.gold_weight.value | default: product.metafields.custom.gold_weight.value
-  assign gold_type = variant.metafields.custom.gold_type.value | default: product.metafields.custom.gold_type.value
-  assign flexible_fitting = variant.metafields.custom.flexible_fitting.value | default: product.metafields.custom.flexible_fitting.value
-  assign product_number = variant.metafields.custom.product_number.value | default: product.metafields.custom.product_number.value
-  assign diamond_type = variant.metafields.custom.diamond_type.value | default: product.metafields.custom.diamond_type.value
+  assign product_number = variant.metafields.custom.product_number | metafield_text | strip
+  if product_number == blank
+    assign product_number = product.metafields.custom.product_number | metafield_text | strip
+  endif
 
-  if diamond_weight != blank and diamond_weight.size > 0
-    assign diamond_weight = diamond_weight | join: ', '
+  assign flexible_fitting = variant.metafields.custom.flexible_fitting | metafield_text | strip
+  if flexible_fitting == blank
+    assign flexible_fitting = product.metafields.custom.flexible_fitting | metafield_text | strip
   endif
-  if diamond_color != blank and diamond_color.size > 0
-    assign diamond_color = diamond_color | join: ', '
+
+  assign gold_type = variant.metafields.custom.gold_type | metafield_text | strip
+  if gold_type == blank
+    assign gold_type = product.metafields.custom.gold_type | metafield_text | strip
   endif
-  if stone_type != blank and stone_type.size > 0
-    assign stone_type = stone_type | join: ', '
+
+  assign gold_weight = variant.metafields.custom.gold_weight | metafield_text | strip
+  if gold_weight == blank
+    assign gold_weight = product.metafields.custom.gold_weight | metafield_text | strip
   endif
-  if diamond_type != blank and diamond_type.size > 0
-    assign diamond_type = diamond_type | join: ', '
+
+  assign diamond_type = variant.metafields.custom.diamond_type | metafield_text | strip
+  if diamond_type == blank
+    assign diamond_type = product.metafields.custom.diamond_type | metafield_text | strip
+  endif
+
+  assign diamond_weight = variant.metafields.custom.diamond_weight | metafield_text | strip
+  if diamond_weight == blank
+    assign diamond_weight = product.metafields.custom.diamond_weight | metafield_text | strip
+  endif
+
+  assign diamond_color = variant.metafields.custom.diamond_color | metafield_text | strip
+  if diamond_color == blank
+    assign diamond_color = product.metafields.custom.diamond_color | metafield_text | strip
+  endif
+
+  assign stone_type = variant.metafields.custom.stone_type | metafield_text | strip
+  if stone_type == blank
+    assign stone_type = product.metafields.custom.stone_type | metafield_text | strip
+  endif
+
+  assign has_specs = false
+  if product_number != blank or flexible_fitting != blank or gold_type != blank or gold_weight != blank or diamond_type != blank or diamond_weight != blank or diamond_color != blank or stone_type != blank
+    assign has_specs = true
   endif
 -%}
 
-{%- if product_number != blank
-  or flexible_fitting != blank
-  or gold_type != blank
-  or gold_weight != blank
-  or diamond_weight != blank
-  or diamond_color != blank
-  or diamond_type != blank
-  or stone_type != blank
-  or product.description != blank
--%}
+{%- if has_specs -%}
   <div class="mj-product-specs">
-    {%- if product.description != blank -%}
-      <div class="mj-product-specs__intro rte">
-        {{ product.description }}
-      </div>
-    {%- endif -%}
+    <div class="mj-product-specs__list">
+      {%- if product_number != blank -%}
+        <div class="mj-product-specs__row">
+          <span class="mj-product-specs__label">Product Number</span>
+          <span class="mj-product-specs__value">{{ product_number | escape }}</span>
+        </div>
+      {%- endif -%}
+      {%- if flexible_fitting != blank -%}
+        <div class="mj-product-specs__row">
+          <span class="mj-product-specs__label">Flexible Fitting</span>
+          <span class="mj-product-specs__value">{{ flexible_fitting | escape }}</span>
+        </div>
+      {%- endif -%}
+      {%- if gold_type != blank -%}
+        <div class="mj-product-specs__row">
+          <span class="mj-product-specs__label">Gold Type</span>
+          <span class="mj-product-specs__value">{{ gold_type | escape }}</span>
+        </div>
+      {%- endif -%}
+      {%- if gold_weight != blank -%}
+        <div class="mj-product-specs__row">
+          <span class="mj-product-specs__label">Gold Weight</span>
+          <span class="mj-product-specs__value">{{ gold_weight | escape }}</span>
+        </div>
+      {%- endif -%}
+      {%- if diamond_type != blank -%}
+        <div class="mj-product-specs__row">
+          <span class="mj-product-specs__label">Diamond Type</span>
+          <span class="mj-product-specs__value">{{ diamond_type | escape }}</span>
+        </div>
+      {%- endif -%}
+      {%- if diamond_weight != blank -%}
+        <div class="mj-product-specs__row">
+          <span class="mj-product-specs__label">Diamond Weight</span>
+          <span class="mj-product-specs__value">{{ diamond_weight | escape }}</span>
+        </div>
+      {%- endif -%}
+      {%- if diamond_color != blank -%}
+        <div class="mj-product-specs__row">
+          <span class="mj-product-specs__label">Diamond Color</span>
+          <span class="mj-product-specs__value">{{ diamond_color | escape }}</span>
+        </div>
+      {%- endif -%}
+      {%- if stone_type != blank -%}
+        <div class="mj-product-specs__row">
+          <span class="mj-product-specs__label">Stone Type</span>
+          <span class="mj-product-specs__value">{{ stone_type | escape }}</span>
+        </div>
+      {%- endif -%}
+    </div>
 
-    {%- if product_number != blank
-      or flexible_fitting != blank
-      or gold_type != blank
-      or gold_weight != blank
-      or diamond_weight != blank
-      or diamond_color != blank
-      or diamond_type != blank
-      or stone_type != blank
-    -%}
-      <div class="mj-product-specs__list">
-        {%- if product_number != blank -%}
-          <div class="mj-product-specs__row">
-            <span class="mj-product-specs__label">Product Number</span>
-            <span class="mj-product-specs__value">{{ product_number }}</span>
-          </div>
-        {%- endif -%}
-        {%- if flexible_fitting != blank -%}
-          <div class="mj-product-specs__row">
-            <span class="mj-product-specs__label">Flexible Fitting</span>
-            <span class="mj-product-specs__value">{{ flexible_fitting }}</span>
-          </div>
-        {%- endif -%}
-        {%- if gold_type != blank -%}
-          <div class="mj-product-specs__row">
-            <span class="mj-product-specs__label">Gold Type</span>
-            <span class="mj-product-specs__value">{{ gold_type }}</span>
-          </div>
-        {%- endif -%}
-        {%- if gold_weight != blank -%}
-          <div class="mj-product-specs__row">
-            <span class="mj-product-specs__label">Gold Weight</span>
-            <span class="mj-product-specs__value">{{ gold_weight }}</span>
-          </div>
-        {%- endif -%}
-        {%- if diamond_type != blank -%}
-          <div class="mj-product-specs__row">
-            <span class="mj-product-specs__label">Diamond Type</span>
-            <span class="mj-product-specs__value">{{ diamond_type }}</span>
-          </div>
-        {%- endif -%}
-        {%- if diamond_weight != blank -%}
-          <div class="mj-product-specs__row">
-            <span class="mj-product-specs__label">Diamond Weight</span>
-            <span class="mj-product-specs__value">{{ diamond_weight }}</span>
-          </div>
-        {%- endif -%}
-        {%- if diamond_color != blank -%}
-          <div class="mj-product-specs__row">
-            <span class="mj-product-specs__label">Diamond Color</span>
-            <span class="mj-product-specs__value">{{ diamond_color }}</span>
-          </div>
-        {%- endif -%}
-        {%- if stone_type != blank -%}
-          <div class="mj-product-specs__row">
-            <span class="mj-product-specs__label">Stone Type</span>
-            <span class="mj-product-specs__value">{{ stone_type }}</span>
-          </div>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
+    <div class="mj-product-specs__footer">
+      <p>
+        Looking for something bespoke?
+        <a href="/pages/contact">Contact us</a>.
+      </p>
+      <p>Slight variations in color, shape, and size are part of their beauty.</p>
+    </div>
   </div>
+{%- endif -%}
 {%- endif -%}
