@@ -170,13 +170,24 @@
         <section class="jewelry-customize__panel">
           <p class="jewelry-customize__section-label">Jewelry specifications</p>
           <div class="jewelry-customize__readonly-group jewelry-customize__variant-picker-wrapper">
+            {% liquid
+              # Modal must always render selectable options. When the nested
+              # variant-picker block cannot be resolved, fall back to button style.
+              if variant_picker_block == blank
+                assign jewelry_modal_picker_block = null
+              else
+                assign jewelry_modal_picker_block = variant_picker_block
+              endif
+            %}
             {% render 'variant-main-picker',
               product_resource: product,
               section: section,
               product: product,
-              block: variant_picker_block,
+              block: jewelry_modal_picker_block,
               is_modal_duplicate: true,
-              readonly: false
+              readonly: false,
+              force_variant_style: 'buttons',
+              force_show_swatches: false
             %}
             <div
               class="jewelry-customize__spec-diamond-color-wrap"
@@ -380,6 +391,7 @@
 
 {% stylesheet %}
   /* Isolated form layout — do not use theme .field / .field__label (floating-label / absolute) */
+  /* Premium cream panel (Naqsh-style readability on Mufaddal palette) */
  .jewelry-customize {
        max-width: 1024px;
     width: 90%;
@@ -387,6 +399,21 @@
     border: none;
     border-radius: var(--style-border-radius-popover, .75rem);
     box-shadow: var(--shadow-popover);
+    --jewelry-modal-bg: #efebe7;
+    --jewelry-modal-fg: #37322a;
+    --color-background: var(--jewelry-modal-bg);
+    --color-background-rgb: 239 235 231;
+    --color-foreground: var(--jewelry-modal-fg);
+    --color-foreground-rgb: 55 50 42;
+    --color-foreground-heading: var(--jewelry-modal-fg);
+    --color-input-background: #f7f4f0;
+    --color-input-text: var(--jewelry-modal-fg);
+    --color-input-text-rgb: 55 50 42;
+    --color-input-border: #d4c4ab;
+    --color-input-hover-background: #f0ebe4;
+    --color-selected-variant-background: #37322a;
+    --color-selected-variant-text: #efebe7;
+    --color-selected-variant-border: #37322a;
     background: var(--color-background);
     color: var(--color-foreground);
     max-height: min(88vh, 72rem);
@@ -440,15 +467,15 @@
     transition: background-color var(--animation-speed) var(--animation-easing), color var(--animation-speed) var(--animation-easing);
     display: flex;
     align-items: center;
-    background-color: #000;
-    color: #fff;
+    background-color: #37322a;
+    color: #efebe7;
     border-radius: 50%;
     cursor: pointer;
 }
 
   .jewelry-customize__close:hover {
-    background: rgb(var(--color-foreground-rgb) / var(--opacity-10-25, 0.08));
-    color: var(--color-foreground);
+    background: #a2947c;
+    color: #efebe7;
   }
 
   .jewelry-customize__body {
@@ -632,15 +659,16 @@
   .jewelry-customize__generated-dropdown .variant-option__select,
   .jewelry-customize [data-jewelry-mf-pill-options] .variant-option__select {
     min-height: 2.75rem;
-    border-radius: var(--style-border-radius-inputs);
-    /* background: var(--color-input-background); */
+    width: 100%;
+    border-radius: 4px;
+    background: var(--color-input-background, #f7f4f0);
     appearance: none;
     -webkit-appearance: none;
     padding-right: 3.5rem;
     padding-left: 0.85rem;
-    /* border: 1px solid var(--color-input-border); */
+    border: 1px solid var(--color-input-border, #d4c4ab);
     box-shadow: none;
-    color: var(--color-input-text);
+    color: var(--color-input-text, #37322a);
     font-weight: 500;
     transition: background-color var(--animation-speed) var(--animation-easing);
   }
@@ -675,7 +703,7 @@
     pointer-events: none;
   }
 
-  .jewelry-customize__variant-picker-wrapper--dropdown fieldset.variant-option--buttons:not(.variant-option--swatches):not([data-jewelry-mf-field-wrap]),
+  .jewelry-customize__variant-picker-wrapper--dropdown fieldset.variant-option--buttons:not([data-jewelry-mf-field-wrap]),
   .jewelry-customize__variant-picker-wrapper--dropdown .variant-option[data-testid='variant-option-single'] {
     display: none !important;
   }
@@ -793,10 +821,21 @@
   .jewelry-customize__actions .button--secondary,
   .jewelry-customize__actions .button-secondary {
     min-width: 6.5rem;
+    background: transparent !important;
+    color: #37322a !important;
+    border: 1px solid #37322a !important;
   }
 
   .jewelry-customize__actions .button:not(.button-secondary):not(.button--secondary) {
     min-width: 10rem;
+    background: #37322a !important;
+    color: #efebe7 !important;
+    border-color: #37322a !important;
+  }
+
+  .jewelry-customize__actions .button:not(.button-secondary):not(.button--secondary):hover {
+    background: #a2947c !important;
+    border-color: #a2947c !important;
   }
 
   @media screen and (max-width: 749px) {

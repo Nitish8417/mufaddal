@@ -19,6 +19,11 @@
     "show_section_top_borders": true,
     "section_top_border_color": "#E5E5E5",
     "section_top_border_thickness": 1,
+    "drawer_background_color": "#EFEBE7",
+    "drawer_text_color": "#37322A",
+    "drawer_border_color": "#D4C4AB",
+    "popover_background_color": "#EFEBE7",
+    "popover_text_color": "#37322A",
     "content_for_index": [],
     "color_palette": {
       "background": "#37322A",

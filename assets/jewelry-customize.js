@@ -1,4 +1,5 @@
 import { ThemeEvents } from '@theme/events';
+import { StandardEvents } from '@shopify/events';
 
 /**
  * Turns metafield text into separate "pills" like variant options.
@@ -387,7 +388,9 @@ function renderVariantOptionDropdowns(dialog) {
     }
     if (!legendText) legendText = `Option ${fieldsetIndex + 1}`;
     ensureFieldIcon(legendEl, legendText);
-    if (fieldset.classList.contains('variant-option--swatches')) return;
+
+    // Convert swatches too — modal uses premium dropdowns (Naqsh confirm flow).
+    // Original radios stay in DOM (hidden via CSS) so theme variant logic still works.
 
     const radioInputs = Array.from(fieldset.querySelectorAll('input[type="radio"]')).filter(
       (el) => el instanceof HTMLInputElement
@@ -892,7 +895,6 @@ function initJewelryCustomize(sectionId) {
   if (!(dialog instanceof HTMLDialogElement) || !sectionEl) return;
 
   const form = sectionEl.querySelector(`product-form-component form[data-type="add-to-cart-form"]`);
-  if (!(form instanceof HTMLFormElement)) return;
   /** @type {any | null} */
   let latestVariant = getVariantFromPicker(dialog);
 
@@ -901,6 +903,7 @@ function initJewelryCustomize(sectionId) {
     requestAnimationFrame(() => {
       const v = latestVariant || getVariantFromPicker(dialog);
       if (v) syncDialogToVariant(dialog, v);
+      else renderVariantOptionDropdowns(dialog);
       const refresh = /** @type {any} */ (window).__refreshJewelryPricingDisplays;
       if (typeof refresh === 'function') refresh();
     });
@@ -908,14 +911,25 @@ function initJewelryCustomize(sectionId) {
 
   const onVariantUpdate = (/** @type {Event} */ event) => {
     const ev = /** @type {any} */ (event);
-    const variant = ev.detail?.resource || ev.detail?.variant;
+    const variant =
+      ev.detail?.resource ||
+      ev.detail?.variant ||
+      ev.detail?.productVariant ||
+      ev.detail?.data?.variant;
     if (!variant) return;
     latestVariant = variant;
-    syncDialogToVariant(dialog, variant);
+    if (dialog.open) syncDialogToVariant(dialog, variant);
   };
 
-  sectionEl.addEventListener(ThemeEvents.variantUpdate, onVariantUpdate);
-  dialog.addEventListener(ThemeEvents.variantUpdate, onVariantUpdate);
+  // Horizon / Mufaddal uses Standard Events; keep ThemeEvents for Naqsh-era builds.
+  if (ThemeEvents?.variantUpdate) {
+    sectionEl.addEventListener(ThemeEvents.variantUpdate, onVariantUpdate);
+    dialog.addEventListener(ThemeEvents.variantUpdate, onVariantUpdate);
+  }
+  if (StandardEvents?.productSelect) {
+    sectionEl.addEventListener(StandardEvents.productSelect, onVariantUpdate);
+    dialog.addEventListener(StandardEvents.productSelect, onVariantUpdate);
+  }
 
   sectionEl.addEventListener(
     'click',
@@ -938,14 +952,16 @@ function initJewelryCustomize(sectionId) {
   });
 
   dialog.querySelector('[data-jewelry-confirm]')?.addEventListener('click', () => {
-    const requestedId = (dialog.dataset.requestedVariantId || '').trim();
+    const requestedId =
+      (dialog.dataset.requestedVariantId || '').trim() ||
+      toText(getVariantFromPicker(dialog)?.id);
     const whatsappNumber = (dialog.dataset.whatsappNumber || '').replace(/\D+/g, '');
     const checkoutError = dialog.querySelector('[data-jewelry-checkout-error]');
     const confirmBtn = dialog.querySelector('[data-jewelry-confirm]');
     if (!requestedId) {
       checkoutError?.classList.remove('jewelry-customize__checkout-error--hidden');
       if (checkoutError instanceof HTMLElement) {
-        checkoutError.textContent = 'Please select a variant before adding to cart.';
+        checkoutError.textContent = 'Please select a variant before confirming.';
         checkoutError.focus();
       }
       return;
@@ -960,14 +976,19 @@ function initJewelryCustomize(sectionId) {
     }
     checkoutError?.classList.add('jewelry-customize__checkout-error--hidden');
 
-    const quantity = getFormQuantity(form);
+    const quantity = form instanceof HTMLFormElement ? getFormQuantity(form) : 1;
     const properties = collectJewelryProperties(dialog);
 
     if (confirmBtn instanceof HTMLButtonElement) confirmBtn.disabled = true;
     try {
       const message = buildWhatsappMessage(dialog, quantity, properties);
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      const popup = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      if (!popup) {
+        // Popup blocked — navigate current tab so the request still reaches WhatsApp.
+        window.location.assign(whatsappUrl);
+        return;
+      }
       dialog.close();
     } catch {
       checkoutError?.classList.remove('jewelry-customize__checkout-error--hidden');

@@ -5,6 +5,8 @@
   @param {object} [block] - The block object
   @param {object} section - The section object.
   @param {object} product - The current product object (used to determine selected variant state).
+  @param {string} [force_variant_style] - Optional override for block.settings.variant_style (e.g. jewelry modal).
+  @param {boolean} [force_show_swatches] - Optional override for block.settings.show_swatches.
 {%- enddoc -%}
 
 {% assign block_settings = block.settings %}
@@ -22,6 +24,15 @@
     assign has_custom_variant_buttons = true
   endif
   assign fieldset_index = 0
+
+  # Jewelry customize modal (and similar) can force a reliable picker style when
+  # the nested block settings are missing or would render nothing.
+  assign effective_variant_style = force_variant_style | default: block_settings.variant_style | default: 'buttons'
+  if force_show_swatches == nil
+    assign effective_show_swatches = block_settings.show_swatches | default: true, allow_false: true
+  else
+    assign effective_show_swatches = force_show_swatches
+  endif
 %}
 
 {% unless product_resource.has_only_default_variant %}
@@ -56,7 +67,7 @@
       {%- for product_option in product_resource.options_with_values -%}
         {%- liquid
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
-          assign variant_style = block_settings.variant_style
+          assign variant_style = effective_variant_style
 
           assign option_name_handle = product_option.name | handleize
           if swatch_count == 0 and option_name_handle == 'color' or swatch_count == 0 and option_name_handle == 'colour'
@@ -71,8 +82,8 @@
             endif
           endif
 
-          if swatch_count > 0 and block_settings.show_swatches
-            if block_settings.variant_style == 'dropdown'
+          if swatch_count > 0 and effective_show_swatches
+            if effective_variant_style == 'dropdown' or effective_variant_style == 'dropdowns'
               assign variant_style = 'swatch_dropdown'
             else
               assign variant_style = 'swatch'
@@ -103,7 +114,7 @@
               <button type="button" class="size-chart-trigger" aria-haspopup="dialog">Size chart</button>
             {%- endif -%}
           </div>
-        {%- elsif variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
+        {%- elsif variant_style == 'swatch' or effective_variant_style == 'buttons' -%}
           <fieldset
             class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
             data-fieldset-index="{{ fieldset_index }}"
@@ -195,7 +206,7 @@
             {% endif %}
           </fieldset>
           {%- assign fieldset_index = fieldset_index | plus: 1 -%}
-        {%- elsif block_settings.variant_style == 'dropdowns' -%}
+        {%- elsif effective_variant_style == 'dropdowns' or effective_variant_style == 'dropdown' -%}
           {%
             # There is an opportunity to build a custom select component that will allow us to style the select element further (animation for dropdown, swatches shown in the dropdown options, etc)
             # It's too bad as it mean rebuilding baked in behaviours but I think we've already done that for the locale selectors
