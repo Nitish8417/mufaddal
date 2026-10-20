@@ -1,11 +1,18 @@
 {%- liquid
   assign current_product = closest.product
-  assign look_products = block.settings.product_list
-  if look_products == blank and current_product.metafields.custom.complete_the_look != blank
+  # Naqsh parity: prefer custom.complete_the_look product references first.
+  assign look_products = null
+  if current_product.metafields.custom.complete_the_look != blank
     assign look_products = current_product.metafields.custom.complete_the_look.value
+  endif
+  if look_products == blank
+    assign look_products = block.settings.product_list
   endif
   if look_products == blank and block.settings.collection != blank
     assign look_products = block.settings.collection.products
+  endif
+  if look_products == blank and request.visual_preview_mode
+    assign look_products = collections.all.products
   endif
 -%}
 
@@ -61,14 +68,18 @@
               {{ 'product-1' | placeholder_svg_tag }}
             {%- endif -%}
           </div>
-          <p class="mj-ctl__title">{{ look_product.title | escape }}</p>
-          <p class="mj-ctl__price">
-            {%- if look_product.price_max == 0 -%}
-              <span class="mj-ctl__on-request">{{ 'mufaddal.price_on_request' | t }}</span>
-            {%- else -%}
-              {{ look_product.price | money }}
-            {%- endif -%}
-          </p>
+          <div class="mj-ctl__body">
+            {% comment %} Same metafield fetch as Naqsh cards: custom.gold_type + custom.diamond_type {% endcomment %}
+            {% render 'product-meta-label', product: look_product %}
+            <p class="mj-ctl__title">{{ look_product.title | escape }}</p>
+            <p class="mj-ctl__price">
+              {%- if look_product.price_max == 0 -%}
+                <span class="mj-ctl__on-request">{{ 'mufaddal.price_on_request' | t }}</span>
+              {%- else -%}
+                {{ look_product.price | money_with_currency }}
+              {%- endif -%}
+            </p>
+          </div>
         </a>
       {%- endfor -%}
     </div>
@@ -205,10 +216,18 @@
     }
   }
 
+  .mj-ctl__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding-top: 0.65rem;
+    min-width: 0;
+  }
+
   .mj-ctl__title {
     display: -webkit-box;
     min-height: calc(2em * 1.35);
-    margin: 0.65rem 0 0;
+    margin: 0;
     overflow: hidden;
     font-family: var(--mj-serif) !important;
     font-size: 0.8125rem;

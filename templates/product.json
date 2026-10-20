@@ -469,7 +469,7 @@
         "enable_sticky_add_to_cart": true,
         "background_color": "{{ settings.color_palette.background }}",
         "enable_jewelry_customization": true,
-        "jewelry_in_stock_secondary_label": "Customize product",
+        "jewelry_in_stock_secondary_label": "Customize",
         "jewelry_whatsapp_number": "8418020269",
         "jewelry_whatsapp_header_text": "Customization Request",
         "jewelry_whatsapp_logo_url": "",

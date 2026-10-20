@@ -22,7 +22,7 @@
   if jewelry_secondary_label == blank
     assign jewelry_secondary_label = 'products.product.jewelry_secondary_in_stock' | t
     if jewelry_secondary_label contains 'Translation missing'
-      assign jewelry_secondary_label = 'Customize product'
+      assign jewelry_secondary_label = 'Customize'
     endif
   endif
   # Theme-editor / Shopify sync often drops this key; default ON like Naqsh jewelry PDP.
