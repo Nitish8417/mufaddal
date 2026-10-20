@@ -299,15 +299,22 @@ body.mufaddal-luxury .product-information .product-details .rte {
   color: color-mix(in srgb, var(--mj-brown) 82%, transparent);
 }
 
+/* Single divider lines only — do not stack on accordion--dividers */
 body.mufaddal-luxury .product-information .accordion {
   margin-block-start: 0.35rem;
-  border-top: 1px solid color-mix(in srgb, var(--mj-sand) 80%, transparent);
+  border: none;
+  --color-border: var(--mj-sand);
+  --style-border-width: 1px;
 }
 
-body.mufaddal-luxury .product-information .accordion details,
-body.mufaddal-luxury .product-information .accordion-row,
-body.mufaddal-luxury .product-information .details {
-  border-bottom: 1px solid color-mix(in srgb, var(--mj-sand) 80%, transparent);
+body.mufaddal-luxury .product-information .accordion.accordion--dividers accordion-custom .details {
+  border-block-start: 1px solid var(--mj-sand);
+  border-block-end: none;
+  border-bottom: none;
+}
+
+body.mufaddal-luxury .product-information .accordion.accordion--dividers accordion-custom:last-child .details {
+  border-block-end: 1px solid var(--mj-sand);
 }
 
 body.mufaddal-luxury .product-information .accordion summary,
@@ -329,10 +336,56 @@ body.mufaddal-luxury .product-information .accordion .rte {
   color: color-mix(in srgb, var(--mj-brown) 78%, transparent);
 }
 
-/* Complete the look — slightly tighter on PDP */
+/* Description specs (metafield rows) */
+body.mufaddal-luxury .mj-product-specs {
+  width: 100%;
+}
+
+body.mufaddal-luxury .mj-product-specs__intro {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--mj-brown) 78%, transparent);
+}
+
+body.mufaddal-luxury .mj-product-specs__list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid color-mix(in srgb, var(--mj-sand) 70%, transparent);
+}
+
+body.mufaddal-luxury .mj-product-specs__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--mj-sand) 55%, transparent);
+}
+
+body.mufaddal-luxury .mj-product-specs__label {
+  flex: 0 0 42%;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mj-brown) 58%, transparent);
+}
+
+body.mufaddal-luxury .mj-product-specs__value {
+  flex: 1;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-align: right;
+  color: var(--mj-brown);
+  word-break: break-word;
+}
+
+/* Complete the look — single separator (accordion already has bottom line) */
 body.mufaddal-luxury .product-information .mj-ctl {
   padding-top: 1.15rem;
-  margin-top: 0.25rem;
+  margin-top: 0;
+  border-top: none;
 }
 
 body.mufaddal-luxury .product-information .mj-ctl .mj-ctl__heading {
